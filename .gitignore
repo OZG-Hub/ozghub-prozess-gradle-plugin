@@ -1,0 +1,10 @@
+.idea/
+.gradle/
+build/
+export/
+models/
+zip/
+*.class
+
+**/currentServerPort.txt
+**/httpServer*.log
