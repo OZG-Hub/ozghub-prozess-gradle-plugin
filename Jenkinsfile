@@ -73,7 +73,7 @@ pipeline {
     }
     post {
         always {
-            junit 'build/test-results/**/*.xml'
+            junit allowEmptyResults: true, testResults: 'build/test-results/**/*.xml'
             recordIssues(tools: [
                 java(),
                 spotBugs(pattern: 'build/**/spotbugs/**/*.xml'),
