@@ -60,6 +60,7 @@ test {
     useJUnitPlatform()
     maxHeapSize = '1G'
     finalizedBy jacocoTestReport
+    systemProperty 'file.encoding', 'UTF-8'
 }
 
 jacocoTestReport {
@@ -136,18 +137,3 @@ gradlePlugin {
         }
     }
 }
-
-/*
-pluginBundle {
-    website = 'http://www.seitenbau.com/'
-    vcsUrl = 'https://bitbucket.dev.seitenbau.net'
-    description = 'Tools zum automatischen Deployment von Prozessen im Serviceportal'
-    tags = ['serviceportal', 'deployment', 'prozesse', 'ozg']
-
-    plugins {
-        ProzessPipelineGradlePlugin {
-            displayName = 'Gradle Plugin für Prozesspipeline des OZG-Hubs'
-        }
-    }
-}
-*/
