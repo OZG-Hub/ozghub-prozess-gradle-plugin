@@ -1,6 +1,6 @@
 pipeline {
     parameters {
-        string defaultValue: '', description: 'Versionsnummer (pushed ins Release statt Snapshot-repository)', name: 'PLUGIN_VERSION'
+        string defaultValue: '', description: 'Versionsnummer im Format YYYY.MM.DD-Nr', name: 'PLUGIN_VERSION'
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '30'))
@@ -47,13 +47,8 @@ pipeline {
     stages {
         stage('Build und Test') {
             steps {
-                script {
-                    catchError {
-                        container('gradle') {
-                            sh 'gradle clean build test --no-daemon -PpluginVersion=' + getPluginVersion()
-                        }
-                    }
-                    rocketChatSendMessage()
+                container('gradle') {
+                    sh 'gradle clean build test --no-daemon -PpluginVersion=' + getPluginVersion()
                 }
             }
         }
@@ -133,57 +128,4 @@ def gitCommitAndTagRelease(newVersion) {
         sh "git push ${gitUrl} \"${tagName}\""
     }
     return true
-}
-
-def getCurrentChangelogAuthor() {
-    return currentBuild.changeSets?.collect { it.items?.collect { it.author.toString() } }.flatten().unique()[0]
-}
-
-def getRocketChatUserName(fullName) {
-    def mapFullNameToRocketChatName = [
-            "Johannes Kern"    : "@jkern",
-            "Matt Bond"        : "@mbond",
-            "Thomas Fox"       : "@fischer",
-            "Sebastian Messner": "@smessner",
-            "Leonard Wicke"    : "@lwicke"
-    ]
-    return mapFullNameToRocketChatName[fullName] ?: "#sbw-schildkroeten"
-}
-
-String getEmojiForBuildResult(buildResult) {
-    def mapResultToEmoji = [
-            "NOT_BUILT": ":white_circle:",
-            "ABORTED"  : ":white_circle:",
-            "SUCCESS"  : ":green_apple:",
-            "UNSTABLE" : ":yellow_heart:",
-            "FAILED"   : ":jenkinsbad:",
-            "FAILURE"  : ":jenkinsbad:"
-    ]
-    return mapResultToEmoji[buildResult] ?: ":jenkins:"
-}
-
-def rocketChatSendMessage() {
-    try {
-        def buildResult = currentBuild.result ?: "SUCCESS"
-        println "[JENKINSFILE] Build & Test sind abgeschlossen. Status: " + buildResult
-
-        def author = getRocketChatUserName(getCurrentChangelogAuthor())
-        def emoji = getEmojiForBuildResult(buildResult)
-        def message = "${emoji} <${env.BUILD_URL}|${currentBuild.displayName}>\n"
-        message += "*Branch:* ${env.GIT_BRANCH}\n"
-
-        if (buildResult == "SUCCESS") {
-            message += "*Grund:* :checkered_flag: Der Jenkinsjob ist nun beendet."
-        } else {
-            message += "*Grund:* Der Build von ozghub-prozess-pipeline ist fehlgeschlagen."
-        }
-
-        rocketSend(
-                avatar: "https://ci.dev.seitenbau.net/static/e9ab2610/images/headshot.png",
-                channel: "${author}",
-                message: message,
-                rawMessage: true)
-    } catch (err) {
-        println "[JENKINSFILE] [WARN] Konnte Rocketchat Nachricht nicht versenden.\nFehlermeldung: ${err.getMessage()}"
-    }
 }
