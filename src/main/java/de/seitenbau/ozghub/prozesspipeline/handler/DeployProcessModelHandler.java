@@ -108,7 +108,7 @@ public class DeployProcessModelHandler extends DefaultHandler
       response.getProcessKeys().forEach(k -> log.info("  - {}", k));
     }
 
-    if (response.getDuplicateKeys() != null)
+    if (DuplicateProcessKeyAction.ERROR != duplicateKeyAction && response.getDuplicateKeys() != null)
     {
       log.info("- Prozess-Keys, die bereits Teil eines Deployments waren:");
       response.getDuplicateKeys().forEach(k -> log.info("  - {}", k));
