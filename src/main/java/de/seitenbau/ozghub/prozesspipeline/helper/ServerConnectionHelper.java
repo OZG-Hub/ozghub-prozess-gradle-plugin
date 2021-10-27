@@ -20,7 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.seitenbau.ozghub.prozesspipeline.common.Environment;
 import de.seitenbau.ozghub.prozesspipeline.common.HTTPHeaderKeys;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class ServerConnectionHelper<T>
 {
   private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -134,6 +136,8 @@ public class ServerConnectionHelper<T>
       Map<String, String> headers) throws IOException
   {
     String serverUrl = env.getUrl() + path;
+
+    log.info("Sende GET-Request an {}", serverUrl);
     URL url = new URL(serverUrl);
 
     if (!url.getProtocol().equals("http") && !url.getProtocol().equals("https"))
@@ -152,6 +156,8 @@ public class ServerConnectionHelper<T>
       Map<String, String> headers, byte[] data) throws IOException
   {
     String serverUrl = env.getUrl() + path;
+
+    log.info("Sende POST-Request an {}", serverUrl);
     URL url = new URL(serverUrl);
 
     if (!url.getProtocol().equals("http") && !url.getProtocol().equals("https"))
