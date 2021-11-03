@@ -8,3 +8,7 @@ zip/
 
 **/currentServerPort.txt
 **/httpServer*.log
+
+# include test-files
+!src/test/resources/**/build/
+!src/test/resources/**/build/models/
