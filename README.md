@@ -13,9 +13,8 @@ Für das Deployment auf die SBW- oder Amt24-Umgebungen siehe
   Gradle-Versionen verfügbar
 - Das verwendete Gradle muss minimal unter Java 11 laufen
 
-## Aktueller Funktionsumfang
-
 ## Referenzen
 
+- [Schnittstellen-Dokumentation](Schnittstellen.md)
 - [Vorlage Prozessmodellierung](https://bitbucket.dev.seitenbau.net/projects/IMBW-SERVICEPORTAL/repos/vorlage-prozessmodellierung)
 - [Beispiel Prozessmodellierung](https://bitbucket.dev.seitenbau.net/projects/IMBW-SERVICEPORTAL/repos/beispiel-prozessmodellierung)
