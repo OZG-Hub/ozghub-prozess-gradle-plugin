@@ -1,7 +1,5 @@
 package de.seitenbau.ozghub.prozesspipeline.task;
 
-import java.io.File;
-
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
@@ -20,12 +18,12 @@ public class DeployFormsTask extends DefaultPluginTask
    */
   @Input
   @Optional
-  String files;
+  String formFiles;
 
   @TaskAction
   public void run()
   {
-    DeployFormsHandler handler = new DeployFormsHandler(getEnvironment(), getProjectDir(), files);
+    DeployFormsHandler handler = new DeployFormsHandler(getEnvironment(), getProjectDir(), formFiles);
 
     handler.deploy();
   }

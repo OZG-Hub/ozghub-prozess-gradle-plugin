@@ -6,11 +6,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FilenameUtils;
 import org.gradle.api.GradleException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,21 +29,23 @@ public class DeployFormsHandler extends DefaultHandler
 {
   public static final String API_PATH = "/formulare/ozghub";
 
-  private static final String DEFAULT_FORMS_DIR_NAME = "forms";
+  private static final String DEFAULT_FORMS_DIR = "/forms";
 
   private static final ServerConnectionHelper<FormDeploymentResponse> CONNECTION_HELPER =
       new ServerConnectionHelper<>(FormDeploymentResponse.class);
 
+  public static final String FILE_EXTENSION_JSON = "json";
+
   private final File projectDir;
 
-  private final String formFilesDir;
+  private final String formFiles;
 
   public DeployFormsHandler(Environment env,
-      File projectDir, String formFilesDir)
+      File projectDir, String formFiles)
   {
     super(env);
     this.projectDir = projectDir;
-    this.formFilesDir = formFilesDir;
+    this.formFiles = formFiles;
   }
 
   public void deploy()
@@ -50,7 +54,11 @@ public class DeployFormsHandler extends DefaultHandler
 
     try
     {
-      List<Path> files = Files.walk(getCustomFormsDirOrDefault(formFilesDir)).collect(Collectors.toList());
+      List<Path> files = new ArrayList<>();
+      Path folder = getCustomFormsDirOrDefault(formFiles);
+
+      Files.walk(folder).filter(Files::isRegularFile)
+          .forEach(f -> files.add(f.toAbsolutePath()));
 
       Map<String, String> headers = getHeaderParameters();
       deployFiles(headers, files);
@@ -73,17 +81,24 @@ public class DeployFormsHandler extends DefaultHandler
       }
       else
       {
-        byte[] formJson = Files.readAllBytes(path);
-        String formName = readFormId(formJson);
+        if (!FILE_EXTENSION_JSON.equals(FilenameUtils.getExtension(file.getName())))
+        {
+          log.info("Datei {} scheint keine json-Datei zu sein und wird übersprungen.",
+              file.getName());
+          return;
+        }
 
-        String apiPath = API_PATH + "/" + URLEncoder.encode(formName, StandardCharsets.UTF_8);
+        byte[] formJson = Files.readAllBytes(path);
+        String formId = readFormId(formJson);
+
+        String apiPath = API_PATH + "/" + URLEncoder.encode(formId, StandardCharsets.UTF_8);
 
         FormDeploymentResponse response =
             CONNECTION_HELPER.post(environment, apiPath, headers, formJson);
 
         log.info("Das Deployment von Formular {} wurde erfolgreich abgeschlossen. " +
                 "ID des Deployments: {}",
-            formName, response.getDeploymentId());
+            formId, response.getDeploymentId());
       }
     }
   }
@@ -92,16 +107,16 @@ public class DeployFormsHandler extends DefaultHandler
   {
     ObjectMapper objectMapper = new ObjectMapper();
     ObjectNode formAndMapping = objectMapper.readValue(formJson, ObjectNode.class);
-    return formAndMapping.get("id").toString();
+    return formAndMapping.get("id").textValue();
   }
 
   private Path getCustomFormsDirOrDefault(String formsDir)
   {
     if (formsDir != null)
     {
-      return Paths.get(formsDir);
+      return new File(formsDir).toPath();
     }
-    return Paths.get(projectDir.getPath(), DEFAULT_FORMS_DIR_NAME);
+    return Paths.get(projectDir.getPath(), DEFAULT_FORMS_DIR);
   }
 
   private Map<String, String> getHeaderParameters()
