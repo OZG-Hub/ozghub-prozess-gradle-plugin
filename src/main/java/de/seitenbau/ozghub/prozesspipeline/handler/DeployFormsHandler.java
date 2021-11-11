@@ -20,45 +20,39 @@ import de.seitenbau.ozghub.prozesspipeline.common.Environment;
 import de.seitenbau.ozghub.prozesspipeline.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozesspipeline.helper.ServerConnectionHelper;
 import de.seitenbau.ozghub.prozesspipeline.model.response.FormDeploymentResponse;
-import de.seitenbau.ozghub.prozesspipeline.model.response.ProcessDeploymentResponse;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class DeployFormsHandler extends DefaultHandler
 {
-  public static final String API_PATH = "/formulare/ozghub/deploy/";
+  public static final String API_PATH = "/formulare/ozghub";
 
-  private static final String FORMS_DIR = "/forms";
+  private static final String DEFAULT_FORMS_DIR_NAME = "forms";
 
   private static final ServerConnectionHelper<FormDeploymentResponse> CONNECTION_HELPER =
       new ServerConnectionHelper<>(FormDeploymentResponse.class);
 
   private final File projectDir;
 
-  //TODO beliebigen Ordner ermöglichen
+  private final String formFilesDir;
 
   public DeployFormsHandler(Environment env,
-      File projectDir)
+      File projectDir, String formFilesDir)
   {
     super(env);
     this.projectDir = projectDir;
+    this.formFilesDir = formFilesDir;
   }
 
   public void deploy()
   {
     log.info("Start des Tasks: Deployment von Formularen");
 
-    Map<String, String> headers = getHeaderParameters();
-
-    Path formsDir = Paths.get(projectDir.getPath(), FORMS_DIR);
-
     try
     {
-      List<Path> files = Files.walk(formsDir).collect(Collectors.toList());
+      List<Path> files = Files.walk(getCustomFormsDirOrDefault(formFilesDir)).collect(Collectors.toList());
 
+      Map<String, String> headers = getHeaderParameters();
       deployFiles(headers, files);
     }
     catch (Exception e)
@@ -79,20 +73,35 @@ public class DeployFormsHandler extends DefaultHandler
       }
       else
       {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode formAndMapping = objectMapper.readValue(file, ObjectNode.class);
+        byte[] formJson = Files.readAllBytes(path);
+        String formName = readFormId(formJson);
 
+        String apiPath = API_PATH + "/" + URLEncoder.encode(formName, StandardCharsets.UTF_8);
 
-        String formName = formAndMapping.get("id").toString();
-        //TODO beliebige Version ermöglichen?
-        String apiPath = API_PATH + URLEncoder.encode(formName, StandardCharsets.UTF_8) + "/v1.0";
         FormDeploymentResponse response =
-            CONNECTION_HELPER.post(environment, apiPath, headers, Files.readAllBytes(path));
+            CONNECTION_HELPER.post(environment, apiPath, headers, formJson);
+
         log.info("Das Deployment von Formular {} wurde erfolgreich abgeschlossen. " +
                 "ID des Deployments: {}",
             formName, response.getDeploymentId());
       }
     }
+  }
+
+  private String readFormId(byte[] formJson) throws java.io.IOException
+  {
+    ObjectMapper objectMapper = new ObjectMapper();
+    ObjectNode formAndMapping = objectMapper.readValue(formJson, ObjectNode.class);
+    return formAndMapping.get("id").toString();
+  }
+
+  private Path getCustomFormsDirOrDefault(String formsDir)
+  {
+    if (formsDir != null)
+    {
+      return Paths.get(formsDir);
+    }
+    return Paths.get(projectDir.getPath(), DEFAULT_FORMS_DIR_NAME);
   }
 
   private Map<String, String> getHeaderParameters()
