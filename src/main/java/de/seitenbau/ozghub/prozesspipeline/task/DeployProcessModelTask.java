@@ -6,7 +6,11 @@ import org.gradle.api.tasks.TaskAction;
 
 import de.seitenbau.ozghub.prozesspipeline.handler.DeployProcessModelHandler;
 import de.seitenbau.ozghub.prozesspipeline.model.request.DuplicateProcessKeyAction;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class DeployProcessModelTask extends DefaultPluginTask
 {
   /**

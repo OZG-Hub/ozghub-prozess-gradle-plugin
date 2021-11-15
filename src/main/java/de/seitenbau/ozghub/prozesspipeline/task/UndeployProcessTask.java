@@ -5,7 +5,11 @@ import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
 
 import de.seitenbau.ozghub.prozesspipeline.handler.UndeployProcessHandler;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class UndeployProcessTask extends DefaultPluginTask
 {
   /** ID des Deployments. */
@@ -15,12 +19,14 @@ public class UndeployProcessTask extends DefaultPluginTask
   /** Ob aktive Prozessinstanzen des Deployments beendet werden sollen. */
   @Input
   @Optional
-  private boolean deleteProcessInstances;
+  private Boolean deleteProcessInstances;
 
   @TaskAction
   public void run()
   {
-    UndeployProcessHandler handler = new UndeployProcessHandler(getEnvironment(), id, deleteProcessInstances);
+    UndeployProcessHandler handler = new UndeployProcessHandler(getEnvironment(),
+        id,
+        Boolean.TRUE.equals(deleteProcessInstances));
     handler.undeploy();
   }
 }
