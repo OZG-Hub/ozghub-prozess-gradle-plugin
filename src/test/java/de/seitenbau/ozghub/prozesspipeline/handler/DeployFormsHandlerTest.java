@@ -4,11 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.gradle.api.GradleException;
 import org.junit.jupiter.api.AfterEach;
@@ -27,10 +30,6 @@ public class DeployFormsHandlerTest extends HandlerTestBase
 {
   private static final File TEST_FOLDER =
       new File("src/test/resources/handler/deployFormsHandler/");
-
-  public static final String FORM_1_FILE_NAME = "form1";
-
-  public static final String FORM_2_FILE_NAME = "form2";
 
   private HttpServer httpServer = null;
 
@@ -55,7 +54,7 @@ public class DeployFormsHandlerTest extends HandlerTestBase
   public void deploy()
   {
     // arrange
-    HttpHandler httpHandler = createAndStartHttpServer(FORM_1_FILE_NAME);
+    HttpHandler httpHandler = createAndStartHttpServer();
 
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
@@ -67,11 +66,11 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     sut.deploy();
 
     // assert
-    assertResponse(httpHandler, "form1");
+    assertResponse(httpHandler);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
 
-    assertRequest(actualRequest, "form1");
+    assertRequest(actualRequest);
     assertRequestBody(actualRequest.getRequestBody(), "/forms/form1.json");
     assertRequestHeaders(actualRequest, env);
   }
@@ -81,7 +80,7 @@ public class DeployFormsHandlerTest extends HandlerTestBase
   public void deploy_customPathToFolder()
   {
     // arrange
-    HttpHandler httpHandler = createAndStartHttpServer(FORM_1_FILE_NAME);
+    HttpHandler httpHandler = createAndStartHttpServer();
 
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
@@ -93,11 +92,11 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     sut.deploy();
 
     // assert
-    assertResponse(httpHandler, "form1");
+    assertResponse(httpHandler);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
 
-    assertRequest(actualRequest, "form1");
+    assertRequest(actualRequest);
     assertRequestBody(actualRequest.getRequestBody(), "/forms/form1.json");
     assertRequestHeaders(actualRequest, env);
   }
@@ -107,7 +106,7 @@ public class DeployFormsHandlerTest extends HandlerTestBase
   public void deploy_customPathToFile()
   {
     // arrange
-    HttpHandler httpHandler = createAndStartHttpServer(FORM_1_FILE_NAME);
+    HttpHandler httpHandler = createAndStartHttpServer();
 
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
@@ -120,22 +119,20 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     sut.deploy();
 
     // assert
-    assertResponse(httpHandler, "form1");
+    assertResponse(httpHandler);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
 
-    assertRequest(actualRequest, "form1");
+    assertRequest(actualRequest);
     assertRequestBody(actualRequest.getRequestBody(), "/forms/form1.json");
     assertRequestHeaders(actualRequest, env);
   }
 
-    @Test
-  public void deploy_multipleFilesInFolder()
+  @Test
+  public void deploy_multipleFilesInFolder() throws IOException
   {
     // arrange
-    HttpHandler form1Handler = createAndStartHttpServer(FORM_1_FILE_NAME);
-    HttpHandler form2Handler = createHttpHandler(FORM_2_FILE_NAME);
-    httpServer.createContext(DeployFormsHandler.API_PATH + "/" + "form2", form2Handler);
+    HttpHandler httpHandler = createAndStartHttpServer();
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo1", "bar1");
@@ -147,18 +144,26 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     sut.deploy();
 
     // assert
-    assertResponse(form1Handler, "form1");
-    assertResponse(form2Handler, "form2");
+    assertThat(httpHandler.countRequests()).isEqualTo(2);
 
-    HttpHandler.Request actualRequestForm1 = form1Handler.getRequest();
-    assertRequest(actualRequestForm1, "form1");
-    assertRequestBody(actualRequestForm1.getRequestBody(), "/multipleForms/form1.json");
-    assertRequestHeaders(actualRequestForm1, env);
+    List<HttpHandler.Request> actualRequests = httpHandler.getRequests();
+    actualRequests.forEach(r -> assertRequestHeaders(r, env));
+    actualRequests.forEach(this::assertRequest);
 
-    HttpHandler.Request actualRequestForm2 = form2Handler.getRequest();
-    assertRequest(actualRequestForm2, "form2");
-    assertRequestBody(actualRequestForm2.getRequestBody(), "/multipleForms/form2.json");
-    assertRequestHeaders(actualRequestForm2, env);
+    assertRequestBodies(actualRequests);
+  }
+
+  private void assertRequestBodies(List<HttpHandler.Request> actualRequests) throws IOException
+  {
+    List<String> actualRequestBodyContents =
+        actualRequests.stream().map(r -> new String(r.getRequestBody(), StandardCharsets.UTF_8)).collect(
+            Collectors.toList());
+
+    List<String> expectedRequestBodyContents = new ArrayList<>();
+    expectedRequestBodyContents.add(Files.readString(getFileInProjectDir("/multipleForms/form1.json").toPath()));
+    expectedRequestBodyContents.add(Files.readString(getFileInProjectDir("/multipleForms/form2.json").toPath()));
+
+    assertThat(actualRequestBodyContents).containsExactlyInAnyOrderElementsOf(expectedRequestBodyContents);
   }
 
   @Test
@@ -167,9 +172,8 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     // arrange
     byte[] response = "Etwas ist schiefgelaufen".getBytes(StandardCharsets.UTF_8);
     HttpHandler httpHandler = new HttpHandler(500, response);
-    String apiPath = DeployFormsHandler.API_PATH + "/" + "form1";
     httpServer =
-        HttpServerFactory.createAndStartHttpServer(apiPath, httpHandler);
+        HttpServerFactory.createAndStartHttpServer(DeployFormsHandler.API_PATH, httpHandler);
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo3", "bar3");
@@ -180,14 +184,15 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     assertThatThrownBy(() -> sut.deploy())
         .isExactlyInstanceOf(GradleException.class)
         .hasMessage("Fehler: HTTP-Response-Code: 500 Internal Server Error | Meldung des Servers: Etwas ist "
-            + "schiefgelaufen | URL: " + url + apiPath);
+            + "schiefgelaufen | URL: " + url + DeployFormsHandler.API_PATH);
 
     // assert
     assertThat(httpHandler.countRequests()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(500);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
-    assertRequest(actualRequest, "form1");
+
+    assertRequest(actualRequest);
     assertRequestBody(actualRequest.getRequestBody(), "/forms/form1.json");
     assertRequestHeaders(actualRequest, env);
   }
@@ -203,17 +208,17 @@ public class DeployFormsHandlerTest extends HandlerTestBase
 
   }
 
-  private void assertResponse(HttpHandler handler, String formId)
+  private void assertResponse(HttpHandler handler)
   {
     assertThat(handler.countRequests()).isEqualTo(1);
     assertThat(handler.getResponseCode()).isEqualTo(200);
-    assertThat(handler.getResponseBody()).isEqualTo(createDeploymentResponse(formId));
+    assertThat(handler.getResponseBody()).isEqualTo(createDeploymentResponse());
   }
 
-  private void assertRequest(HttpHandler.Request request, String formName)
+  private void assertRequest(HttpHandler.Request request)
   {
     assertThat(request.getRequestMethod()).isEqualTo("POST");
-    assertThat(request.getPath()).isEqualTo(DeployFormsHandler.API_PATH + "/" + formName);
+    assertThat(request.getPath()).isEqualTo(DeployFormsHandler.API_PATH);
     assertThat(request.getQuery()).isNull();
   }
 
@@ -227,27 +232,26 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     assertThat(headers).containsEntry(HTTPHeaderKeys.AUTHORIZATION, List.of(auth));
   }
 
-  private HttpHandler createAndStartHttpServer(String formId)
+  private HttpHandler createAndStartHttpServer()
   {
-    HttpHandler httpHandler = createHttpHandler(formId);
+    HttpHandler httpHandler = createHttpHandler();
     httpServer =
-        HttpServerFactory.createAndStartHttpServer(DeployFormsHandler.API_PATH + "/" + formId, httpHandler);
+        HttpServerFactory.createAndStartHttpServer(DeployFormsHandler.API_PATH, httpHandler);
 
     return httpHandler;
   }
 
-  private HttpHandler createHttpHandler(String formId)
+  private HttpHandler createHttpHandler()
   {
-    byte[] response = createDeploymentResponse(formId);
+    byte[] response = createDeploymentResponse();
     return new HttpHandler(200, response);
   }
 
   @SneakyThrows
-  private byte[] createDeploymentResponse(String formId)
+  private byte[] createDeploymentResponse()
   {
-    String deploymentId = formId.substring(formId.length() - 1);
     FormDeploymentResponse response =
-        FormDeploymentResponse.builder().deploymentId(deploymentId).build();
+        FormDeploymentResponse.builder().deploymentId("123").build();
 
     return OBJECT_MAPPER.writeValueAsBytes(response);
   }

@@ -63,11 +63,8 @@ ausgeführt werden.
 
 #### Pfad
 
-`{URL der Umgebung}/formulare/ozghub/{formId}`
+`{URL der Umgebung}/formulare/ozghub/`
 
-#### Pfadparameter
-
-_formId_ Die ID des Formulars, das deployed werden soll in der Form, in der sie auch im Prozessmodell verwendet wird, z.B 1:formularName:versionName. 
 
 #### Request-Body
  

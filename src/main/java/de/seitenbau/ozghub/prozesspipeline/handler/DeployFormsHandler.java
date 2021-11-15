@@ -2,8 +2,6 @@ package de.seitenbau.ozghub.prozesspipeline.handler;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -99,10 +97,8 @@ public class DeployFormsHandler extends DefaultHandler
     byte[] formJson = Files.readAllBytes(path);
     String formId = readFormId(formJson);
 
-    String apiPath = API_PATH + "/" + URLEncoder.encode(formId, StandardCharsets.UTF_8);
-
     FormDeploymentResponse response =
-        CONNECTION_HELPER.post(environment, apiPath, headers, formJson);
+        CONNECTION_HELPER.post(environment, API_PATH, headers, formJson);
 
     log.info("Das Deployment von Formular {} wurde erfolgreich abgeschlossen. " +
             "ID des Deployments: {}",
