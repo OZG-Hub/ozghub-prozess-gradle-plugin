@@ -36,8 +36,8 @@ ausgeführt werden.
 #### Rückgabewerte
 
 Ein Objekt mit den Informationen zu den Vorgängen (`application/json`).<br />
-Darunter die ID des erzeugten Deployments, die Prozess-Key der deployten Prozessdefinitionen und die
-Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
+Darunter die ID des erzeugten Deployments, die Prozess-Keys der deployten Prozessdefinitionen und
+die Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
 
 ```json
 {
@@ -48,6 +48,42 @@ Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
   ],
   "duplicateKeys": [
     "m1.testprocess-1"
+  ],
+  "removedDeploymentIds": [
+    "140"
+  ]
+}
+```
+
+---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum Löschen eines Prozess-Deployments
+
+#### Allgemein
+
+Die Schnittstelle ermöglicht das Löschen eines Prozess-Deployments.<br />
+
+#### Pfad
+
+`{URL der Umgebung}/prozess/ozghub/undeploy`
+
+#### Header-Parameter
+
+| **Name**                  | **Pflicht** | **Beschreibung**     |
+| ------------------------- | ----------- | -------------------- |
+| X-OZG-Deployment-ID       | Ja          | ID des Deployments |
+| X-OZG-Deployment-DeleteProcessInstance | Ja | Wenn `true` werden aktive Prozessinstanzen beendet
+
+#### Rückgabewerte
+
+Ein Objekt mit den Informationen zu den Vorgängen (`application/json`).<br />
+Darunter die Prozess-Keys der undeployten Prozessdefinitionen.
+
+```json
+{
+  "processKeys": [
+    "m1.testprocess-1",
+    "m1.testprocess-2"
   ]
 }
 ```

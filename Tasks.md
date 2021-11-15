@@ -5,7 +5,7 @@ Dieses Dokument beschreibt die verfügbaren Tasks dieses Gradle-Plugins.
 ## Allgemein
 
 Parameter der Tasks werden als Kommantozeilen-Parameter übergeben. So kann z.B.: der Parameter `url`
-an einem Task mittels `-Purl=http://mtest1.ozghub.imbw.dev.seitenbau.net:9081` übergeben. werden Die
+an einem Task mittels `-Purl=http://mtest1.ozghub.imbw.dev.seitenbau.net:9081` übergeben werden. Die
 Reihenfolge der Parameter spielt dabei keine Rolle.
 
 Die folgenden Parameter werden von allen Tasks verpflichted benötigt.
@@ -28,19 +28,41 @@ Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt.
 
 #### Parameter
 
-| **Name**           | **Default-Wert** | **Beschreibung**                   |
-| ------------------ | ---------------- | ---------------------------------- |
-| files              | /build/models | Ordner aus dem Prozessmodelle gelesen werden |
-| deploymentName     |               | Name des Deployments |
-| duplicateKeyAction | `ERROR`       | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll |
-| engine             | `null`        | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet |
+| **Name**                  | **Default-Wert** | **Beschreibung**                   |
+| ------------------------- | ---------------- | ---------------------------------- |
+| files                     | /build/models | Ordner aus dem Prozessmodelle gelesen werden |
+| deploymentName            |               | Name des Deployments |
+| duplicateProcesskeyAction | `ERROR`       | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll |
+| engine                    | `null`        | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet |
 
-Der Parameter `duplicateKeyAction` definiert, was geschehen soll, wenn vor dem Deployment der
+Der Parameter `duplicateProcesskeyAction` definiert, was geschehen soll, wenn vor dem Deployment der
 gegebenen Prozessmodell-Dateien festgestellt wird, dass mindestens ein Prozess-Key bereits Teil
 eines Deployments ist. Die folgenden Optionen sind möglich:
 
-- `IGNORE`: Ignorieren, das Deployment wird fortgesetzt
-- `UNDEPLOY`: Prozessdefinitionen mit doppelten Prozess-Keys werden zuvor undeployt
+- `IGNORE`: Ignorieren. Das Deployment wird fortgesetzt
+- `UNDEPLOY`: Deployments werden zuvor gelöscht (Undeployen der entsprechenden Prozessdefinitionen)
 - `ERROR`: Der Aufruf der Schnittstelle wird mit einer Fehlermeldung abgebrochen
+
+---------------------------------------------------------------------------------------------------
+
+### Task zum Löschen eines Prozess-Deployments
+
+#### Allgemein
+
+Der Task ermöglicht das Löschen eines Prozess-Dpeloyments.<br />
+
+#### Parameter
+
+| **Name**                  | **Default-Wert** | **Beschreibung**                   |
+| ------------------------- | ---------------- | ---------------------------------- |
+| id                        |                  | ID eines Prozess-Deployments |
+| deleteProcessInstances    | `false`          | Ob aktive Prozessinstanzen beendet werden sollen |
+
+Der Parameter `deleteProcessInstances` definiert, was geschehen soll, wenn vor dem Undeployment
+festgestellt wird, dass noch mindestens eine aktiv Prozessinstanz einer Prozessdefinition, die Teil
+des Deployments ist, existiert. Folgende Optionen sind möglich:
+
+- `true`: Alle aktiven Prozessinstanzen werden beendet und das Undeployment ausgeführt
+- `false`: Der Aufruf der Schnittstelle wird mit einer Fehlermeldung abgebrochen
 
 ---------------------------------------------------------------------------------------------------

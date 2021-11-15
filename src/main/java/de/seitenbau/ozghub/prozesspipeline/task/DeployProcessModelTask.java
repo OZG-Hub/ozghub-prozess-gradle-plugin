@@ -6,11 +6,7 @@ import org.gradle.api.tasks.TaskAction;
 
 import de.seitenbau.ozghub.prozesspipeline.handler.DeployProcessModelHandler;
 import de.seitenbau.ozghub.prozesspipeline.model.request.DuplicateProcessKeyAction;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class DeployProcessModelTask extends DefaultPluginTask
 {
   /**
@@ -28,7 +24,7 @@ public class DeployProcessModelTask extends DefaultPluginTask
   /** Aktion, wenn mindestens ein Prozess-Key bereits Teil eines Deployments ist. */
   @Input
   @Optional
-  private DuplicateProcessKeyAction duplicateKeyAction;
+  private DuplicateProcessKeyAction duplicateProcesskeyAction;
 
   /**
    * ID der Prozess-Engine, auf welche deployt werden soll. Ist keine Engine-ID gegeben wird die
@@ -46,7 +42,7 @@ public class DeployProcessModelTask extends DefaultPluginTask
         getProjectDir(),
         files,
         deploymentName,
-        duplicateKeyAction,
+        duplicateProcesskeyAction,
         engine);
 
     handler.deploy();

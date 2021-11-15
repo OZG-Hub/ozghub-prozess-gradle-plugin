@@ -21,4 +21,7 @@ public class ProcessDeploymentResponse
 
   /** Prozess-Keys von Prozessen, welche bereits deployt waren. */
   private Set<String> duplicateKeys;
+
+  /** IDs von Deplyments, welche gelöscht wurden, wenn DuplicateProcessKeyAction = UNDEPLOY gewählt wurde. */
+  private Set<String> removedDeploymentIds;
 }

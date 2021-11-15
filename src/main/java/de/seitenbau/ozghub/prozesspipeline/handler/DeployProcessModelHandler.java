@@ -32,7 +32,7 @@ public class DeployProcessModelHandler extends DefaultHandler
 
   private final String deploymentName;
 
-  private final DuplicateProcessKeyAction duplicateKeyAction;
+  private final DuplicateProcessKeyAction duplicateProcessKeyAction;
 
   private final String engineId;
 
@@ -47,7 +47,8 @@ public class DeployProcessModelHandler extends DefaultHandler
     this.projectDir = projectDir;
     this.filePath = filePath;
     this.deploymentName = deploymentName;
-    this.duplicateKeyAction = Objects.requireNonNullElse(duplicateKeyAction, DuplicateProcessKeyAction.ERROR);
+    this.duplicateProcessKeyAction =
+        Objects.requireNonNullElse(duplicateKeyAction, DuplicateProcessKeyAction.ERROR);
     this.engineId = engineId;
   }
 
@@ -55,11 +56,10 @@ public class DeployProcessModelHandler extends DefaultHandler
   {
     log.info("Start des Tasks: Deployment eines Prozessmodells");
 
-    Map<String, String> headers = getHeaderParameters();
-
     try
     {
       byte[] data = createDeploymentArchive();
+      Map<String, String> headers = getHeaderParameters();
       ProcessDeploymentResponse response = CONNECTION_HELPER.post(environment, API_PATH, headers, data);
       logEndOfTask(response);
     }
@@ -86,7 +86,7 @@ public class DeployProcessModelHandler extends DefaultHandler
   {
     Map<String, String> headers = new HashMap<>();
     headers.put(HTTPHeaderKeys.PROCESS_DEPLOYMENT_NAME, deploymentName);
-    headers.put(HTTPHeaderKeys.PROCESS_DUPLICATION, duplicateKeyAction.toString());
+    headers.put(HTTPHeaderKeys.PROCESS_DUPLICATION, duplicateProcessKeyAction.toString());
     headers.put(HTTPHeaderKeys.CONTENT_TYPE, "application/java-archive");
 
     if (engineId != null)
@@ -101,22 +101,23 @@ public class DeployProcessModelHandler extends DefaultHandler
   {
     log.info("Das Deployment wurde erfolgreich abgeschlossen:");
     log.info("- ID des Deployments: {}", response.getDeploymentId());
+    log.info("- Prozessdefinitionen mit folgenden Prozess-Keys wurden deployt:");
+    response.getProcessKeys().forEach(k -> log.info("  - {}", k));
 
-    if (response.getProcessKeys() != null)
-    {
-      log.info("- Prozessdefinitionen mit folgenden Prozess-Keys wurden deployt:");
-      response.getProcessKeys().forEach(k -> log.info("  - {}", k));
-    }
-
-    if (DuplicateProcessKeyAction.ERROR != duplicateKeyAction && response.getDuplicateKeys() != null)
+    if (DuplicateProcessKeyAction.ERROR != duplicateProcessKeyAction
+        && response.getDuplicateKeys() != null
+        && !response.getDuplicateKeys().isEmpty())
     {
       log.info("- Prozess-Keys, die bereits Teil eines Deployments waren:");
       response.getDuplicateKeys().forEach(k -> log.info("  - {}", k));
 
-      if (DuplicateProcessKeyAction.UNDEPLOY == duplicateKeyAction)
+      if (DuplicateProcessKeyAction.UNDEPLOY == duplicateProcessKeyAction)
       {
         log.info("  ---> Diese Prozessmodelle wurden undeployt");
       }
+
+      log.info("- Die folgenden Prozess-Deployments wurden gelöscht:");
+      response.getRemovedDeploymentIds().forEach(k -> log.info("  - {}", k));
     }
 
     log.info("Ende des Tasks: Deployment eines Prozessmodells");

@@ -234,6 +234,7 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
         .deploymentId("123")
         .processKeys(Set.of("key"))
         .duplicateKeys(Set.of("duplicateKey"))
+        .removedDeploymentIds(Set.of("deploymentId"))
         .build();
 
     return OBJECT_MAPPER.writeValueAsBytes(response);

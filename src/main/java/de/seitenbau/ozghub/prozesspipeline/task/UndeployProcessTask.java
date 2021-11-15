@@ -1,0 +1,26 @@
+package de.seitenbau.ozghub.prozesspipeline.task;
+
+import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.Optional;
+import org.gradle.api.tasks.TaskAction;
+
+import de.seitenbau.ozghub.prozesspipeline.handler.UndeployProcessHandler;
+
+public class UndeployProcessTask extends DefaultPluginTask
+{
+  /** ID des Deployments. */
+  @Input
+  private String id;
+
+  /** Ob aktive Prozessinstanzen des Deployments beendet werden sollen. */
+  @Input
+  @Optional
+  private boolean deleteProcessInstances;
+
+  @TaskAction
+  public void run()
+  {
+    UndeployProcessHandler handler = new UndeployProcessHandler(getEnvironment(), id, deleteProcessInstances);
+    handler.undeploy();
+  }
+}
