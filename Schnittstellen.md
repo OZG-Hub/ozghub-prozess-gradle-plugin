@@ -62,6 +62,7 @@ die Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
 #### Allgemein
 
 Die Schnittstelle ermöglicht das Löschen eines Prozess-Deployments.<br />
+Der Aufruf muss als DELETE ausgeführt werden.
 
 #### Pfad
 
@@ -69,9 +70,9 @@ Die Schnittstelle ermöglicht das Löschen eines Prozess-Deployments.<br />
 
 #### Header-Parameter
 
-| **Name**                  | **Pflicht** | **Beschreibung**     |
-| ------------------------- | ----------- | -------------------- |
-| X-OZG-Deployment-ID       | Ja          | ID des Deployments |
+| **Name**             | **Pflicht** | **Beschreibung**     |
+| -------------------- | ----------- | -------------------- |
+| X-OZG-Deployment-ID  | Ja          | ID des Deployments |
 | X-OZG-Deployment-DeleteProcessInstance | Ja | Wenn `true` werden aktive Prozessinstanzen beendet
 
 #### Rückgabewerte
