@@ -25,6 +25,8 @@ public final class FileHelper
 
   public static byte[] createArchiveForFilesInFolder(Path folder)
   {
+    log.info("Dateien im Pfad {} lesen", folder);
+
     List<Path> files = new ArrayList<>();
     try
     {
@@ -37,6 +39,7 @@ public final class FileHelper
       throw new RuntimeException("Fehler beim Lesen der Dateien in Ordner " + folder, e);
     }
 
+    log.info("{} Datei(en) eingelesen", files.size());
     return createArchive(files);
   }
 

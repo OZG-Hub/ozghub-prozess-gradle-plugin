@@ -24,9 +24,11 @@ public class UndeployProcessTask extends DefaultPluginTask
   @TaskAction
   public void run()
   {
-    UndeployProcessHandler handler = new UndeployProcessHandler(getEnvironment(),
+    UndeployProcessHandler handler = new UndeployProcessHandler(
+        getEnvironment(),
         id,
         Boolean.TRUE.equals(deleteProcessInstances));
+
     handler.undeploy();
   }
 }
