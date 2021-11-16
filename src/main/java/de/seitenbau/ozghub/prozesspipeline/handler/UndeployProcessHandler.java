@@ -49,7 +49,7 @@ public class UndeployProcessHandler extends DefaultHandler
   private Map<String, String> getHeaderParameters()
   {
     Map<String, String> headers = new HashMap<>();
-    headers.put(HTTPHeaderKeys.PROCESS_DEPLOYMENT_ID, deploymentId);
+    headers.put(HTTPHeaderKeys.DEPLOYMENT_ID, deploymentId);
     headers.put(HTTPHeaderKeys.DELETE_PROCESS_INSTANCES, Boolean.toString(deleteProcessInstances));
     return headers;
   }

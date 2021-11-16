@@ -50,7 +50,7 @@ public class ServerConnectionHelper<T>
   {
     try (InputStream stream = getInternal(env, path, headers))
     {
-      return MAPPER.readValue(stream, responseType);
+      return responseType == null ? null : MAPPER.readValue(stream, responseType);
     }
   }
 
@@ -70,7 +70,7 @@ public class ServerConnectionHelper<T>
   {
     try (InputStream stream = postInternal(env, path, headers, data))
     {
-      return MAPPER.readValue(stream, responseType);
+      return responseType == null ? null : MAPPER.readValue(stream, responseType);
     }
   }
 
@@ -90,7 +90,7 @@ public class ServerConnectionHelper<T>
   {
     try (InputStream stream = deleteInternal(env, path, headers))
     {
-      return MAPPER.readValue(stream, responseType);
+      return responseType == null ? null : MAPPER.readValue(stream, responseType);
     }
   }
 
@@ -309,6 +309,12 @@ public class ServerConnectionHelper<T>
     }
 
     String responseAsString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+
+    if (responseType == null)
+    {
+      return responseAsString;
+    }
+
     try
     {
       T value = MAPPER.readValue(responseAsString, responseType);

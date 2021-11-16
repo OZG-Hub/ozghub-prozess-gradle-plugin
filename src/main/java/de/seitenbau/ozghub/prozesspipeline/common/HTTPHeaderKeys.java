@@ -9,7 +9,7 @@ public final class HTTPHeaderKeys
   public static final String PROCESS_DEPLOYMENT_NAME = "X-OZG-Deployment-Name";
   public static final String PROCESS_DUPLICATION = "X-OZG-Process-Duplication";
   public static final String PROCESS_ENGINE = "X-OZG-Process-Engine";
-  public static final String PROCESS_DEPLOYMENT_ID = "X-OZG-Deployment-ID";
+  public static final String DEPLOYMENT_ID = "X-OZG-Deployment-ID";
   public static final String DELETE_PROCESS_INSTANCES = "X-OZG-Deployment-DeleteProcessInstances";
 
   public static final String CONTENT_TYPE = "Content-Type";

@@ -5,6 +5,7 @@ import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskContainer;
 
 import de.seitenbau.ozghub.prozesspipeline.task.DeployProcessModelTask;
+import de.seitenbau.ozghub.prozesspipeline.task.UndeployFormTask;
 import de.seitenbau.ozghub.prozesspipeline.task.UndeployProcessTask;
 
 public class ProzessPipelineGradlePlugin implements Plugin<Project>
@@ -18,5 +19,8 @@ public class ProzessPipelineGradlePlugin implements Plugin<Project>
 
     tasks.create("undeployProcess", UndeployProcessTask.class, (task) -> {
     }).setDescription("Löscht ein Prozess-Deployment von der konfigurierten Umgebung");
+
+    tasks.create("undeployForm", UndeployFormTask.class, (task) -> {
+    }).setDescription("Löscht ein Formular-Deployment von der konfigurierten Umgebung");
   }
 }

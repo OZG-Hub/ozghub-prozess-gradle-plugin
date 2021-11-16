@@ -70,10 +70,10 @@ Der Aufruf muss als DELETE ausgeführt werden.
 
 #### Header-Parameter
 
-| **Name**             | **Pflicht** | **Beschreibung**     |
-| -------------------- | ----------- | -------------------- |
+| **Name**             | **Pflicht** | **Beschreibung**   |
+| -------------------- | ----------- | ------------------ |
 | X-OZG-Deployment-ID  | Ja          | ID des Deployments |
-| X-OZG-Deployment-DeleteProcessInstance | Ja | Wenn `true` werden aktive Prozessinstanzen beendet
+| X-OZG-Deployment-DeleteProcessInstance | Ja | Wenn `true` werden aktive Prozessinstanzen beendet |
 
 #### Rückgabewerte
 
@@ -88,5 +88,24 @@ Darunter die Prozess-Keys der undeployten Prozessdefinitionen.
   ]
 }
 ```
+
+---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum Löschen eines Formular-Deployments
+
+#### Allgemein
+
+Die Schnittstelle ermöglicht das Löschen eines Formular-Deployments.<br />
+Der Aufruf muss als DELETE ausgeführt werden.
+
+#### Pfad
+
+`{URL der Umgebung}/formulare/ozghub/undeploy`
+
+#### Header-Parameter
+
+| **Name**             | **Pflicht** | **Beschreibung**   |
+| -------------------- | ----------- | ------------------ |
+| X-OZG-Deployment-ID  | Ja          | ID des Deployments |
 
 ---------------------------------------------------------------------------------------------------

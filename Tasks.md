@@ -22,7 +22,7 @@ Die folgenden Parameter werden von allen Tasks verpflichted benötigt.
 
 #### Allgemein
 
-Der Task ermöglicht das Deployen von Prozessmodell-Dateien auf eine spezifische
+Der Task `deployProcessModel` ermöglicht das Deployen von Prozessmodell-Dateien auf eine spezifische
 Prozess-Engine.<br />
 Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt.
 
@@ -49,7 +49,7 @@ eines Deployments ist. Die folgenden Optionen sind möglich:
 
 #### Allgemein
 
-Der Task ermöglicht das Löschen eines Prozess-Dpeloyments.<br />
+Der Task `undeployProcess` ermöglicht das Löschen eines Prozess-Deployments.
 
 #### Parameter
 
@@ -64,5 +64,19 @@ des Deployments ist, existiert. Folgende Optionen sind möglich:
 
 - `true`: Alle aktiven Prozessinstanzen werden beendet und das Undeployment ausgeführt
 - `false`: Der Aufruf der Schnittstelle wird mit einer Fehlermeldung abgebrochen
+
+---------------------------------------------------------------------------------------------------
+
+### Task zum Löschen eines Formular-Deployments
+
+#### Allgemein
+
+Der Task `undeployForm` ermöglicht das Löschen eines Formular-Deployments
+
+#### Parameter
+
+| **Name** | **Beschreibung**              |
+| -------- | ----------------------------- |
+| id       | ID eines Formular-Deployments |
 
 ---------------------------------------------------------------------------------------------------
