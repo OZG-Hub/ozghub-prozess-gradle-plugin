@@ -59,7 +59,7 @@ Der Task ermöglicht das Löschen eines Prozess-Dpeloyments.<br />
 | deleteProcessInstances    | `false`          | Ob aktive Prozessinstanzen beendet werden sollen |
 
 Der Parameter `deleteProcessInstances` definiert, was geschehen soll, wenn vor dem Undeployment
-festgestellt wird, dass noch mindestens eine aktiv Prozessinstanz einer Prozessdefinition, die Teil
+festgestellt wird, dass noch mindestens eine aktive Prozessinstanz einer Prozessdefinition, die Teil
 des Deployments ist, existiert. Folgende Optionen sind möglich:
 
 - `true`: Alle aktiven Prozessinstanzen werden beendet und das Undeployment ausgeführt
