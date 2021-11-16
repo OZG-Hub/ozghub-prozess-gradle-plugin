@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class DeployFormsTask extends DefaultPluginTask
 {
-    /**
+   /**
    * Pfad zum Ordner mit Formular-Dateien. Ist kein Pfad angegeben, werden die Dateien im Order
    * forms im aktuellen Projekt verwendet.
    */
