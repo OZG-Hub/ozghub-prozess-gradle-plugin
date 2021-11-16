@@ -63,7 +63,7 @@ ausgeführt werden.
 
 #### Pfad
 
-`{URL der Umgebung}/formulare/ozghub/`
+`{URL der Umgebung}/formulare/ozghub/deploy`
 
 
 #### Request-Body

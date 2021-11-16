@@ -26,7 +26,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class DeployFormsHandler extends DefaultHandler
 {
-  public static final String API_PATH = "/formulare/ozghub";
+  public static final String API_PATH = "/formulare/ozghub/deploy";
 
   private static final String DEFAULT_FORMS_DIR = "/forms";
 
