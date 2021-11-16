@@ -70,10 +70,10 @@ Der Aufruf muss als DELETE ausgeführt werden.
 
 #### Header-Parameter
 
-| **Name**             | **Pflicht** | **Beschreibung**     |
-| -------------------- | ----------- | -------------------- |
+| **Name**             | **Pflicht** | **Beschreibung**   |
+| -------------------- | ----------- | ------------------ |
 | X-OZG-Deployment-ID  | Ja          | ID des Deployments |
-| X-OZG-Deployment-DeleteProcessInstance | Ja | Wenn `true` werden aktive Prozessinstanzen beendet
+| X-OZG-Deployment-DeleteProcessInstances | Ja | Wenn `true` werden aktive Prozessinstanzen beendet|
 
 #### Rückgabewerte
 

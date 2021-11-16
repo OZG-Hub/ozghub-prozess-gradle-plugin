@@ -49,12 +49,12 @@ eines Deployments ist. Die folgenden Optionen sind möglich:
 
 #### Allgemein
 
-Der Task ermöglicht das Löschen eines Prozess-Dpeloyments.<br />
+Der Task ermöglicht das Löschen eines Prozess-Deployments.
 
 #### Parameter
 
-| **Name**                  | **Default-Wert** | **Beschreibung**                   |
-| ------------------------- | ---------------- | ---------------------------------- |
+| **Name**                  | **Default-Wert** | **Beschreibung**             |
+| ------------------------- | ---------------- | ---------------------------- |
 | id                        |                  | ID eines Prozess-Deployments |
 | deleteProcessInstances    | `false`          | Ob aktive Prozessinstanzen beendet werden sollen |
 
