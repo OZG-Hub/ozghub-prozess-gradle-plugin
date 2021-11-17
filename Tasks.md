@@ -47,7 +47,7 @@ eines Deployments ist. Die folgenden Optionen sind möglich:
 
 #### Allgemein
 
-Der Task `deployForms`ermöglicht das Deployen von Formularen.<br />
+Der Task `deployForms` ermöglicht das Deployen von Formularen.<br />
 Ist für ein Formular-JSON bereits eines mit der gleichen Id deployed, so wird das vorhandene
 ersetzt.
 
@@ -63,7 +63,7 @@ ersetzt.
 
 #### Allgemein
 
-Der Task `undeployForm` ermöglicht das Löschen eines Prozess-Deployments.
+Der Task `undeployProcess` ermöglicht das Löschen eines Prozess-Deployments.
 
 #### Parameter
 
