@@ -33,7 +33,7 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
-    implementation 'org.projectlombok:lombok:1.18.10'
+    implementation 'org.projectlombok:lombok:1.18.16'
 
     compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.1.4'
 
@@ -43,8 +43,8 @@ dependencies {
 
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.10'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
 java {

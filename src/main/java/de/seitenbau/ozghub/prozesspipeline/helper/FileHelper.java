@@ -2,10 +2,12 @@ package de.seitenbau.ozghub.prozesspipeline.helper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -25,22 +27,36 @@ public final class FileHelper
 
   public static byte[] createArchiveForFilesInFolder(Path folder)
   {
-    log.info("Dateien im Pfad {} lesen", folder);
+    List<Path> files = readFilesInFolder(folder);
 
+    return createArchive(files);
+  }
+
+  public static List<Path> readFilesInFolder(Path folder)
+  {
     List<Path> files = new ArrayList<>();
+
     try
     {
-      Files.walk(folder)
-          .filter(Files::isRegularFile)
+      Files.walk(folder).filter(Files::isRegularFile)
           .forEach(f -> files.add(f.toAbsolutePath()));
+      log.info("Im Ordner {} wurden {} Dateien gefunden.", folder, files.size());
     }
     catch (IOException e)
     {
       throw new RuntimeException("Fehler beim Lesen der Dateien in Ordner " + folder, e);
     }
 
-    log.info("{} Datei(en) eingelesen", files.size());
-    return createArchive(files);
+    return files;
+  }
+
+  public static Path getCustomFolderOrDefault(File projectDir, String customFolder, String defaultFolder)
+  {
+    if (customFolder != null)
+    {
+      return new File(customFolder).toPath();
+    }
+    return Paths.get(projectDir.getPath(), defaultFolder);
   }
 
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
