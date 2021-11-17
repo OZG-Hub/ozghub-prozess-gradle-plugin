@@ -32,10 +32,10 @@ Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt.
 | -------------------------- | ---------------- | ---------------------------------- |
 | files                      | /build/models    | Ordner aus dem Prozessmodelle gelesen werden |
 | deploymentName             |                  | Name des Deployments |
-| duplicateProcessKeyAction  | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll |
+| duplicateProcesskeyAction  | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll |
 | engine                     | `null`           | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet |
 
-Der Parameter `duplicateProcessKeyAction` definiert, was geschehen soll, wenn vor dem Deployment der
+Der Parameter `duplicateProcesskeyAction` definiert, was geschehen soll, wenn vor dem Deployment der
 gegebenen Prozessmodell-Dateien festgestellt wird, dass mindestens ein Prozess-Key bereits Teil
 eines Deployments ist. Die folgenden Optionen sind möglich:
 
