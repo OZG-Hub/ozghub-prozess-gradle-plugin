@@ -60,6 +60,8 @@ Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
 
 Die Schnittstelle ermöglicht das Deployen eines Formulars. Der Aufruf muss als POST
 ausgeführt werden.
+Ist für das im Body übergebene Formular-JSON bereits eines deployed, welches die gleiche Id hat, 
+so wird das vorhandene ersetzt.
 
 #### Pfad
 

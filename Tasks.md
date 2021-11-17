@@ -47,7 +47,8 @@ eines Deployments ist. Die folgenden Optionen sind möglich:
 
 #### Allgemein
 
-Der Task ermöglicht das Deployen von Formularen.
+Der Task ermöglicht das Deployen von Formularen.<br />
+Ist für ein Formular-JSON bereits eines mit der gleichen Id deployed, so wird das vorhandene ersetzt.
 
 #### Parameter
 | **Name**                   | **Default-Wert** | **Beschreibung**                   |
