@@ -28,19 +28,31 @@ Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt.
 
 #### Parameter
 
-| **Name**           | **Default-Wert** | **Beschreibung**                   |
-| ------------------ | ---------------- | ---------------------------------- |
-| files              | /build/models | Ordner aus dem Prozessmodelle gelesen werden |
-| deploymentName     |               | Name des Deployments |
-| duplicateKeyAction | `ERROR`       | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll |
-| engine             | `null`        | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet |
+| **Name**                   | **Default-Wert** | **Beschreibung**                   |
+| -------------------------- | ---------------- | ---------------------------------- |
+| files                      | /build/models    | Ordner aus dem Prozessmodelle gelesen werden |
+| deploymentName             |                  | Name des Deployments |
+| duplicateProcesskeyAction  | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll |
+| engine                     | `null`           | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet |
 
-Der Parameter `duplicateKeyAction` definiert, was geschehen soll, wenn vor dem Deployment der
+Der Parameter `duplicateProcesskeyAction` definiert, was geschehen soll, wenn vor dem Deployment der
 gegebenen Prozessmodell-Dateien festgestellt wird, dass mindestens ein Prozess-Key bereits Teil
 eines Deployments ist. Die folgenden Optionen sind möglich:
 
 - `IGNORE`: Ignorieren, das Deployment wird fortgesetzt
 - `UNDEPLOY`: Prozessdefinitionen mit doppelten Prozess-Keys werden zuvor undeployt
 - `ERROR`: Der Aufruf der Schnittstelle wird mit einer Fehlermeldung abgebrochen
+
+### Task zum Deployen von Formularen
+
+#### Allgemein
+
+Der Task ermöglicht das Deployen von Formularen.<br />
+Ist für ein Formular-JSON bereits eines mit der gleichen Id deployed, so wird das vorhandene ersetzt.
+
+#### Parameter
+| **Name**                   | **Default-Wert** | **Beschreibung**                   |
+| -------------------------- | ---------------- | ---------------------------------- |
+| files                      | /forms           | Ordner aus dem Formulare gelesen werden. Es werden auch Unterordner berücksichtigt |
 
 ---------------------------------------------------------------------------------------------------

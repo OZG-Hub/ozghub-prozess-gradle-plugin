@@ -1,7 +1,7 @@
 package de.seitenbau.ozghub.prozesspipeline.handler;
 
 import java.io.File;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -71,15 +71,9 @@ public class DeployProcessModelHandler extends DefaultHandler
 
   private byte[] createDeploymentArchive()
   {
-    // Default path
-    if (filePath == null)
-    {
-      return FileHelper.createArchiveForFilesInFolder(Paths.get(projectDir.getPath(), MODEL_DIR));
-    }
+    Path folder = FileHelper.getCustomFolderOrDefault(projectDir, filePath, MODEL_DIR);
 
-    // Custom path
-    File rootFile = new File(filePath);
-    return FileHelper.createArchiveForFilesInFolder(rootFile.toPath());
+    return FileHelper.createArchiveForFilesInFolder(folder);
   }
 
   private Map<String, String> getHeaderParameters()

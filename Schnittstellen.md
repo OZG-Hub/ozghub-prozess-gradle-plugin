@@ -53,3 +53,32 @@ Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
 ```
 
 ---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum Deployen eines Formulars
+
+#### Allgemein
+
+Die Schnittstelle ermöglicht das Deployen eines Formulars. Der Aufruf muss als POST
+ausgeführt werden.
+Ist für das im Body übergebene Formular-JSON bereits eines deployed, welches die gleiche Id hat, 
+so wird das vorhandene ersetzt.
+
+#### Pfad
+
+`{URL der Umgebung}/formulare/ozghub/deploy`
+
+
+#### Request-Body
+ 
+Die Schnittstelle erwartet als Body einen JSON-String.
+
+#### Rückgabewerte
+
+Ein Objekt mit den Informationen zu den Vorgängen (`application/json`).<br />
+Dieses enthält die ID des erzeugten Deployments.
+
+```json
+{
+  "deploymentId": "141"
+}
+```
