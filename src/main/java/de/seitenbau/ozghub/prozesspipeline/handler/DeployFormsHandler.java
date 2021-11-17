@@ -4,12 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.gradle.api.GradleException;
@@ -19,6 +16,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.seitenbau.ozghub.prozesspipeline.common.Environment;
 import de.seitenbau.ozghub.prozesspipeline.common.HTTPHeaderKeys;
+import de.seitenbau.ozghub.prozesspipeline.helper.FileHelper;
 import de.seitenbau.ozghub.prozesspipeline.helper.ServerConnectionHelper;
 import de.seitenbau.ozghub.prozesspipeline.model.response.FormDeploymentResponse;
 import lombok.extern.log4j.Log4j2;
@@ -53,43 +51,42 @@ public class DeployFormsHandler extends DefaultHandler
 
     try
     {
-      List<Path> files = new ArrayList<>();
-      Path folder = getCustomFormsDirOrDefault(formFiles);
 
-      Files.walk(folder).filter(Files::isRegularFile)
-          .forEach(f -> files.add(f.toAbsolutePath()));
+      Path path = FileHelper.getCustomFolderOrDefault(projectDir, formFiles, DEFAULT_FORMS_DIR);
+      List<Path> files = FileHelper.readFilesInFolder(path);
 
       Map<String, String> headers = getHeaderParameters();
-      deployFiles(headers, files);
+      int numberOfDeployedFiles = deployFiles(headers, files);
+
+      log.info("Es wurden {} Dateien erfolgreich deployed.", numberOfDeployedFiles);
     }
     catch (Exception e)
     {
       throw new GradleException("Fehler: " + e.getMessage(), e);
     }
+
+    log.info("Ende des Tasks: Deployment von Formularen");
   }
 
-  private void deployFiles(Map<String, String> headers, List<Path> filePaths) throws java.io.IOException
+  private int deployFiles(Map<String, String> headers, List<Path> filePaths) throws java.io.IOException
   {
+    int deployedFilesCounter = 0;
     for (Path path : filePaths)
     {
       File file = path.toFile();
 
-      if (file.isDirectory())
+      if (!FILE_EXTENSION_JSON.equals(FilenameUtils.getExtension(file.getName())))
       {
-        deployFiles(headers, Files.walk(path).collect(Collectors.toList()));
+        log.info("Datei {} scheint keine json-Datei zu sein und wird übersprungen.",
+            file.getName());
+        continue;
       }
-      else
-      {
-        if (!FILE_EXTENSION_JSON.equals(FilenameUtils.getExtension(file.getName())))
-        {
-          log.info("Datei {} scheint keine json-Datei zu sein und wird übersprungen.",
-              file.getName());
-          return;
-        }
 
-        deployFile(headers, path);
-      }
+      log.info("Deploye Datei {}.", file.getName());
+      deployFile(headers, path);
+      deployedFilesCounter++;
     }
+    return deployedFilesCounter;
   }
 
   private void deployFile(Map<String, String> headers, Path path) throws IOException
@@ -112,14 +109,6 @@ public class DeployFormsHandler extends DefaultHandler
     return formAndMapping.get("id").textValue();
   }
 
-  private Path getCustomFormsDirOrDefault(String formsDir)
-  {
-    if (formsDir != null)
-    {
-      return new File(formsDir).toPath();
-    }
-    return Paths.get(projectDir.getPath(), DEFAULT_FORMS_DIR);
-  }
 
   private Map<String, String> getHeaderParameters()
   {
