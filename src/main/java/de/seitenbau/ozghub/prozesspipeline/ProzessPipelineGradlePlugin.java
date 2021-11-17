@@ -17,7 +17,7 @@ public class ProzessPipelineGradlePlugin implements Plugin<Project>
     }).setDescription("Deployt die gegebenen Prozessdefinitionen auf der konfigurierten Umgebung");
 
     tasks.create("deployForms", DeployFormsTask.class, (task) -> {
-    }).setDescription("Deployt sämtliche Formulare aus dem Ordner forms sowie dessen Unterordnern " +
-        "auf der konfigurierten Umgebung");
+    }).setDescription("Deployt sämtliche Formulare aus dem Ordner forms sowie dessen Unterordnern "
+        + "auf der konfigurierten Umgebung");
   }
 }

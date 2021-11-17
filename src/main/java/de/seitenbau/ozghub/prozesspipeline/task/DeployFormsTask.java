@@ -18,7 +18,7 @@ public class DeployFormsTask extends DefaultPluginTask
    */
   @Input
   @Optional
-  String files;
+  private String files;
 
   @TaskAction
   public void run()

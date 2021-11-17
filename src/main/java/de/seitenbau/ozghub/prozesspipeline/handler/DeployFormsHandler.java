@@ -37,8 +37,7 @@ public class DeployFormsHandler extends DefaultHandler
 
   private final String formFiles;
 
-  public DeployFormsHandler(Environment env,
-      File projectDir, String formFiles)
+  public DeployFormsHandler(Environment env, File projectDir, String formFiles)
   {
     super(env);
     this.projectDir = projectDir;
@@ -97,8 +96,8 @@ public class DeployFormsHandler extends DefaultHandler
     FormDeploymentResponse response =
         CONNECTION_HELPER.post(environment, API_PATH, headers, formJson);
 
-    log.info("Das Deployment von Formular {} wurde erfolgreich abgeschlossen. " +
-            "ID des Deployments: {}",
+    log.info("Das Deployment von Formular {} wurde erfolgreich abgeschlossen. "
+            + "ID des Deployments: {}",
         formId, response.getDeploymentId());
   }
 
