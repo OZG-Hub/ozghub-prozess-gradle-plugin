@@ -36,8 +36,8 @@ ausgeführt werden.
 #### Rückgabewerte
 
 Ein Objekt mit den Informationen zu den Vorgängen (`application/json`).<br />
-Darunter die ID des erzeugten Deployments, die Prozess-Key der deployten Prozessdefinitionen und die
-Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
+Darunter die ID des erzeugten Deployments, die Prozess-Keys der deployten Prozessdefinitionen und
+die Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
 
 ```json
 {
@@ -48,6 +48,9 @@ Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
   ],
   "duplicateKeys": [
     "m1.testprocess-1"
+  ],
+  "removedDeploymentIds": [
+    "140"
   ]
 }
 ```
@@ -58,18 +61,16 @@ Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
 
 #### Allgemein
 
-Die Schnittstelle ermöglicht das Deployen eines Formulars. Der Aufruf muss als POST
-ausgeführt werden.
-Ist für das im Body übergebene Formular-JSON bereits eines deployed, welches die gleiche Id hat, 
-so wird das vorhandene ersetzt.
+Die Schnittstelle ermöglicht das Deployen eines Formulars. Der Aufruf muss als POST ausgeführt
+werden. Ist für das im Body übergebene Formular-JSON bereits eines deployed, welches die gleiche Id
+hat, so wird das vorhandene ersetzt.
 
 #### Pfad
 
 `{URL der Umgebung}/formulare/ozghub/deploy`
 
-
 #### Request-Body
- 
+
 Die Schnittstelle erwartet als Body einen JSON-String.
 
 #### Rückgabewerte
@@ -82,3 +83,39 @@ Dieses enthält die ID des erzeugten Deployments.
   "deploymentId": "141"
 }
 ```
+
+---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum Löschen eines Prozess-Deployments
+
+#### Allgemein
+
+Die Schnittstelle ermöglicht das Löschen eines Prozess-Deployments.<br />
+Der Aufruf muss als DELETE ausgeführt werden.
+
+#### Pfad
+
+`{URL der Umgebung}/prozess/ozghub/undeploy`
+
+#### Header-Parameter
+
+| **Name**                                | **Pflicht** | **Beschreibung**   |
+| --------------------------------------- | ----------- | ------------------ |
+| X-OZG-Deployment-ID                     | Ja          | ID des Deployments |
+| X-OZG-Deployment-DeleteProcessInstances | Ja          | Wenn `true` werden aktive Prozessinstanzen beendet, wenn `false` dürfen keine Prozessinstanzen existieren |
+
+#### Rückgabewerte
+
+Ein Objekt mit den Informationen zu den Vorgängen (`application/json`).<br />
+Darunter die Prozess-Keys der undeployten Prozessdefinitionen.
+
+```json
+{
+  "processKeys": [
+    "m1.testprocess-1",
+    "m1.testprocess-2"
+  ]
+}
+```
+
+---------------------------------------------------------------------------------------------------

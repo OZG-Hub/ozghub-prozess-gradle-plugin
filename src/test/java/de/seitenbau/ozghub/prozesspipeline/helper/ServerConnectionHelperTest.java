@@ -138,6 +138,55 @@ public class ServerConnectionHelperTest
     assertPostRequest(actualRequest, env, headers, data);
   }
 
+  @Test
+  @SneakyThrows
+  public void delete()
+  {
+    // arrange
+    HttpHandler handler = createAndStartHttpServer();
+
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo", "bar");
+    Map<String, String> headers = Map.of("header-key", "header-value");
+
+    TestResponse expected = createTestResponse();
+
+    // act
+    TestResponse actual = sut.delete(env, "/api/pfad", headers);
+
+    // assert
+    assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+
+    HttpHandler.Request actualRequest = handler.getRequest();
+    assertThat(handler.countRequests()).isEqualTo(1);
+    assertDeleteRequest(actualRequest, env, headers);
+  }
+
+  @Test
+  @SneakyThrows
+  public void delete_badRequest()
+  {
+    // arrange
+    byte[] response = "Es ist ein Fehler aufgetreten".getBytes(StandardCharsets.UTF_8);
+    HttpHandler httpHandler = new HttpHandler(400, response);
+    httpServer = HttpServerFactory.createAndStartHttpServer("/api/pfad", httpHandler);
+
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo", "bar");
+    Map<String, String> headers = Map.of("header-key", "header-value");
+
+    // act
+    assertThatThrownBy(() -> sut.delete(env, "/api/pfad", headers))
+        .isExactlyInstanceOf(RuntimeException.class)
+        .hasMessage("HTTP-Response-Code: 400 Bad Request | Meldung des Servers: Es ist ein Fehler aufgetreten"
+            + " | URL: " + url + "/api/pfad");
+
+    // assert
+    HttpHandler.Request actualRequest = httpHandler.getRequest();
+    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertDeleteRequest(actualRequest, env, headers);
+  }
+
   private void assertGetRequest(HttpHandler.Request request,
       Environment env,
       Map<String, String> headers)
@@ -154,6 +203,15 @@ public class ServerConnectionHelperTest
   {
     assertThat(request.getRequestMethod()).isEqualTo("POST");
     assertThat(request.getRequestBody()).isEqualTo(data);
+    assertRequest(request, env, headers);
+  }
+
+  private void assertDeleteRequest(HttpHandler.Request request,
+      Environment env,
+      Map<String, String> headers)
+  {
+    assertThat(request.getRequestMethod()).isEqualTo("DELETE");
+    assertThat(request.getRequestBody()).isEmpty();
     assertRequest(request, env, headers);
   }
 

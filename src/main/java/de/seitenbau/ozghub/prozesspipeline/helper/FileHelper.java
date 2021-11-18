@@ -50,7 +50,6 @@ public final class FileHelper
     return files;
   }
 
-
   public static Path getCustomFolderOrDefault(File projectDir, String customFolder, String defaultFolder)
   {
     if (customFolder != null)

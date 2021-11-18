@@ -4,14 +4,14 @@ import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
 
-import de.seitenbau.ozghub.prozesspipeline.handler.DeployProcessModelHandler;
+import de.seitenbau.ozghub.prozesspipeline.handler.DeployProcessHandler;
 import de.seitenbau.ozghub.prozesspipeline.model.request.DuplicateProcessKeyAction;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class DeployProcessModelTask extends DefaultPluginTask
+public class DeployProcessTask extends DefaultPluginTask
 {
   /**
    * Pfad zum Ordner mit Prozessmodell-Dateien. Ist kein Pfad angegeben, werden die Dateien im Order
@@ -41,7 +41,7 @@ public class DeployProcessModelTask extends DefaultPluginTask
   @TaskAction
   public void run()
   {
-    DeployProcessModelHandler handler = new DeployProcessModelHandler(
+    DeployProcessHandler handler = new DeployProcessHandler(
         getEnvironment(),
         getProjectDir(),
         files,

@@ -28,14 +28,14 @@ import de.seitenbau.ozghub.prozesspipeline.model.request.DuplicateProcessKeyActi
 import de.seitenbau.ozghub.prozesspipeline.model.response.ProcessDeploymentResponse;
 import lombok.SneakyThrows;
 
-public class DeployProcessModelHandlerTest extends HandlerTestBase
+public class DeployProcessHandlerTest extends HandlerTestBase
 {
   private static final File TEST_FOLDER =
-      new File("src/test/resources/handler/deployProcessModelHandler/");
+      new File("src/test/resources/handler/deployProcessHandler/");
 
   private HttpServer httpServer = null;
 
-  private DeployProcessModelHandler sut;
+  private DeployProcessHandler sut;
 
   @AfterEach
   private void after()
@@ -61,7 +61,7 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo1", "bar1");
 
-    sut = new DeployProcessModelHandler(env,
+    sut = new DeployProcessHandler(env,
         getProjectDir(),
         null,
         "deployment1",
@@ -89,9 +89,9 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo2", "bar2");
 
-    sut = new DeployProcessModelHandler(env,
+    sut = new DeployProcessHandler(env,
         getProjectDir(),
-        "src/test/resources/handler/deployProcessModelHandler/build",
+        "src/test/resources/handler/deployProcessHandler/build",
         "deployment1",
         DuplicateProcessKeyAction.IGNORE,
         null);
@@ -117,9 +117,9 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo3", "bar3");
 
-    sut = new DeployProcessModelHandler(env,
+    sut = new DeployProcessHandler(env,
         getProjectDir(),
-        "src/test/resources/handler/deployProcessModelHandler/build/models/example.bpmn",
+        "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn",
         "deployment1",
         DuplicateProcessKeyAction.UNDEPLOY,
         null);
@@ -142,12 +142,12 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     // arrange
     byte[] response = "Etwas ist schiefgelaufen".getBytes(StandardCharsets.UTF_8);
     HttpHandler httpHandler = new HttpHandler(500, response);
-    httpServer = HttpServerFactory.createAndStartHttpServer(DeployProcessModelHandler.API_PATH, httpHandler);
+    httpServer = HttpServerFactory.createAndStartHttpServer(DeployProcessHandler.API_PATH, httpHandler);
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo3", "bar3");
 
-    sut = new DeployProcessModelHandler(env,
+    sut = new DeployProcessHandler(env,
         getProjectDir(),
         null,
         "deployment1",
@@ -158,7 +158,7 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     assertThatThrownBy(() -> sut.deploy())
         .isExactlyInstanceOf(GradleException.class)
         .hasMessage("Fehler: HTTP-Response-Code: 500 Internal Server Error | Meldung des Servers: Etwas ist "
-            + "schiefgelaufen | URL: " + url + DeployProcessModelHandler.API_PATH);
+            + "schiefgelaufen | URL: " + url + DeployProcessHandler.API_PATH);
 
     // assert
     assertThat(httpHandler.countRequests()).isEqualTo(1);
@@ -195,7 +195,7 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
   private void assertRequest(HttpHandler.Request request)
   {
     assertThat(request.getRequestMethod()).isEqualTo("POST");
-    assertThat(request.getPath()).isEqualTo(DeployProcessModelHandler.API_PATH);
+    assertThat(request.getPath()).isEqualTo(DeployProcessHandler.API_PATH);
     assertThat(request.getQuery()).isNull();
   }
 
@@ -223,7 +223,7 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
   {
     byte[] response = createDeploymentResponse();
     HttpHandler httpHandler = new HttpHandler(200, response);
-    httpServer = HttpServerFactory.createAndStartHttpServer(DeployProcessModelHandler.API_PATH, httpHandler);
+    httpServer = HttpServerFactory.createAndStartHttpServer(DeployProcessHandler.API_PATH, httpHandler);
     return httpHandler;
   }
 
@@ -234,6 +234,7 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
         .deploymentId("123")
         .processKeys(Set.of("key"))
         .duplicateKeys(Set.of("duplicateKey"))
+        .removedDeploymentIds(Set.of("deploymentId"))
         .build();
 
     return OBJECT_MAPPER.writeValueAsBytes(response);
