@@ -4,7 +4,7 @@ Dieses Dokument beschreibt die verfügbaren Tasks dieses Gradle-Plugins.
 
 ## Allgemein
 
-Parameter der Tasks werden als Kommantozeilen-Parameter übergeben.<br />
+Parameter der Tasks werden als Kommandozeilen-Parameter übergeben.<br />
 Die Reihenfolge der Parameter spielt dabei keine Rolle.
 
 Die folgenden Parameter werden von allen Tasks verpflichted benötigt.
