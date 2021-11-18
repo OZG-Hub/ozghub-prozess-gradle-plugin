@@ -101,7 +101,7 @@ public class ServerConnectionHelper<T>
     {
       HttpURLConnection http = createHttpURLConnectionForGetRequest(env, path, headers);
 
-      if (http.getResponseCode() != 200)
+      if (hasInvalidResponseCode(http))
       {
         try (InputStream inputStream = http.getErrorStream())
         {
@@ -130,7 +130,7 @@ public class ServerConnectionHelper<T>
       HttpURLConnection http = createHttpURLConnectionForPostRequest(env, path, headers, data);
       sendData(data, http);
 
-      if (http.getResponseCode() != 200)
+      if (hasInvalidResponseCode(http))
       {
         try (InputStream inputStream = http.getErrorStream())
         {
@@ -158,7 +158,7 @@ public class ServerConnectionHelper<T>
     {
       HttpURLConnection http = createHttpURLConnectionForDeleteRequest(env, path, headers);
 
-      if (http.getResponseCode() != 200)
+      if (hasInvalidResponseCode(http))
       {
         try (InputStream inputStream = http.getErrorStream())
         {
@@ -177,6 +177,12 @@ public class ServerConnectionHelper<T>
     {
       throw new RuntimeException("Protokoll-Fehler", e);
     }
+  }
+
+  private boolean hasInvalidResponseCode(HttpURLConnection http) throws IOException
+  {
+    return (responseType == null && http.getResponseCode() != 204)
+        || (responseType != null && http.getResponseCode() != 200);
   }
 
   @SuppressFBWarnings("URLCONNECTION_SSRF_FD")

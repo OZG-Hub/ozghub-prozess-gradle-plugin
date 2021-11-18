@@ -94,7 +94,7 @@ public class UndeployFormHandlerTest extends HandlerTestBase
   private void assertResponse(HttpHandler handler)
   {
     assertThat(handler.countRequests()).isEqualTo(1);
-    assertThat(handler.getResponseCode()).isEqualTo(200);
+    assertThat(handler.getResponseCode()).isEqualTo(204);
   }
 
   private void assertRequest(HttpHandler.Request request)
@@ -116,7 +116,7 @@ public class UndeployFormHandlerTest extends HandlerTestBase
 
   private HttpHandler createAndStartHttpServer()
   {
-    HttpHandler httpHandler = new HttpHandler(200, new byte[0]);
+    HttpHandler httpHandler = new HttpHandler(204, null);
     httpServer = HttpServerFactory.createAndStartHttpServer(UndeployFormHandler.API_PATH, httpHandler);
     return httpHandler;
   }
