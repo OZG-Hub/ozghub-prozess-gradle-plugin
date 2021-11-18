@@ -13,12 +13,12 @@ public class UndeployFormTask extends DefaultPluginTask
 {
   /** ID des Deployments. */
   @Input
-  private String id;
+  private String deploymentId;
 
   @TaskAction
   public void run()
   {
-    UndeployFormHandler handler = new UndeployFormHandler(getEnvironment(), id);
+    UndeployFormHandler handler = new UndeployFormHandler(getEnvironment(), deploymentId);
     handler.undeploy();
   }
 }

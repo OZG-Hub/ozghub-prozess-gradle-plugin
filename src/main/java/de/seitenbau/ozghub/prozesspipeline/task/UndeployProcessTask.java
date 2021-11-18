@@ -14,7 +14,7 @@ public class UndeployProcessTask extends DefaultPluginTask
 {
   /** ID des Deployments. */
   @Input
-  private String id;
+  private String deploymentId;
 
   /** Ob aktive Prozessinstanzen des Deployments beendet werden sollen. */
   @Input
@@ -26,7 +26,7 @@ public class UndeployProcessTask extends DefaultPluginTask
   {
     UndeployProcessHandler handler = new UndeployProcessHandler(
         getEnvironment(),
-        id,
+        deploymentId,
         Boolean.TRUE.equals(deleteProcessInstances));
 
     handler.undeploy();
