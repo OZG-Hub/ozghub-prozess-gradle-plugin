@@ -3,17 +3,16 @@ package de.seitenbau.ozghub.prozesspipeline.handler;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.zip.ZipInputStream;
+import java.util.stream.Collectors;
 
-import org.apache.commons.io.IOUtils;
 import org.gradle.api.GradleException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -24,18 +23,17 @@ import de.seitenbau.ozghub.prozesspipeline.common.Environment;
 import de.seitenbau.ozghub.prozesspipeline.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozesspipeline.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozesspipeline.integrationtest.HttpServerFactory;
-import de.seitenbau.ozghub.prozesspipeline.model.request.DuplicateProcessKeyAction;
-import de.seitenbau.ozghub.prozesspipeline.model.response.ProcessDeploymentResponse;
+import de.seitenbau.ozghub.prozesspipeline.model.response.FormDeploymentResponse;
 import lombok.SneakyThrows;
 
-public class DeployProcessModelHandlerTest extends HandlerTestBase
+public class DeployFormsHandlerTest extends HandlerTestBase
 {
   private static final File TEST_FOLDER =
-      new File("src/test/resources/handler/deployProcessModelHandler/");
+      new File("src/test/resources/handler/deployFormsHandler/");
 
   private HttpServer httpServer = null;
 
-  private DeployProcessModelHandler sut;
+  private DeployFormsHandler sut;
 
   @AfterEach
   private void after()
@@ -58,15 +56,11 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
+
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo1", "bar1");
 
-    sut = new DeployProcessModelHandler(env,
-        getProjectDir(),
-        null,
-        "deployment1",
-        DuplicateProcessKeyAction.ERROR,
-        "engine1");
+    sut = new DeployFormsHandler(env, getProjectDir(), null);
 
     // act
     sut.deploy();
@@ -75,10 +69,12 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     assertResponse(httpHandler);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
+
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
-    assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.ERROR, "engine1");
+    assertRequestBody(actualRequest.getRequestBody(), "/forms/form1.json");
+    assertRequestHeaders(actualRequest, env);
   }
+
 
   @Test
   public void deploy_customPathToFolder()
@@ -86,15 +82,11 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
-    String url = "http://localhost:" + httpServer.getAddress().getPort();
-    Environment env = new Environment(url, "foo2", "bar2");
 
-    sut = new DeployProcessModelHandler(env,
-        getProjectDir(),
-        "src/test/resources/handler/deployProcessModelHandler/build",
-        "deployment1",
-        DuplicateProcessKeyAction.IGNORE,
-        null);
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo1", "bar1");
+
+    sut = new DeployFormsHandler(env, getProjectDir(), "src/test/resources/handler/deployFormsHandler/forms");
 
     // act
     sut.deploy();
@@ -103,10 +95,12 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     assertResponse(httpHandler);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
+
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
-    assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.IGNORE, null);
+    assertRequestBody(actualRequest.getRequestBody(), "/forms/form1.json");
+    assertRequestHeaders(actualRequest, env);
   }
+
 
   @Test
   public void deploy_customPathToFile()
@@ -114,15 +108,12 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
-    String url = "http://localhost:" + httpServer.getAddress().getPort();
-    Environment env = new Environment(url, "foo3", "bar3");
 
-    sut = new DeployProcessModelHandler(env,
-        getProjectDir(),
-        "src/test/resources/handler/deployProcessModelHandler/build/models/example.bpmn",
-        "deployment1",
-        DuplicateProcessKeyAction.UNDEPLOY,
-        null);
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo1", "bar1");
+
+    sut = new DeployFormsHandler(env, getProjectDir(),
+        "src/test/resources/handler/deployFormsHandler/forms/form1.json");
 
     // act
     sut.deploy();
@@ -131,9 +122,48 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     assertResponse(httpHandler);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
+
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
-    assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
+    assertRequestBody(actualRequest.getRequestBody(), "/forms/form1.json");
+    assertRequestHeaders(actualRequest, env);
+  }
+
+  @Test
+  public void deploy_multipleFilesInFolder() throws IOException
+  {
+    // arrange
+    HttpHandler httpHandler = createAndStartHttpServer();
+
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo1", "bar1");
+
+    sut = new DeployFormsHandler(env, getProjectDir(),
+        "src/test/resources/handler/deployFormsHandler/multipleForms");
+
+    // act
+    sut.deploy();
+
+    // assert
+    assertThat(httpHandler.countRequests()).isEqualTo(2);
+
+    List<HttpHandler.Request> actualRequests = httpHandler.getRequests();
+    actualRequests.forEach(r -> assertRequestHeaders(r, env));
+    actualRequests.forEach(this::assertRequest);
+
+    assertRequestBodies(actualRequests);
+  }
+
+  private void assertRequestBodies(List<HttpHandler.Request> actualRequests) throws IOException
+  {
+    List<String> actualRequestBodyContents =
+        actualRequests.stream().map(r -> new String(r.getRequestBody(), StandardCharsets.UTF_8)).collect(
+            Collectors.toList());
+
+    List<String> expectedRequestBodyContents = new ArrayList<>();
+    expectedRequestBodyContents.add(Files.readString(getFileInProjectDir("/multipleForms/form1.json").toPath()));
+    expectedRequestBodyContents.add(Files.readString(getFileInProjectDir("/multipleForms/form2.json").toPath()));
+
+    assertThat(actualRequestBodyContents).containsExactlyInAnyOrderElementsOf(expectedRequestBodyContents);
   }
 
   @Test
@@ -142,47 +172,40 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
     // arrange
     byte[] response = "Etwas ist schiefgelaufen".getBytes(StandardCharsets.UTF_8);
     HttpHandler httpHandler = new HttpHandler(500, response);
-    httpServer = HttpServerFactory.createAndStartHttpServer(DeployProcessModelHandler.API_PATH, httpHandler);
+    httpServer =
+        HttpServerFactory.createAndStartHttpServer(DeployFormsHandler.API_PATH, httpHandler);
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo3", "bar3");
 
-    sut = new DeployProcessModelHandler(env,
-        getProjectDir(),
-        null,
-        "deployment1",
-        DuplicateProcessKeyAction.UNDEPLOY,
-        null);
+    sut = new DeployFormsHandler(env, getProjectDir(), null);
 
     // act
     assertThatThrownBy(() -> sut.deploy())
         .isExactlyInstanceOf(GradleException.class)
         .hasMessage("Fehler: HTTP-Response-Code: 500 Internal Server Error | Meldung des Servers: Etwas ist "
-            + "schiefgelaufen | URL: " + url + DeployProcessModelHandler.API_PATH);
+            + "schiefgelaufen | URL: " + url + DeployFormsHandler.API_PATH);
 
     // assert
     assertThat(httpHandler.countRequests()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(500);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
+
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
-    assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
+    assertRequestBody(actualRequest.getRequestBody(), "/forms/form1.json");
+    assertRequestHeaders(actualRequest, env);
   }
 
-  @SneakyThrows
-  private void assertRequestBody(byte[] data)
-  {
-    try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(data)))
-    {
-      zis.getNextEntry();
-      byte[] actualContentBytes = IOUtils.toByteArray(zis);
-      String actualContent = new String(actualContentBytes);
-      String expectedContent = Files.readString(getFileInProjectDir("/build/models/example.bpmn").toPath());
 
-      assertThat(actualContent).isEqualTo(expectedContent);
-      assertThat(zis.getNextEntry()).isNull();
-    }
+  @SneakyThrows
+  private void assertRequestBody(byte[] data, String filePathInProjectDir)
+  {
+    String expectedContent = Files.readString(getFileInProjectDir(filePathInProjectDir).toPath());
+    String actualContent = new String(data, StandardCharsets.UTF_8);
+
+    assertThat(actualContent).isEqualTo(expectedContent);
+
   }
 
   private void assertResponse(HttpHandler handler)
@@ -195,24 +218,14 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
   private void assertRequest(HttpHandler.Request request)
   {
     assertThat(request.getRequestMethod()).isEqualTo("POST");
-    assertThat(request.getPath()).isEqualTo(DeployProcessModelHandler.API_PATH);
+    assertThat(request.getPath()).isEqualTo(DeployFormsHandler.API_PATH);
     assertThat(request.getQuery()).isNull();
   }
 
-  private void assertRequestHeaders(HttpHandler.Request request,
-      Environment env,
-      DuplicateProcessKeyAction action,
-      String engineId)
+  private void assertRequestHeaders(HttpHandler.Request request, Environment env)
   {
     Map<String, List<String>> headers = request.getHeaders();
-    assertThat(headers).containsEntry(HTTPHeaderKeys.CONTENT_TYPE, List.of("application/java-archive"));
-    assertThat(headers).containsEntry(HTTPHeaderKeys.PROCESS_DEPLOYMENT_NAME, List.of("deployment1"));
-    assertThat(headers).containsEntry(HTTPHeaderKeys.PROCESS_DUPLICATION, List.of(action.toString()));
-
-    if (engineId != null)
-    {
-      assertThat(headers).containsEntry(HTTPHeaderKeys.PROCESS_ENGINE, List.of(engineId));
-    }
+    assertThat(headers).containsEntry(HTTPHeaderKeys.CONTENT_TYPE, List.of("application/json"));
 
     String tmp = env.getUser() + ':' + env.getPassword();
     String auth = "Basic " + Base64.getEncoder().encodeToString(tmp.getBytes(StandardCharsets.UTF_8));
@@ -221,21 +234,24 @@ public class DeployProcessModelHandlerTest extends HandlerTestBase
 
   private HttpHandler createAndStartHttpServer()
   {
-    byte[] response = createDeploymentResponse();
-    HttpHandler httpHandler = new HttpHandler(200, response);
-    httpServer = HttpServerFactory.createAndStartHttpServer(DeployProcessModelHandler.API_PATH, httpHandler);
+    HttpHandler httpHandler = createHttpHandler();
+    httpServer =
+        HttpServerFactory.createAndStartHttpServer(DeployFormsHandler.API_PATH, httpHandler);
+
     return httpHandler;
+  }
+
+  private HttpHandler createHttpHandler()
+  {
+    byte[] response = createDeploymentResponse();
+    return new HttpHandler(200, response);
   }
 
   @SneakyThrows
   private byte[] createDeploymentResponse()
   {
-    ProcessDeploymentResponse response = ProcessDeploymentResponse.builder()
-        .deploymentId("123")
-        .processKeys(Set.of("key"))
-        .duplicateKeys(Set.of("duplicateKey"))
-        .removedDeploymentIds(Set.of("deploymentId"))
-        .build();
+    FormDeploymentResponse response =
+        FormDeploymentResponse.builder().deploymentId("123").build();
 
     return OBJECT_MAPPER.writeValueAsBytes(response);
   }

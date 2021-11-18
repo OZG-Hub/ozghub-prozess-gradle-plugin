@@ -16,10 +16,13 @@ public class UndeployProcessTask extends DefaultPluginTask
   @Input
   private String deploymentId;
 
-  /** Ob aktive Prozessinstanzen des Deployments beendet werden sollen. */
+  /**
+   * Ob aktive Prozessinstanzen des Deployments beendet werden sollen. Wird in zu boolean geparst.
+   * Wenn <code>false</code> dürfen für das Undeployment keine Prozessinstanzen mehr existieren.
+   */
   @Input
   @Optional
-  private Boolean deleteProcessInstances;
+  private String deleteProcessInstances;
 
   @TaskAction
   public void run()
@@ -27,7 +30,7 @@ public class UndeployProcessTask extends DefaultPluginTask
     UndeployProcessHandler handler = new UndeployProcessHandler(
         getEnvironment(),
         deploymentId,
-        Boolean.TRUE.equals(deleteProcessInstances));
+        Boolean.parseBoolean(deleteProcessInstances));
 
     handler.undeploy();
   }
