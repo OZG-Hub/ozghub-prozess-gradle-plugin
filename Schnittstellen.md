@@ -108,4 +108,17 @@ Der Aufruf muss als DELETE ausgeführt werden.
 | -------------------- | ----------- | ------------------ |
 | X-OZG-Deployment-ID  | Ja          | ID des Deployments |
 
+#### Rückgabewerte
+
+Ein Objekt mit den Informationen zu den Vorgängen (`application/json`).<br />
+Darunter die IDs der undeployten Formulare.
+
+```json
+{
+  "ids": [
+    "1:test-formular:v1.0"
+  ]
+}
+```
+
 ---------------------------------------------------------------------------------------------------

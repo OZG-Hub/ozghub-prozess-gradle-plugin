@@ -50,7 +50,7 @@ public class ServerConnectionHelper<T>
   {
     try (InputStream stream = getInternal(env, path, headers))
     {
-      return responseType == null ? null : MAPPER.readValue(stream, responseType);
+      return MAPPER.readValue(stream, responseType);
     }
   }
 
@@ -70,7 +70,7 @@ public class ServerConnectionHelper<T>
   {
     try (InputStream stream = postInternal(env, path, headers, data))
     {
-      return responseType == null ? null : MAPPER.readValue(stream, responseType);
+      return MAPPER.readValue(stream, responseType);
     }
   }
 
@@ -90,7 +90,7 @@ public class ServerConnectionHelper<T>
   {
     try (InputStream stream = deleteInternal(env, path, headers))
     {
-      return responseType == null ? null : MAPPER.readValue(stream, responseType);
+      return MAPPER.readValue(stream, responseType);
     }
   }
 
@@ -101,7 +101,7 @@ public class ServerConnectionHelper<T>
     {
       HttpURLConnection http = createHttpURLConnectionForGetRequest(env, path, headers);
 
-      if (hasInvalidResponseCode(http))
+      if (http.getResponseCode() != 200)
       {
         try (InputStream inputStream = http.getErrorStream())
         {
@@ -130,7 +130,7 @@ public class ServerConnectionHelper<T>
       HttpURLConnection http = createHttpURLConnectionForPostRequest(env, path, headers, data);
       sendData(data, http);
 
-      if (hasInvalidResponseCode(http))
+      if (http.getResponseCode() != 200)
       {
         try (InputStream inputStream = http.getErrorStream())
         {
@@ -158,7 +158,7 @@ public class ServerConnectionHelper<T>
     {
       HttpURLConnection http = createHttpURLConnectionForDeleteRequest(env, path, headers);
 
-      if (hasInvalidResponseCode(http))
+      if (http.getResponseCode() != 200)
       {
         try (InputStream inputStream = http.getErrorStream())
         {
@@ -177,12 +177,6 @@ public class ServerConnectionHelper<T>
     {
       throw new RuntimeException("Protokoll-Fehler", e);
     }
-  }
-
-  private boolean hasInvalidResponseCode(HttpURLConnection http) throws IOException
-  {
-    return (responseType == null && http.getResponseCode() != 204)
-        || (responseType != null && http.getResponseCode() != 200);
   }
 
   @SuppressFBWarnings("URLCONNECTION_SSRF_FD")
@@ -315,12 +309,6 @@ public class ServerConnectionHelper<T>
     }
 
     String responseAsString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-
-    if (responseType == null)
-    {
-      return responseAsString;
-    }
-
     try
     {
       T value = MAPPER.readValue(responseAsString, responseType);

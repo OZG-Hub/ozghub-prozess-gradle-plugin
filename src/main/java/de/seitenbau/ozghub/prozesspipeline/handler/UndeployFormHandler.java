@@ -8,6 +8,7 @@ import org.gradle.api.GradleException;
 import de.seitenbau.ozghub.prozesspipeline.common.Environment;
 import de.seitenbau.ozghub.prozesspipeline.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozesspipeline.helper.ServerConnectionHelper;
+import de.seitenbau.ozghub.prozesspipeline.model.response.FormUndeploymentResponse;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -15,7 +16,8 @@ public class UndeployFormHandler extends DefaultHandler
 {
   public static final String API_PATH = "/formulare/ozghub/undeploy";
 
-  private static final ServerConnectionHelper<?> CONNECTION_HELPER = new ServerConnectionHelper<>(null);
+  private static final ServerConnectionHelper<FormUndeploymentResponse> CONNECTION_HELPER =
+      new ServerConnectionHelper<>(FormUndeploymentResponse.class);
 
   private final String deploymentId;
 

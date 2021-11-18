@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.gradle.api.GradleException;
 import org.junit.jupiter.api.AfterEach;
@@ -19,6 +20,8 @@ import de.seitenbau.ozghub.prozesspipeline.common.Environment;
 import de.seitenbau.ozghub.prozesspipeline.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozesspipeline.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozesspipeline.integrationtest.HttpServerFactory;
+import de.seitenbau.ozghub.prozesspipeline.model.response.FormUndeploymentResponse;
+import lombok.SneakyThrows;
 
 public class UndeployFormHandlerTest extends HandlerTestBase
 {
@@ -94,7 +97,8 @@ public class UndeployFormHandlerTest extends HandlerTestBase
   private void assertResponse(HttpHandler handler)
   {
     assertThat(handler.countRequests()).isEqualTo(1);
-    assertThat(handler.getResponseCode()).isEqualTo(204);
+    assertThat(handler.getResponseCode()).isEqualTo(200);
+    assertThat(handler.getResponseBody()).isEqualTo(createUndeploymentResponse());
   }
 
   private void assertRequest(HttpHandler.Request request)
@@ -116,8 +120,19 @@ public class UndeployFormHandlerTest extends HandlerTestBase
 
   private HttpHandler createAndStartHttpServer()
   {
-    HttpHandler httpHandler = new HttpHandler(204, null);
+    byte[] response = createUndeploymentResponse();
+    HttpHandler httpHandler = new HttpHandler(200, response);
     httpServer = HttpServerFactory.createAndStartHttpServer(UndeployFormHandler.API_PATH, httpHandler);
     return httpHandler;
+  }
+
+  @SneakyThrows
+  private byte[] createUndeploymentResponse()
+  {
+    FormUndeploymentResponse response = FormUndeploymentResponse.builder()
+        .ids(Set.of("1:form:v1.0"))
+        .build();
+
+    return OBJECT_MAPPER.writeValueAsBytes(response);
   }
 }
