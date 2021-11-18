@@ -17,7 +17,7 @@ import de.seitenbau.ozghub.prozesspipeline.model.response.ProcessDeploymentRespo
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class DeployProcessModelHandler extends DefaultHandler
+public class DeployProcessHandler extends DefaultHandler
 {
   public static final String API_PATH = "/prozess/ozghub/deploy";
 
@@ -32,11 +32,11 @@ public class DeployProcessModelHandler extends DefaultHandler
 
   private final String deploymentName;
 
-  private final DuplicateProcessKeyAction duplicateProcessKeyAction;
+  private final DuplicateProcessKeyAction duplicateProcesskeyAction;
 
   private final String engineId;
 
-  public DeployProcessModelHandler(Environment env,
+  public DeployProcessHandler(Environment env,
       File projectDir,
       String filePath,
       String deploymentName,
@@ -47,7 +47,7 @@ public class DeployProcessModelHandler extends DefaultHandler
     this.projectDir = projectDir;
     this.filePath = filePath;
     this.deploymentName = deploymentName;
-    this.duplicateProcessKeyAction =
+    this.duplicateProcesskeyAction =
         Objects.requireNonNullElse(duplicateKeyAction, DuplicateProcessKeyAction.ERROR);
     this.engineId = engineId;
   }
@@ -80,7 +80,7 @@ public class DeployProcessModelHandler extends DefaultHandler
   {
     Map<String, String> headers = new HashMap<>();
     headers.put(HTTPHeaderKeys.PROCESS_DEPLOYMENT_NAME, deploymentName);
-    headers.put(HTTPHeaderKeys.PROCESS_DUPLICATION, duplicateProcessKeyAction.toString());
+    headers.put(HTTPHeaderKeys.PROCESS_DUPLICATION, duplicateProcesskeyAction.toString());
     headers.put(HTTPHeaderKeys.CONTENT_TYPE, "application/java-archive");
 
     if (engineId != null)
@@ -98,14 +98,14 @@ public class DeployProcessModelHandler extends DefaultHandler
     log.info("- Prozessdefinitionen mit folgenden Prozess-Keys wurden deployt:");
     response.getProcessKeys().forEach(k -> log.info("  - {}", k));
 
-    if (DuplicateProcessKeyAction.ERROR != duplicateProcessKeyAction
+    if (DuplicateProcessKeyAction.ERROR != duplicateProcesskeyAction
         && response.getDuplicateKeys() != null
         && !response.getDuplicateKeys().isEmpty())
     {
       log.info("- Prozess-Keys, die bereits Teil eines Deployments waren:");
       response.getDuplicateKeys().forEach(k -> log.info("  - {}", k));
 
-      if (DuplicateProcessKeyAction.UNDEPLOY == duplicateProcessKeyAction)
+      if (DuplicateProcessKeyAction.UNDEPLOY == duplicateProcesskeyAction)
       {
         log.info("  ---> Diese Prozessmodelle wurden undeployt");
       }

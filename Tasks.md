@@ -4,9 +4,8 @@ Dieses Dokument beschreibt die verfügbaren Tasks dieses Gradle-Plugins.
 
 ## Allgemein
 
-Parameter der Tasks werden als Kommantozeilen-Parameter übergeben. So kann z.B.: der Parameter `url`
-an einem Task mittels `-Purl=http://mtest1.ozghub.imbw.dev.seitenbau.net:9081` übergeben werden. Die
-Reihenfolge der Parameter spielt dabei keine Rolle.
+Parameter der Tasks werden als Kommantozeilen-Parameter übergeben.<br />
+Die Reihenfolge der Parameter spielt dabei keine Rolle.
 
 Die folgenden Parameter werden von allen Tasks verpflichted benötigt.
 
@@ -22,7 +21,7 @@ Die folgenden Parameter werden von allen Tasks verpflichted benötigt.
 
 #### Allgemein
 
-Der Task `deployProcessModel` ermöglicht das Deployen von Prozessmodell-Dateien auf eine spezifische
+Der Task `deployProcess` ermöglicht das Deployen von Prozessmodell-Dateien auf eine spezifische
 Prozess-Engine.<br />
 Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt.
 
@@ -69,7 +68,7 @@ Der Task `undeployProcess` ermöglicht das Löschen eines Prozess-Deployments.
 
 | **Name**               | **Default-Wert** | **Beschreibung**             |
 | ---------------------- | ---------------- | ---------------------------- |
-| id                     |                  | ID eines Prozess-Deployments |
+| deploymentId           |                  | ID eines Prozess-Deployments |
 | deleteProcessInstances | `false`          | Ob aktive Prozessinstanzen beendet werden sollen |
 
 Der Parameter `deleteProcessInstances` definiert, was geschehen soll, wenn vor dem Undeployment
