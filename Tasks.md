@@ -65,7 +65,7 @@ ersetzt.
 #### Allgemein
 
 Der Task `undeployProcess` ermöglicht das Löschen eines Prozess-Deployments.<br />
-Die Prozessdefinitionen, welche Teil des Deployments sind, werden undeployt.
+Prozessdefinitionen, die Teil des Deployments sind, werden undeployt.
 
 #### Parameter
 
@@ -88,7 +88,7 @@ des Deployments ist, existiert. Folgende Optionen sind möglich:
 #### Allgemein
 
 Der Task `undeployForm` ermöglicht das Löschen eines Formular-Deployments.<br />
-Die Formulare, welche Teil des Deployments sind, werden undeployt.
+Formulare, die Teil des Deployments sind, werden undeployt.
 
 #### Parameter
 

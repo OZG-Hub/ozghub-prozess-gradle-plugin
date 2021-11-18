@@ -91,7 +91,7 @@ Dieses enthält die ID des erzeugten Deployments.
 #### Allgemein
 
 Die Schnittstelle ermöglicht das Löschen eines Prozess-Deployments.<br />
-Die Prozessdefinitionen, welche Teil des Deployments sind, werden undeployt.<br />
+Prozessdefinitionen, die Teil des Deployments sind, werden undeployt.<br />
 Der Aufruf muss als DELETE ausgeführt werden.
 
 #### Pfad
@@ -126,7 +126,7 @@ Darunter die Prozess-Keys der undeployten Prozessdefinitionen.
 #### Allgemein
 
 Die Schnittstelle ermöglicht das Löschen eines Formular-Deployments.<br />
-Die Formulare, welche Teil des Deployments sind, werden undeployt.<br />
+Formulare, die Teil des Deployments sind, werden undeployt.<br />
 Der Aufruf muss als DELETE ausgeführt werden.
 
 #### Pfad

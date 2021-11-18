@@ -34,8 +34,8 @@ public class UndeployFormHandler extends DefaultHandler
     try
     {
       Map<String, String> headers = getHeaderParameters();
-      CONNECTION_HELPER.delete(environment, API_PATH, headers);
-      logEndOfTask();
+      FormUndeploymentResponse response = CONNECTION_HELPER.delete(environment, API_PATH, headers);
+      logEndOfTask(response);
     }
     catch (Exception e)
     {
@@ -50,9 +50,16 @@ public class UndeployFormHandler extends DefaultHandler
     return headers;
   }
 
-  private void logEndOfTask()
+  private void logEndOfTask(FormUndeploymentResponse response)
   {
     log.info("Das Undeployment wurde erfolgreich abgeschlossen");
+
+    if (response.getIds() != null && !response.getIds().isEmpty())
+    {
+      log.info("- Formulare mit folgenden IDs wurden undeployt:");
+      response.getIds().forEach(id -> log.info("  - {}", id));
+    }
+
     log.info("Ende des Tasks: Löschen eines Formular-Deployments");
   }
 }
