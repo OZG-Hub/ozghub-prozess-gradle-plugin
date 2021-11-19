@@ -53,13 +53,7 @@ public class UndeployFormHandler extends DefaultHandler
   private void logEndOfTask(FormUndeploymentResponse response)
   {
     log.info("Das Undeployment wurde erfolgreich abgeschlossen");
-
-    if (response.getIds() != null && !response.getIds().isEmpty())
-    {
-      log.info("- Formulare mit folgenden IDs wurden undeployt:");
-      response.getIds().forEach(id -> log.info("  - {}", id));
-    }
-
+    log.info("- Formular mit folgender ID wurde undeployt: {}", response.getId());
     log.info("Ende des Tasks: Löschen eines Formular-Deployments");
   }
 }

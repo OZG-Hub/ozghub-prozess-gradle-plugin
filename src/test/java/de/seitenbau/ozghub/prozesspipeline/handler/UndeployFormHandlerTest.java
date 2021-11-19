@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.gradle.api.GradleException;
 import org.junit.jupiter.api.AfterEach;
@@ -130,7 +129,7 @@ public class UndeployFormHandlerTest extends HandlerTestBase
   private byte[] createUndeploymentResponse()
   {
     FormUndeploymentResponse response = FormUndeploymentResponse.builder()
-        .ids(Set.of("1:form:v1.0"))
+        .id("1:form:v1.0")
         .build();
 
     return OBJECT_MAPPER.writeValueAsBytes(response);
