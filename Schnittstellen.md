@@ -20,11 +20,11 @@ ausgeführt werden.
 
 #### Header-Parameter
 
-| **Name**                  | **Pflicht** | **Beschreibung**     |
-| ------------------------- | ----------- | -------------------- |
-| X-OZG-Deployment-Name     | Ja          | Name des Deployments |
-| X-OZG-Process-Duplication | Ja          | Wie mit Deployments, welche zu deployende Prozess-Keys enthalten, umgegangen werden soll<br />`IGNORE`, `UNDEPLOY`, `ERROR`
-| X-OZG-Process-Engine      | Nein        | ID der Prozess-Engine, Standard-Prozess-Engine wenn nicht gesetzt
+| **Name**                  | **Pflicht** | **Typ** | **Beschreibung**     |
+| ------------------------- | ----------- | ------- | -------------------- |
+| X-OZG-Deployment-Name     | Ja          | String  | Name des Deployments |
+| X-OZG-Process-Duplication | Ja          | String  | Wie mit Deployments, welche zu deployende Prozess-Keys enthalten, umgegangen werden soll<br />`IGNORE`, `UNDEPLOY`, `ERROR` |
+| X-OZG-Process-Engine      | Nein        | String  | ID der Prozess-Engine, Standard-Prozess-Engine wenn nicht gesetzt |
 
 #### Request-Body
 
@@ -91,6 +91,7 @@ Dieses enthält die ID des erzeugten Deployments.
 #### Allgemein
 
 Die Schnittstelle ermöglicht das Löschen eines Prozess-Deployments.<br />
+Prozessdefinitionen, die Teil des Deployments sind, werden undeployt.<br />
 Der Aufruf muss als DELETE ausgeführt werden.
 
 #### Pfad
@@ -99,10 +100,10 @@ Der Aufruf muss als DELETE ausgeführt werden.
 
 #### Header-Parameter
 
-| **Name**                                | **Pflicht** | **Beschreibung**   |
-| --------------------------------------- | ----------- | ------------------ |
-| X-OZG-Deployment-ID                     | Ja          | ID des Deployments |
-| X-OZG-Deployment-DeleteProcessInstances | Ja          | Wenn `true` werden aktive Prozessinstanzen beendet, wenn `false` dürfen keine Prozessinstanzen existieren |
+| **Name**                                | **Pflicht** | **Typ** | **Beschreibung**   |
+| --------------------------------------- | ----------- | ------- | ------------------ |
+| X-OZG-Deployment-ID                     | Ja          | String  | ID des Deployments |
+| X-OZG-Deployment-DeleteProcessInstances | Ja          | boolean | Wenn `true` werden aktive Prozessinstanzen beendet, wenn `false` dürfen keine Prozessinstanzen existieren |
 
 #### Rückgabewerte
 
@@ -115,6 +116,37 @@ Darunter die Prozess-Keys der undeployten Prozessdefinitionen.
     "m1.testprocess-1",
     "m1.testprocess-2"
   ]
+}
+```
+
+---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum Löschen eines Formular-Deployments
+
+#### Allgemein
+
+Die Schnittstelle ermöglicht das Löschen eines Formular-Deployments.<br />
+Formulare, die Teil des Deployments sind, werden undeployt.<br />
+Der Aufruf muss als DELETE ausgeführt werden.
+
+#### Pfad
+
+`{URL der Umgebung}/formulare/ozghub/undeploy`
+
+#### Header-Parameter
+
+| **Name**             | **Pflicht** | **Typ**  | **Beschreibung**   |
+| -------------------- | ----------- | -------- | ------------------ |
+| X-OZG-Deployment-ID  | Ja          | Ganzzahl | ID des Deployments |
+
+#### Rückgabewerte
+
+Ein Objekt mit den Informationen zu den Vorgängen (`application/json`).<br />
+Darunter die ID des undeployten Formulars.
+
+```json
+{
+  "id": "1:test-formular:v1.0"
 }
 ```
 

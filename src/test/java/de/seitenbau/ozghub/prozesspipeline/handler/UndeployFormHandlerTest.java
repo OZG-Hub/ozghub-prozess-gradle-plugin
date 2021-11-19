@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.gradle.api.GradleException;
 import org.junit.jupiter.api.AfterEach;
@@ -20,14 +19,14 @@ import de.seitenbau.ozghub.prozesspipeline.common.Environment;
 import de.seitenbau.ozghub.prozesspipeline.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozesspipeline.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozesspipeline.integrationtest.HttpServerFactory;
-import de.seitenbau.ozghub.prozesspipeline.model.response.ProcessUndeploymentResponse;
+import de.seitenbau.ozghub.prozesspipeline.model.response.FormUndeploymentResponse;
 import lombok.SneakyThrows;
 
-public class UndeployProcessHandlerTest extends HandlerTestBase
+public class UndeployFormHandlerTest extends HandlerTestBase
 {
   private HttpServer httpServer = null;
 
-  private UndeployProcessHandler sut;
+  private UndeployFormHandler sut;
 
   @AfterEach
   private void after()
@@ -53,7 +52,7 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo1", "bar1");
 
-    sut = new UndeployProcessHandler(env, "deploymentId1", false);
+    sut = new UndeployFormHandler(env, "deploymentId1");
 
     // act
     sut.undeploy();
@@ -63,7 +62,7 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestHeaders(actualRequest, env, "deploymentId1", false);
+    assertRequestHeaders(actualRequest, env, "deploymentId1");
   }
 
   @Test
@@ -72,18 +71,18 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
     // arrange
     byte[] response = "Etwas ist schiefgelaufen".getBytes(StandardCharsets.UTF_8);
     HttpHandler httpHandler = new HttpHandler(500, response);
-    httpServer = HttpServerFactory.createAndStartHttpServer(UndeployProcessHandler.API_PATH, httpHandler);
+    httpServer = HttpServerFactory.createAndStartHttpServer(UndeployFormHandler.API_PATH, httpHandler);
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo3", "bar3");
 
-    sut = new UndeployProcessHandler(env, "deploymentId2", true);
+    sut = new UndeployFormHandler(env, "deploymentId2");
 
     // act
     assertThatThrownBy(() -> sut.undeploy())
         .isExactlyInstanceOf(GradleException.class)
         .hasMessage("Fehler: HTTP-Response-Code: 500 Internal Server Error | Meldung des Servers: Etwas ist "
-            + "schiefgelaufen | URL: " + url + UndeployProcessHandler.API_PATH);
+            + "schiefgelaufen | URL: " + url + UndeployFormHandler.API_PATH);
 
     // assert
     assertThat(httpHandler.countRequests()).isEqualTo(1);
@@ -91,7 +90,7 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestHeaders(actualRequest, env, "deploymentId2", true);
+    assertRequestHeaders(actualRequest, env, "deploymentId2");
   }
 
   private void assertResponse(HttpHandler handler)
@@ -104,19 +103,14 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
   private void assertRequest(HttpHandler.Request request)
   {
     assertThat(request.getRequestMethod()).isEqualTo("DELETE");
-    assertThat(request.getPath()).isEqualTo(UndeployProcessHandler.API_PATH);
+    assertThat(request.getPath()).isEqualTo(UndeployFormHandler.API_PATH);
     assertThat(request.getQuery()).isNull();
   }
 
-  private void assertRequestHeaders(HttpHandler.Request request,
-      Environment env,
-      String deploymentId,
-      boolean deleteProcessInstances)
+  private void assertRequestHeaders(HttpHandler.Request request, Environment env, String deploymentId)
   {
     Map<String, List<String>> headers = request.getHeaders();
     assertThat(headers).containsEntry(HTTPHeaderKeys.DEPLOYMENT_ID, List.of(deploymentId));
-    assertThat(headers).containsEntry(HTTPHeaderKeys.DELETE_PROCESS_INSTANCES,
-        List.of(Boolean.toString(deleteProcessInstances)));
 
     String tmp = env.getUser() + ':' + env.getPassword();
     String auth = "Basic " + Base64.getEncoder().encodeToString(tmp.getBytes(StandardCharsets.UTF_8));
@@ -127,15 +121,15 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
   {
     byte[] response = createUndeploymentResponse();
     HttpHandler httpHandler = new HttpHandler(200, response);
-    httpServer = HttpServerFactory.createAndStartHttpServer(UndeployProcessHandler.API_PATH, httpHandler);
+    httpServer = HttpServerFactory.createAndStartHttpServer(UndeployFormHandler.API_PATH, httpHandler);
     return httpHandler;
   }
 
   @SneakyThrows
   private byte[] createUndeploymentResponse()
   {
-    ProcessUndeploymentResponse response = ProcessUndeploymentResponse.builder()
-        .processKeys(Set.of("key"))
+    FormUndeploymentResponse response = FormUndeploymentResponse.builder()
+        .id("1:form:v1.0")
         .build();
 
     return OBJECT_MAPPER.writeValueAsBytes(response);
