@@ -50,7 +50,6 @@ public class DeployFormsHandler extends DefaultHandler
 
     try
     {
-
       Path path = FileHelper.getCustomFolderOrDefault(projectDir, formFiles, DEFAULT_FORMS_DIR);
       List<Path> files = FileHelper.readFilesInFolder(path);
 
