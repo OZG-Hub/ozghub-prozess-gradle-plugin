@@ -1,6 +1,7 @@
 package de.seitenbau.ozghub.prozesspipeline.model.response;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -15,9 +16,9 @@ import lombok.NoArgsConstructor;
 public class Deployment
 {
   /**
-   * Die Keys der im Deployment enthaltenenen Prozessmodelle
+   * Die Keys und Namen der im Deployment enthaltenenen Prozessmodelle
    */
-  private Set<String> processKeys;
+  private Map<String, String> processDefinitionKeysAndNames;
 
   /**
    * Das Deployment Datum

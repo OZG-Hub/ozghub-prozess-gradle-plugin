@@ -64,9 +64,11 @@ public class ListProcessesHandler extends DefaultHandler
           sb.append("Deployment-ID: ");
           sb.append(d.getDeploymentId());
           sb.append("\n");
-          d.getProcessKeys().forEach(key -> {
+          d.getProcessDefinitionKeysAndNames().forEach((key, value) -> {
             sb.append(" - ");
             sb.append(key);
+            sb.append(" ");
+            sb.append(value);
             sb.append("\n");
           });
         });
