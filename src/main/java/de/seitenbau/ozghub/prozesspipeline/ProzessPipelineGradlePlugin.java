@@ -29,7 +29,7 @@ public class ProzessPipelineGradlePlugin implements Plugin<Project>
     tasks.create("undeployForm", UndeployFormTask.class, (task) -> {
     }).setDescription("Löscht ein Formular-Deployment von der konfigurierten Umgebung");
 
-    tasks.create("listProcesses", ListProcessesTask.class,(task) -> {
+    tasks.create("listProcesses", ListProcessesTask.class, (task) -> {
     }).setDescription("Listet alle deployten Prozesse auf");
   }
 }

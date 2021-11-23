@@ -2,7 +2,6 @@ package de.seitenbau.ozghub.prozesspipeline.model.response;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
