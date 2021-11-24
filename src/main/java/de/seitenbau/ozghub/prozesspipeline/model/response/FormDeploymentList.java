@@ -1,19 +1,17 @@
 package de.seitenbau.ozghub.prozesspipeline.model.response;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeploymentList
+public class FormDeploymentList
 {
-  private boolean complete;
-
-  private List<Deployment> value;
+  private List<FormDeployment> deployments;
 }

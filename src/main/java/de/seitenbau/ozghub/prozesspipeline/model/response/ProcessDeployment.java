@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Deployment
+public class ProcessDeployment
 {
   /**
    * Die Keys und Namen der im Deployment enthaltenenen Prozessmodelle
