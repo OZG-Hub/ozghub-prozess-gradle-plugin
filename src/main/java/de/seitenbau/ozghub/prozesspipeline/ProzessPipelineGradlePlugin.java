@@ -6,6 +6,7 @@ import org.gradle.api.tasks.TaskContainer;
 
 import de.seitenbau.ozghub.prozesspipeline.task.DeployFormsTask;
 import de.seitenbau.ozghub.prozesspipeline.task.DeployProcessTask;
+import de.seitenbau.ozghub.prozesspipeline.task.ListFormsTask;
 import de.seitenbau.ozghub.prozesspipeline.task.ListProcessesTask;
 import de.seitenbau.ozghub.prozesspipeline.task.UndeployFormTask;
 import de.seitenbau.ozghub.prozesspipeline.task.UndeployProcessTask;
@@ -31,5 +32,8 @@ public class ProzessPipelineGradlePlugin implements Plugin<Project>
 
     tasks.create("listProcesses", ListProcessesTask.class, (task) -> {
     }).setDescription("Listet alle deployten Prozesse auf");
+
+    tasks.create("listForms", ListFormsTask.class, (task) -> {
+    }).setDescription("Listet alle deployten Formulare auf");
   }
 }
