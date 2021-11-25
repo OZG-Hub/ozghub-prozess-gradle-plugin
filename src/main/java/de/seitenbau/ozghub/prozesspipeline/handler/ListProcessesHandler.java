@@ -1,7 +1,5 @@
 package de.seitenbau.ozghub.prozesspipeline.handler;
 
-import java.io.IOException;
-
 import de.seitenbau.ozghub.prozesspipeline.common.Environment;
 import de.seitenbau.ozghub.prozesspipeline.model.response.ProcessDeploymentList;
 import lombok.extern.log4j.Log4j2;
@@ -16,14 +14,7 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
     super(environment, ProcessDeploymentList.class, API_PATH);
   }
 
-  @Override
-  protected String getListAndGenerateLogEntry() throws IOException
-  {
-    ProcessDeploymentList list = getList();
-    return generateLogEntry(list);
-  }
-
-  String generateLogEntry(ProcessDeploymentList deploymentList)
+  protected String generateLogEntry(ProcessDeploymentList deploymentList)
   {
     if (!Boolean.TRUE.equals(deploymentList.isComplete()))
     {

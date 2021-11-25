@@ -1,7 +1,5 @@
 package de.seitenbau.ozghub.prozesspipeline.handler;
 
-import java.io.IOException;
-
 import de.seitenbau.ozghub.prozesspipeline.common.Environment;
 import de.seitenbau.ozghub.prozesspipeline.model.response.FormDeploymentList;
 
@@ -15,13 +13,7 @@ public class ListFormsHandler extends AbstractListHandler<FormDeploymentList>
   }
 
   @Override
-  protected String getListAndGenerateLogEntry() throws IOException
-  {
-    FormDeploymentList list = getList();
-    return generateLogEntry(list);
-  }
-
-  String generateLogEntry(FormDeploymentList deploymentList)
+  protected String generateLogEntry(FormDeploymentList deploymentList)
   {
     StringBuilder sb = new StringBuilder();
     sb.append("Vorhandene Deployments:\n");
