@@ -149,6 +149,7 @@ Darunter die ID des undeployten Formulars.
   "id": "1:test-formular:v1.0"
 }
 ```
+---------------------------------------------------------------------------------------------------
 
 ### Schnittstelle zum Auflisten der Prozess-Deployments
 
@@ -199,14 +200,15 @@ einer Liste der vorhandenen Deployments.<br />
 }
 ```
 
+---------------------------------------------------------------------------------------------------
+
 ### Schnittstelle zum Auflisten der Formular-Deployments
 
 #### Allgemein
 
 Die Schnittstelle liefert eine Liste der auf der Umgebung vorhandenen Formular-Deployments jeweils
 mit Informationen zu Mandant-Id, Name des Formulars, Name der Version, Sprache, Deployment-Datum und
-Deployment-Id. Die Liste ist nach Mandanten sortiert. Innerhalb eines Mandanten wird sie nach Name
-des Formulars und Version sortiert.
+Deployment-Id. Die Liste wird nach den in den Formulardefinitionen angegebenen IDs sortiert.
 
 Der Aufruf muss als GET ausgeführt werden.
 
