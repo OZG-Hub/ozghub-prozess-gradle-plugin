@@ -25,7 +25,7 @@ public class ListFormsHandler extends AbstractListHandler<FormDeploymentList>
   {
     StringBuilder sb = new StringBuilder();
     sb.append("Vorhandene Deployments:\n");
-    deploymentList.getDeployments().forEach(
+    deploymentList.getDeploymentList().forEach(
         d -> {
           sb.append(formatDate(d.getDeploymentDate()));
           sb.append(" ");

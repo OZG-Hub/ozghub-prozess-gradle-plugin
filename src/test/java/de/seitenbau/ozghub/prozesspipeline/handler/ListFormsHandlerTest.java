@@ -79,7 +79,7 @@ public class ListFormsHandlerTest
 
     List<String> actualLogMessages = listAppender.getEventList();
     assertThat(actualLogMessages).contains("INFO Start des Tasks: " + TASK_NAME);
-    assertDeploymentLogMessage(actualLogMessages, deploymentDate, deploymentList.getDeployments().get(0));
+    assertDeploymentLogMessage(actualLogMessages, deploymentDate, deploymentList.getDeploymentList().get(0));
     assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
   }
 
@@ -95,7 +95,7 @@ public class ListFormsHandlerTest
         .deploymentId(1L)
         .build();
 
-    return FormDeploymentList.builder().deployments(List.of(deployment1)).build();
+    return FormDeploymentList.builder().deploymentList(List.of(deployment1)).build();
   }
 
   private void prepareLogging()
