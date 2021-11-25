@@ -1,10 +1,8 @@
 package de.seitenbau.ozghub.prozesspipeline.model.response;
 
 import java.util.Date;
-import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

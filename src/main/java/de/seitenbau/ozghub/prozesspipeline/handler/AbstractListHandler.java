@@ -20,7 +20,7 @@ public abstract class AbstractListHandler<T> extends DefaultHandler
 
   private final Class<T> responseType;
 
-  public String apiPath;
+  private String apiPath;
 
   public AbstractListHandler(Environment environment, Class<T> responseType, String apiPath)
   {
