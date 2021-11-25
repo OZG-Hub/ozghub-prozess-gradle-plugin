@@ -11,7 +11,6 @@ import org.gradle.api.GradleException;
 import de.seitenbau.ozghub.prozesspipeline.common.Environment;
 import de.seitenbau.ozghub.prozesspipeline.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozesspipeline.helper.ServerConnectionHelper;
-import de.seitenbau.ozghub.prozesspipeline.model.response.FormDeploymentList;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -51,8 +50,7 @@ public abstract class AbstractListHandler<T> extends DefaultHandler
     try
     {
       T list = getList();
-      String logEntry = generateLogEntry(list);
-      log.info(logEntry);
+      writeLogEntries(list);
     }
     catch (Exception e)
     {
@@ -61,7 +59,7 @@ public abstract class AbstractListHandler<T> extends DefaultHandler
     log.info("Ende des Tasks: " + taskName);
   }
 
-  protected abstract String generateLogEntry(T list) throws IOException;
+  protected abstract void writeLogEntries(T list) throws IOException;
 
   protected T getList() throws java.io.IOException
   {

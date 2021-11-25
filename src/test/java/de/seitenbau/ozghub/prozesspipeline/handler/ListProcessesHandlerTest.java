@@ -163,7 +163,6 @@ public class ListProcessesHandlerTest
         " " +
         deployment1.getDeploymentName() +
         " " +
-        "Deployment-ID: " +
         deployment1.getDeploymentId() +
         "\n" +
         " - " +

@@ -117,16 +117,15 @@ public class ListFormsHandlerTest
     SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
     String expectedDeploymentDateString = format.format(deploymentDate);
 
-    return "INFO Vorhandene Deployments:\n" +
-        expectedDeploymentDateString +
-        " " +
-        deployment1.getDeploymentName() +
-        " " +
-        deployment1.getLanguage() +
-        " " +
-        "Deployment-ID: " +
-        deployment1.getDeploymentId() +
-        "\n";
+    return "INFO Vorhandene Deployments:\n"
+        + deployment1.getDeploymentName()
+        + " "
+        + deployment1.getLanguage()
+        + " "
+        + deployment1.getDeploymentId()
+        + " "
+        + expectedDeploymentDateString
+        + "\n";
   }
 
   private void assertRequest(HttpHandler.Request request)

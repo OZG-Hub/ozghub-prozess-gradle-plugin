@@ -14,12 +14,13 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
     super(environment, ProcessDeploymentList.class, API_PATH);
   }
 
-  protected String generateLogEntry(ProcessDeploymentList deploymentList)
+  protected void writeLogEntries(ProcessDeploymentList deploymentList)
   {
     if (!Boolean.TRUE.equals(deploymentList.isComplete()))
     {
       log.warn("Es konnten nicht alle Deployments von allen Prozessengines abgerufen werden.");
     }
+    log.info("Deployment-Datum Deployment-Id Deployment-Name:\n Prozesskey Prozessname");
     StringBuilder sb = new StringBuilder();
     sb.append("Vorhandene Deployments:\n");
     deploymentList.getValue().forEach(
@@ -28,7 +29,6 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
           sb.append(" ");
           sb.append(d.getDeploymentName());
           sb.append(" ");
-          sb.append("Deployment-ID: ");
           sb.append(d.getDeploymentId());
           sb.append("\n");
           d.getProcessDefinitionKeysAndNames().forEach((key, value) -> {
@@ -39,7 +39,7 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
             sb.append("\n");
           });
         });
-    return sb.toString();
+    log.info(sb.toString());
   }
 
 }
