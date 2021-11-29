@@ -15,7 +15,7 @@ import lombok.SneakyThrows;
 
 public class FileHelperTest
 {
-  private static final String RESOURCES_PATH = "helper/FileHelper";
+  private static final String RESOURCES_PATH = "src/test/resources/helper/FileHelper";
 
   @Test
   @SneakyThrows
@@ -77,9 +77,6 @@ public class FileHelperTest
   @SneakyThrows
   private Path getPathFromResources(String path)
   {
-    URL url = Thread.currentThread().getContextClassLoader().getResource(path);
-    Objects.requireNonNull(url);
-
-    return Path.of(url.toURI());
+    return Path.of(path);
   }
 }
