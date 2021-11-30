@@ -97,3 +97,19 @@ Formulare, die Teil des Deployments sind, werden undeployt.
 | deploymentId | ID eines Formular-Deployments |
 
 ---------------------------------------------------------------------------------------------------
+
+### Task zum Auflisten aller Prozess-Deployments
+
+#### Allgemein
+
+Der Task `listProcesses` liefert eine List aller auf der Umgebung vorhandenen Prozess-Deployments.<br />
+Die Liste mit den enthaltenen Informationen wird auf der Konsole ausgegeben.
+
+### Task zum Auflisten aller Formular-Deployments
+
+---------------------------------------------------------------------------------------------------
+
+#### Allgemein
+
+Der Task `listForms` liefert eine List aller auf der Umgebung vorhandenen Formular-Deployments.<br />
+Die Liste mit den enthaltenen Informationen wird auf der Konsole ausgegeben.

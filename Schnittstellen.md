@@ -149,5 +149,98 @@ Darunter die ID des undeployten Formulars.
   "id": "1:test-formular:v1.0"
 }
 ```
+---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum Auflisten der Prozess-Deployments
+
+#### Allgemein
+
+Die Schnittstelle liefert eine Liste der auf der Umgebung vorhandenen Prozess-Deployments jeweils
+mit Informationen zu Name des Deployments, Deployment-Datum, Deployment-Id sowie den enthaltenen
+Prozessdefinitionen. Die Liste ist absteigend nach Deployment-Datum sortiert. Innerhalb eines
+Deployments sind die enthaltenen Prozessdefinitionen aufsteigend nach dem Key sortiert.
+
+Es wird außerdem die Information zurückgeliefert, ob die Deployments von allen Prozess-Engines
+abgerufen werden konnten
+
+Der Aufruf muss als GET ausgeführt werden.
+
+#### Pfad
+
+`{URL der Umgebung}/prozess/ozghub/list`
+
+#### Rückgabewerte
+
+Ein Objekt (`application/json`) mit der Information, ob alle Prozess-Engines geantwortet haben und
+einer Liste der vorhandenen Deployments.<br />
+
+```json
+{
+  "complete": true,
+  "value": [
+    {
+      "processDefinitionKeysAndNames": {
+        "processKey1": "processName1",
+        "processKey2": "processName2"
+      },
+      "deploymentDate": 1635270704000,
+      "deploymentName": "deploymentName1",
+      "deploymentId": "141"
+    },
+    {
+      "processDefinitionKeysAndNames": {
+        "processKey3": "processName3",
+        "processKey4": "processName4"
+      },
+      "deploymentDate": 1629293345000,
+      "deploymentName": "deploymentName2",
+      "deploymentId": "142"
+    }
+  ]
+}
+```
+
+---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum Auflisten der Formular-Deployments
+
+#### Allgemein
+
+Die Schnittstelle liefert eine Liste der auf der Umgebung vorhandenen Formular-Deployments jeweils
+mit Informationen zu Mandant-Id, Name des Formulars, Name der Version, Sprache, Deployment-Datum und
+Deployment-Id. Die Liste wird nach den in den Formulardefinitionen angegebenen IDs sortiert.
+
+Der Aufruf muss als GET ausgeführt werden.
+
+#### Pfad
+
+`{URL der Umgebung}/formulare/ozghub/list`
+
+#### Rückgabewerte
+
+Ein Objekt (`application/json`), das eine Liste mit den vorhandenen Deployments enthält.<br />
+
+```json
+{
+  "deploymentList": [
+    {
+      "mandantId": "1",
+      "formName": "formularName",
+      "formVersion": "formularVersion",
+      "language": "sprache",
+      "deploymentDate": 1629293345000,
+      "deploymentId": "141"
+    },
+    {
+      "mandantId": "1",
+      "formName": "formularName",
+      "formVersion": "formularVersion",
+      "language": "sprache",
+      "deploymentDate": 1629293345000,
+      "deploymentId": "141"
+    }
+  ]
+}
+```
 
 ---------------------------------------------------------------------------------------------------

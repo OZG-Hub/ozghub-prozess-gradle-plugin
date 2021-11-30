@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.zip.ZipInputStream;
 
@@ -15,7 +17,7 @@ import lombok.SneakyThrows;
 
 public class FileHelperTest
 {
-  private static final String RESOURCES_PATH = "helper/FileHelper";
+  private static final String RESOURCES_PATH = "helper/fileHelper";
 
   @Test
   @SneakyThrows
@@ -51,15 +53,18 @@ public class FileHelperTest
     // assert
     try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(actual)))
     {
+      List<String> actualContents = new ArrayList<>();
+
       zis.getNextEntry();
       byte[] contentBytes = IOUtils.toByteArray(zis);
-      String content = new String(contentBytes);
-      assertThat(content).isEqualTo("This is the test-file.");
+      actualContents.add(new String(contentBytes));
 
       zis.getNextEntry();
       contentBytes = IOUtils.toByteArray(zis);
-      content = new String(contentBytes);
-      assertThat(content).isEqualTo("This is the test-sub-file.");
+      actualContents.add( new String(contentBytes));
+
+      List<String> expectedContents = List.of("This is the test-file.", "This is the test-sub-file.");
+      assertThat(actualContents).containsExactlyInAnyOrderElementsOf(expectedContents);
       assertThat(zis.getNextEntry()).isNull();
     }
   }

@@ -108,10 +108,10 @@ public class DeployProcessHandler extends DefaultHandler
       if (DuplicateProcessKeyAction.UNDEPLOY == duplicateProcesskeyAction)
       {
         log.info("  ---> Diese Prozessmodelle wurden undeployt");
+        log.info("- Die folgenden Prozess-Deployments wurden gelöscht:");
+        response.getRemovedDeploymentIds().forEach(k -> log.info("  - {}", k));
       }
 
-      log.info("- Die folgenden Prozess-Deployments wurden gelöscht:");
-      response.getRemovedDeploymentIds().forEach(k -> log.info("  - {}", k));
     }
 
     log.info("Ende des Tasks: Deployment eines Prozessmodells");
