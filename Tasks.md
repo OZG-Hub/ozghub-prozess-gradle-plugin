@@ -65,7 +65,7 @@ ersetzt.
 #### Allgemein
 
 Der Task `undeployProcess` ermöglicht das asynchrone Löschen eines Prozess-Deployments.<br />
-Prozessdefinitionen, die Teil des Deployments sind, werden undeployt.<br />
+Prozessdefinitionen, die Teil des Deployments sind, werden undeployt.
 
 Es darf höchstens ein Undeployment pro Prozess-Engine gleichzeitig ausgeführt werden.<br />
 Wird von der Prozess-Engine, zu der das gegebene Deployment gehört, bereits ein Undeployment
