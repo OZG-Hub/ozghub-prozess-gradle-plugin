@@ -90,9 +90,13 @@ Dieses enthält die ID des erzeugten Deployments.
 
 #### Allgemein
 
-Die Schnittstelle ermöglicht das Löschen eines Prozess-Deployments.<br />
+Die Schnittstelle ermöglicht das asynchrone Löschen eines Prozess-Deployments.<br />
 Prozessdefinitionen, die Teil des Deployments sind, werden undeployt.<br />
 Der Aufruf muss als DELETE ausgeführt werden.
+
+Es darf höchstens ein Undeployment pro Prozess-Engine gleichzeitig ausgeführt werden.<br />
+Wird von der Prozess-Engine, zu der das gegebene Deployment gehört, bereits ein Undeployment
+ausgeführt, wird der Aufruf mit einer Fehlermeldung abgebrochen.
 
 #### Pfad
 
