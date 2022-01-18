@@ -267,7 +267,7 @@ Der Aufruf muss als GET ausgeführt werden.
 | **Name**             | **Pflicht** | **Typ**  | **Beschreibung**   |
 | -------------------- | ----------- | -------- | ------------------ |
 | sortProperty         | Nein        | String   | Eigenschaft, welche zur Sortierung herangezogen werden soll. Mögliche Werte: id, createDate, applicationName, level, logger, message, exception, logEntryType, mandant. Default: createDate |
-| sortDirection        | Nein        | String   | Ob aufsteigend (ASC) oder absteigend (DESC) sortiert werden soll. Default: ASC |
+| sortDirection        | Nein        | String   | Ob aufsteigend (ASC) oder absteigend (DESC) sortiert werden soll. Default: DESC |
 | from                 | Nein        | Long     | Untere Grenze für das Datum der angezeigten Logeintröge, als Unix Timestamp. Default : keine untere Grenze  |
 | to                   | Nein        | Long     | Obere Grenze für das Datum der angezeigten Logeintröge, als Unix Timestamp. Default : keine obere Grenze |
 | mandant              | Nein        | String   | Id des Mandanten, dessen Logeinträge angezeigt werden sollen. Default : es werden Logeinträge aller Mandanten angezeigt. |
