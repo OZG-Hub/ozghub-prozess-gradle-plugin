@@ -131,9 +131,23 @@ else {
 
 gradlePlugin {
     plugins {
-        ProzessPipelineGradlePlugin {
+        OzghubProzessGradlePlugin {
             id = 'de.seitenbau.ozghub.prozesspipeline'
             implementationClass = 'de.seitenbau.ozghub.prozesspipeline.ProzessPipelineGradlePlugin'
         }
     }
 }
+
+pluginBundle {
+    website = 'https://github.com/OZG-Hub/ozghub-prozess-gradle-plugin'
+    vcsUrl = 'https://github.com/OZG-Hub/ozghub-prozess-gradle-plugin'
+    description = 'Tools zum Deployen von Prozessen und Formularen im OZG-Hub'
+    tags = ['deployment', 'prozess', 'formular', 'ozg', 'ozg-hub']
+
+    plugins {
+        OzghubProzessGradlePlugin {
+            displayName = 'Gradle Plugin zum Deployen von Prozessen und Formularen im OZG-Hub'
+        }
+    }
+}
+
