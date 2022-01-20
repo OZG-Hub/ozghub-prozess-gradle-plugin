@@ -6,7 +6,7 @@ plugins {
     id 'com.github.spotbugs' version '4.5.0'
     id 'checkstyle'
     id 'com.jfrog.artifactory'
-    id "com.gradle.plugin-publish"
+    id 'com.gradle.plugin-publish' version '0.20.0'
 }
 
 group 'de.seitenbau.ozghub.prozesspipeline'
