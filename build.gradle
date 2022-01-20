@@ -133,7 +133,7 @@ else {
 gradlePlugin {
     plugins {
         OzghubProzessGradlePlugin {
-            id = 'de.seitenbau.ozghub.prozesspipeline'
+            id = 'de.seitenbau.ozghub.prozessdeployment'
             implementationClass = 'de.seitenbau.ozghub.prozesspipeline.ProzessPipelineGradlePlugin'
         }
     }
