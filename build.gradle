@@ -9,7 +9,7 @@ plugins {
     id 'com.gradle.plugin-publish' version '0.20.0'
 }
 
-group 'de.seitenbau.ozghub.prozesspipeline'
+group 'de.seitenbau.ozghub.prozessdeployment'
 
 version = project.hasProperty('pluginVersion') ? pluginVersion : '99.0.0-SNAPSHOT'
 println 'Plugin-Version ist  : ' + version
