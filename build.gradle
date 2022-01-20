@@ -122,7 +122,7 @@ else {
     }
 
     jar {
-        baseName 'ozghub-prozess-pipeline-gradle-plugin'
+        baseName 'ozghub-prozessdeployment-gradle-plugin'
     }
 
     artifactoryPublish {
