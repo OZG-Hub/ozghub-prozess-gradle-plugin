@@ -4,7 +4,7 @@ pipeline {
         booleanParam defaultValue: false, description: 'Lädt offizielle Version in das öffentliche Gradle-Repository hoch, sofern eine PLUGIN_VERSION gesetzt ist ', name: 'UPLOAD_TO_GRADLE_REPO'
     }
     options {
-        buildDiscarder(logRotator(numToKeepStr: '1', artifactNumToKeepStr: '30'))
+        buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '30'))
     }
     agent {
         kubernetes {
