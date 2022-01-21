@@ -8,7 +8,7 @@
       <!-- Der Prozessmodellierer führt den Code auf seinem Rechner aus und kann sowieso alle Dateien lesen und schreiben, die das Plugin auch lesen kann. -->
       <Bug pattern="PATH_TRAVERSAL_IN" />
 
-      <!-- Derjenige, der den Code ausführt, hat sowieso volle Kontrolle darüber, deswegen muss man den Code nicht vor Einschleusen falsche Daten schützen. -->
+      <!-- Derjenige, der den Code ausführt, hat sowieso volle Kontrolle darüber, deswegen muss man den Code nicht vor Einschleusen falscher Daten schützen. -->
       <Bug pattern="EI_EXPOSE_REP" />
       <Bug pattern="EI_EXPOSE_REP2" />
     </Or>
