@@ -1,4 +1,4 @@
-<Configuration status="WARN" name="ozghub-prozess-pipeline">
+<Configuration status="WARN" name="ozghub-prozess-deployment">
   <Appenders>
     <Console name="stdout" target="SYSTEM_OUT">
       <PatternLayout charset="UTF-8" pattern="%d{HH:mm:ss} %p %m%n" />
