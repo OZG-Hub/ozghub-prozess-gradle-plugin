@@ -1,4 +1,4 @@
-# Prozess-Pipeline-Gradle-Plugin für den OZG-Hub
+# Prozess-Deployment-Gradle-Plugin für den OZG-Hub
 
 ## Ziel
 
