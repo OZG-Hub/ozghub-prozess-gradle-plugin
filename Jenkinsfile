@@ -1,6 +1,7 @@
 pipeline {
     parameters {
         string defaultValue: '', description: 'Versionsnummer im Format YYYY.MM.DD-Nr', name: 'PLUGIN_VERSION'
+        booleanParam defaultValue: false, description: 'Lädt offizielle Version in das öffentliche Gradle-Repository hoch, sofern eine PLUGIN_VERSION gesetzt ist ', name: 'UPLOAD_TO_GRADLE_REPO'
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '30'))
@@ -66,6 +67,31 @@ pipeline {
                     println "Pushe Version " + pluginVersion + " nach " + repositoryKey
                     container('gradle') {
                         sh('gradle --info artifactoryPublish -PpluginVersion=' + pluginVersion + ' -PrepositoryKey=' + repositoryKey)
+                    }
+                }
+            }
+        }
+        stage('Publish Artifact to Gradle Plugin Repository') {
+            when {
+                expression { versionManuallySet() && params.UPLOAD_TO_GRADLE_REPO }
+            }
+            steps {
+                script {
+                    def pluginVersion = getPluginVersion()
+
+                    if (versionManuallySet() && params.UPLOAD_TO_GRADLE_REPO) {
+                        pFile = "./gradle.properties"
+                        println "Pushe Version " + pluginVersion + " in das öffentliche Repository "
+
+                        sh 'echo "gradle.publish.key=$GRADLE_AUTHENTICATION_USR" >> ' + pFile
+                        sh 'echo "gradle.publish.secret=$GRADLE_AUTHENTICATION_PSW" >> ' + pFile
+                        sh 'chmod 600 ' + pFile
+
+                        container('gradle') {
+                            sh('gradle --info publishPlugins -PpluginVersion=' + pluginVersion)
+                        }
+
+                        sh 'rm ' + pFile
                     }
                 }
             }

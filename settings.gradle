@@ -4,4 +4,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'ozghub-prozess-pipeline-gradle-plugin'
+rootProject.name = 'ozghub-prozessdeployment-gradle-plugin'

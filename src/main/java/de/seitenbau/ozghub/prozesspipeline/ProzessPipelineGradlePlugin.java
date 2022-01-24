@@ -18,22 +18,21 @@ public class ProzessPipelineGradlePlugin implements Plugin<Project>
     TaskContainer tasks = project.getTasks();
 
     tasks.create("deployProcess", DeployProcessTask.class, (task) -> {
-    }).setDescription("Deployt die gegebenen Prozessdefinitionen auf der konfigurierten Umgebung");
+    }).setDescription("Deployt Prozessdefinitionen");
 
     tasks.create("deployForms", DeployFormsTask.class, (task) -> {
-    }).setDescription("Deployt sämtliche Formulare aus dem Ordner forms sowie dessen Unterordnern "
-        + "auf der konfigurierten Umgebung");
+    }).setDescription("Deployt Formulare");
 
     tasks.create("undeployProcess", UndeployProcessTask.class, (task) -> {
-    }).setDescription("Löscht ein Prozess-Deployment von der konfigurierten Umgebung");
+    }).setDescription("Löscht ein Prozess-Deployment");
 
     tasks.create("undeployForm", UndeployFormTask.class, (task) -> {
-    }).setDescription("Löscht ein Formular-Deployment von der konfigurierten Umgebung");
+    }).setDescription("Löscht ein Formular-Deployment");
 
     tasks.create("listProcesses", ListProcessesTask.class, (task) -> {
-    }).setDescription("Listet alle deployten Prozesse auf");
+    }).setDescription("Zeigt eine Liste aller deployten Prozesse an");
 
     tasks.create("listForms", ListFormsTask.class, (task) -> {
-    }).setDescription("Listet alle deployten Formulare auf");
+    }).setDescription("Zeigt eine Liste aller deployten Formulare an");
   }
 }
