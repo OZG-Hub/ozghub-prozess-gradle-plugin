@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="WINDOWS-1252" standalone="yes"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:yaoqiang="http://bpmn.sourceforge.net" exporter="Yaoqiang BPMN Editor" exporterVersion="5.3" expressionLanguage="http://www.w3.org/1999/XPath" id="_1635252175623" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://bpmn.sourceforge.net/schemas/BPMN20.xsd">
-  <process id="BeispielprozessPipeline" isClosed="false" isExecutable="true" name="Beispielprozess Pipeline" processType="None">
+  <process id="Beispielprozess" isClosed="false" isExecutable="true" name="Beispielprozess" processType="None">
     <extensionElements>
       <yaoqiang:description/>
       <yaoqiang:pageFormat height="841.8897637795276" imageableHeight="831.8897637795276" imageableWidth="588.1102362204724" imageableX="5.0" imageableY="5.0" orientation="0" width="598.1102362204724"/>
@@ -43,8 +43,8 @@
     <userTask activiti:formKey="formular:1:test:v1.0" completionQuantity="1" id="usertask2" implementation="##unspecified" isForCompensation="false" name="Formular anderer Mandant" startQuantity="1"/>
     <userTask activiti:formKey="showOnce" completionQuantity="1" id="usertask3" implementation="##unspecified" isForCompensation="false" name="Sondertask" startQuantity="1"/>
   </process>
-  <bpmndi:BPMNDiagram id="Yaoqiang_Diagram-BeispielprozessPipeline" name="Untitled Diagram" resolution="96.0">
-    <bpmndi:BPMNPlane bpmnElement="BeispielprozessPipeline">
+  <bpmndi:BPMNDiagram id="Yaoqiang_Diagram-Beispielprozess" name="Untitled Diagram" resolution="96.0">
+    <bpmndi:BPMNPlane bpmnElement="Beispielprozess">
       <bpmndi:BPMNShape bpmnElement="startevent1" id="Yaoqiang-startevent1">
         <omgdc:Bounds height="32.0" width="32.0" x="230.0" y="80.0"/>
         <bpmndi:BPMNLabel>
