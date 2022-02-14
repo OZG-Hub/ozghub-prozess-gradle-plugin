@@ -27,9 +27,9 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
         d -> {
           sb.append(formatDate(d.getDeploymentDate()));
           sb.append(" ");
-          sb.append(d.getDeploymentName());
-          sb.append(" ");
           sb.append(d.getDeploymentId());
+          sb.append(" ");
+          sb.append(d.getDeploymentName());
           sb.append("\n");
           d.getProcessDefinitionKeysAndNames().forEach((key, value) -> {
             sb.append(" - ");
