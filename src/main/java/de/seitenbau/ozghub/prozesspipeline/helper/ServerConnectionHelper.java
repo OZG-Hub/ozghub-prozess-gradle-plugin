@@ -61,6 +61,7 @@ public class ServerConnectionHelper<T>
    * @param env Informationen über den Server der Schnittstelle
    * @param path Pfad der API
    * @param headers HTTP-Header
+   * @param data Daten im Body des Request
    *
    * @return Rückgabewert des Servers
    * @throws IOException Wenn beim Aufrufen der Schnittstelle oder beim Bearbeiten der Anfrage beim Server ein

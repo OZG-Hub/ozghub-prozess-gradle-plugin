@@ -161,9 +161,9 @@ public class ListProcessesHandlerTest
     return "INFO Vorhandene Deployments:\n" +
         expectedDeploymentDateString +
         " " +
-        deployment1.getDeploymentName() +
-        " " +
         deployment1.getDeploymentId() +
+        " " +
+        deployment1.getDeploymentName() +
         "\n" +
         " - " +
         "processKey1" +
