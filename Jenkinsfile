@@ -8,7 +8,7 @@ pipeline {
     }
     agent {
         kubernetes {
-            label "ozghub-prozesspipeline-${UUID.randomUUID().toString()}"
+            label "ozghub-prozessdeployment-${UUID.randomUUID().toString()}"
             idleMinutes 1
             yaml """
         apiVersion: v1
