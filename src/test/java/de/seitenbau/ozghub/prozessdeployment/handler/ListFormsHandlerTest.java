@@ -119,15 +119,15 @@ public class ListFormsHandlerTest
     String expectedDeploymentDateString = format.format(deploymentDate);
 
     return "INFO Vorhandene Deployments:\n"
-        + "Deployment-Datum    Deployment-Id Deployment-Name Sprache\n"
-        + "---------------------------------------------------------\n"
+        + "Deployment-Datum    | Deployment-Id | Sprache | Deployment-Name\n"
+        + "--------------------+---------------+---------+----------------\n"
         + expectedDeploymentDateString
-        + " "
+        + " | "
         + StringUtils.leftPad(String.valueOf(deployment.getDeploymentId()), "Deployment-Id".length())
-        + " "
+        + " | "
+        + StringUtils.leftPad(deployment.getLanguage(), "Sprache".length())
+        + " | "
         + deployment.getDeploymentName()
-        + " "
-        + deployment.getLanguage()
         + "\n";
   }
 

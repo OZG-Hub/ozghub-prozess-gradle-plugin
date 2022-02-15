@@ -160,13 +160,13 @@ public class ListProcessesHandlerTest
     String expectedDeploymentDateString = format.format(deploymentDate);
 
     return "INFO Vorhandene Deployments:\n"
-        + "Deployment-Datum    Deployment-Id Deployment-Name\n"
+        + "Deployment-Datum    | Deployment-Id | Deployment-Name\n"
         + " - Prozesskey Prozessname\n"
-        + "-------------------------------------------------\n"
+        + "--------------------+---------------+----------------\n"
         + expectedDeploymentDateString
-        + " "
+        + " | "
         + StringUtils.leftPad(deployment.getDeploymentId(), "Deployment-Id".length())
-        + " "
+        + " | "
         + deployment.getDeploymentName()
         + "\n"
         + " - "

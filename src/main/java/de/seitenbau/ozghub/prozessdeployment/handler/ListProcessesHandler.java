@@ -24,15 +24,15 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
     }
     StringBuilder sb = new StringBuilder();
     sb.append("Vorhandene Deployments:\n");
-    sb.append("Deployment-Datum    Deployment-Id Deployment-Name\n");
+    sb.append("Deployment-Datum    | Deployment-Id | Deployment-Name\n");
     sb.append(" - Prozesskey Prozessname\n");
-    sb.append("-------------------------------------------------\n");
+    sb.append("--------------------+---------------+----------------\n");
     deploymentList.getValue().forEach(
         deployment -> {
           sb.append(formatDate(deployment.getDeploymentDate()));
-          sb.append(" ");
+          sb.append(" | ");
           sb.append(StringUtils.leftPad(deployment.getDeploymentId(), "Deployment-Id".length()));
-          sb.append(" ");
+          sb.append(" | ");
           sb.append(deployment.getDeploymentName());
           sb.append("\n");
           deployment.getProcessDefinitionKeysAndNames().forEach((key, name) -> {

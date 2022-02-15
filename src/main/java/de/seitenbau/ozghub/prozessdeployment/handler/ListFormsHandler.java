@@ -21,17 +21,17 @@ public class ListFormsHandler extends AbstractListHandler<FormDeploymentList>
   {
     StringBuilder sb = new StringBuilder();
     sb.append("Vorhandene Deployments:\n");
-    sb.append("Deployment-Datum    Deployment-Id Deployment-Name Sprache\n");
-    sb.append("---------------------------------------------------------\n");
+    sb.append("Deployment-Datum    | Deployment-Id | Sprache | Deployment-Name\n");
+    sb.append("--------------------+---------------+---------+----------------\n");
     deploymentList.getDeploymentList().forEach(
         d -> {
           sb.append(formatDate(d.getDeploymentDate()));
-          sb.append(" ");
+          sb.append(" | ");
           sb.append(StringUtils.leftPad(String.valueOf(d.getDeploymentId()), "Deployment-Id".length()));
-          sb.append(" ");
+          sb.append(" | ");
+          sb.append(StringUtils.leftPad(d.getLanguage(), "Sprache".length()));
+          sb.append(" | ");
           sb.append(d.getDeploymentName());
-          sb.append(" ");
-          sb.append(d.getLanguage());
           sb.append("\n");
         });
     log.info(sb.toString());
