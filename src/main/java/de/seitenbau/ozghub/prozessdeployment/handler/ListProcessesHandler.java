@@ -35,13 +35,16 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
           sb.append(" | ");
           sb.append(deployment.getDeploymentName());
           sb.append("\n");
-          deployment.getProcessDefinitionKeysAndNames().forEach((key, name) -> {
-            sb.append(" - ");
-            sb.append(key);
-            sb.append(" ");
-            sb.append(name);
-            sb.append("\n");
-          });
+          deployment.getProcessDefinitionKeysAndNames().entrySet()
+              .stream()
+              .sorted((e1, e2) -> String.CASE_INSENSITIVE_ORDER.compare(e1.getKey(), e2.getKey()))
+              .forEachOrdered(entry -> {
+                sb.append(" - ");
+                sb.append(entry.getKey());
+                sb.append(" ");
+                sb.append(entry.getValue());
+                sb.append("\n");
+              });
         });
     log.info(sb.toString());
   }
