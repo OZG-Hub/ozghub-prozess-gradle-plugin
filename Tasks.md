@@ -106,14 +106,14 @@ Formulare, die Teil des Deployments sind, werden undeployt.
 
 #### Allgemein
 
-Der Task `listProcesses` liefert eine List aller auf der Umgebung vorhandenen Prozess-Deployments.<br />
+Der Task `listProcesses` liefert die Liste aller auf der Umgebung vorhandenen Prozess-Deployments.<br />
 Die Liste mit den enthaltenen Informationen wird auf der Konsole ausgegeben.
-
-### Task zum Auflisten aller Formular-Deployments
 
 ---------------------------------------------------------------------------------------------------
 
+### Task zum Auflisten aller Formular-Deployments
+
 #### Allgemein
 
-Der Task `listForms` liefert eine List aller auf der Umgebung vorhandenen Formular-Deployments.<br />
+Der Task `listForms` liefert die Liste aller auf der Umgebung vorhandenen Formular-Deployments.<br />
 Die Liste mit den enthaltenen Informationen wird auf der Konsole ausgegeben.
