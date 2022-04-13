@@ -31,7 +31,7 @@ public class ListFormsHandlerTest
 {
   protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-  private static final String DATE_FORMAT = "YYYY-MM-dd hh:mm:ss";
+  private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
   public static final String TASK_NAME = "listForms";
 
   private HttpServer httpServer = null;

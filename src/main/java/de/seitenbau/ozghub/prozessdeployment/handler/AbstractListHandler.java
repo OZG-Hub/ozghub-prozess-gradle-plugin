@@ -16,7 +16,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public abstract class AbstractListHandler<T> extends DefaultHandler
 {
-  private static final String DATE_FORMAT = "YYYY-MM-dd hh:mm:ss";
+  private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
   private final Class<T> responseType;
 
