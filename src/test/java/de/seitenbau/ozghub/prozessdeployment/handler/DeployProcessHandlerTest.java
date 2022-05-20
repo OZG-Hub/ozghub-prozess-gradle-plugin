@@ -14,10 +14,12 @@ import java.util.Set;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.gradle.api.GradleException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpServer;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
@@ -26,6 +28,8 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
+import de.seitenbau.ozghub.prozesspipeline.model.request.DeployProcessRequest;
+import de.seitenbau.ozghub.prozesspipeline.model.request.ProcessMetadata;
 import lombok.SneakyThrows;
 
 public class DeployProcessHandlerTest extends HandlerTestBase
@@ -76,12 +80,12 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
+    assertRequestBody(actualRequest.getRequestBody(), true);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.ERROR, "engine1");
   }
 
   @Test
-  public void deploy_customPathToFolder()
+  public void deploy_customPathToFolder_NoMetadata()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
@@ -104,12 +108,12 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
+    assertRequestBody(actualRequest.getRequestBody(), false);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.IGNORE, null);
   }
 
   @Test
-  public void deploy_customPathToFile()
+  public void deploy_customPathToFile_WithMetadata()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
@@ -132,7 +136,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
+    assertRequestBody(actualRequest.getRequestBody(), true);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
   }
 
@@ -166,14 +170,19 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
+    assertRequestBody(actualRequest.getRequestBody(), true);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
   }
 
   @SneakyThrows
-  private void assertRequestBody(byte[] data)
+  private void assertRequestBody(byte[] data, boolean withMetadata)
   {
-    try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(data)))
+    DeployProcessRequest actualDeployProcessRequest = SerializationUtils.deserialize(data);
+
+    byte[] actualDeploymentArchive =
+        Base64.getDecoder().decode(actualDeployProcessRequest.getDeploymentArchiveBase64());
+
+    try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(actualDeploymentArchive)))
     {
       zis.getNextEntry();
       byte[] actualContentBytes = IOUtils.toByteArray(zis);
@@ -183,6 +192,18 @@ public class DeployProcessHandlerTest extends HandlerTestBase
       assertThat(actualContent).isEqualTo(expectedContent);
       assertThat(zis.getNextEntry()).isNull();
     }
+
+    if (withMetadata)
+    {
+      Map<String, ProcessMetadata> actualMetadata = actualDeployProcessRequest.getMetadata();
+      assertThat(actualMetadata.entrySet()).hasSize(1);
+
+      ObjectMapper objectMapper = new ObjectMapper();
+      ProcessMetadata expectedProcessMetadata =
+          objectMapper.readValue(getFileInProjectDir("/build/models/metadata/example.json"), ProcessMetadata.class);
+      assertThat(actualMetadata.get("example")).isEqualToComparingFieldByField(expectedProcessMetadata);
+    }
+
   }
 
   private void assertResponse(HttpHandler handler)

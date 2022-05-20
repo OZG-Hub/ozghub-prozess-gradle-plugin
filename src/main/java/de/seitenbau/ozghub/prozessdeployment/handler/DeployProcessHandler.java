@@ -1,12 +1,20 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Base64;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.gradle.api.GradleException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
@@ -14,14 +22,18 @@ import de.seitenbau.ozghub.prozessdeployment.helper.FileHelper;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
+import de.seitenbau.ozghub.prozesspipeline.model.request.DeployProcessRequest;
+import de.seitenbau.ozghub.prozesspipeline.model.request.ProcessMetadata;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class DeployProcessHandler extends DefaultHandler
 {
-  public static final String API_PATH = "/prozess/ozghub/deploy";
+  public static final String API_PATH = "/prozess/ozghub/deployWithMetadata";
 
   private static final String MODEL_DIR = "/build/models";
+
+  public static final String PROCESS_METADATA_FOLDER_NAME = "metadata";
 
   private static final ServerConnectionHelper<ProcessDeploymentResponse> CONNECTION_HELPER =
       new ServerConnectionHelper<>(ProcessDeploymentResponse.class);
@@ -58,8 +70,10 @@ public class DeployProcessHandler extends DefaultHandler
 
     try
     {
-      byte[] data = createDeploymentArchive();
+      DeployProcessRequest deployProcessRequest = createDeployProcessRequest();
+
       Map<String, String> headers = getHeaderParameters();
+      byte[] data = SerializationUtils.serialize(deployProcessRequest);
       ProcessDeploymentResponse response = CONNECTION_HELPER.post(environment, API_PATH, headers, data);
       logEndOfTask(response);
     }
@@ -69,11 +83,75 @@ public class DeployProcessHandler extends DefaultHandler
     }
   }
 
+  private DeployProcessRequest createDeployProcessRequest()
+  {
+
+    Map<String, ProcessMetadata> metadata = new HashMap<>();
+
+    List<Path> metadataFiles = readMetadataFiles();
+
+    metadataFiles.forEach(file -> {
+      String fileName = FilenameUtils.removeExtension(file.getFileName().toString());
+      ProcessMetadata processMetadata = readProcessMetadata(file);
+      metadata.put(fileName, processMetadata);
+    });
+
+    DeployProcessRequest deployProcessRequest = new DeployProcessRequest();
+    deployProcessRequest.setMetadata(metadata);
+
+    byte[] data = createDeploymentArchive();
+    deployProcessRequest.setDeploymentArchiveBase64(Base64.getEncoder().encodeToString(data));
+
+    return deployProcessRequest;
+  }
+
+  private List<Path> readMetadataFiles()
+  {
+    File metadataFolder = determineMetadataFolder();
+
+    if (metadataFolder.exists())
+    {
+      return FileHelper.readFilesInFolder(metadataFolder.toPath());
+    }
+    return Collections.emptyList();
+  }
+
+  private File determineMetadataFolder()
+  {
+    Path processModelPath = FileHelper.getCustomFolderOrDefault(projectDir, filePath, MODEL_DIR);
+
+    File file = processModelPath.toFile();
+
+    if (file.isFile())
+    {
+      String fullPath = FilenameUtils.getFullPath(processModelPath.toString());
+
+      return new File(fullPath, PROCESS_METADATA_FOLDER_NAME);
+    }
+    else
+    {
+      return new File(processModelPath.toFile(), PROCESS_METADATA_FOLDER_NAME);
+    }
+  }
+
+  private ProcessMetadata readProcessMetadata(Path file)
+  {
+    try
+    {
+      ObjectMapper objectMapper = new ObjectMapper();
+      return objectMapper.readValue(file.toFile(), ProcessMetadata.class);
+    }
+    catch (IOException e)
+    {
+      throw new RuntimeException("Fehler beim Lesen der Metadata-Datei " + file, e);
+    }
+  }
+
   private byte[] createDeploymentArchive()
   {
     Path folder = FileHelper.getCustomFolderOrDefault(projectDir, filePath, MODEL_DIR);
 
-    return FileHelper.createArchiveForFilesInFolder(folder);
+    return FileHelper.createArchiveForFilesInFolder(folder, PROCESS_METADATA_FOLDER_NAME);
   }
 
   private Map<String, String> getHeaderParameters()
