@@ -155,7 +155,7 @@ public class DeployProcessHandler extends DefaultHandler
     }
     catch (IOException e)
     {
-      throw new RuntimeException("Fehler beim Lesen der Metadata-Datei " + file, e);
+      throw new RuntimeException("Fehler beim Einlesen der Metadata-Datei " + file, e);
     }
   }
 
