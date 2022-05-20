@@ -74,7 +74,7 @@ public class DeployProcessHandler extends DefaultHandler
       Map<String, String> headers = getHeaderParameters();
 
       ProcessDeploymentRequest deployProcessRequest = createProcessDeploymentRequest();
-      byte[] data = getBody(deployProcessRequest);
+      byte[] data = getRequestBody(deployProcessRequest);
 
       ProcessDeploymentResponse response = CONNECTION_HELPER.post(environment, API_PATH, headers, data);
       logEndOfTask(response);
@@ -85,7 +85,7 @@ public class DeployProcessHandler extends DefaultHandler
     }
   }
 
-  private byte[] getBody(ProcessDeploymentRequest deployProcessRequest) throws IOException
+  private byte[] getRequestBody(ProcessDeploymentRequest deployProcessRequest) throws IOException
   {
     ObjectMapper objectMapper = new ObjectMapper();
     String deployProcessRequestAsString = objectMapper.writeValueAsString(deployProcessRequest);
@@ -94,29 +94,32 @@ public class DeployProcessHandler extends DefaultHandler
 
   private ProcessDeploymentRequest createProcessDeploymentRequest()
   {
-
-    Map<String, ProcessMetadata> metadata = new HashMap<>();
-
-    List<Path> metadataFiles = readMetadataFiles();
-
-    metadataFiles.forEach(file -> {
-      String fileName = FilenameUtils.removeExtension(file.getFileName().toString());
-      ProcessMetadata processMetadata = readProcessMetadata(file);
-      metadata.put(fileName, processMetadata);
-    });
-
-    ProcessDeploymentRequest deployProcessRequest = new ProcessDeploymentRequest();
-    deployProcessRequest.setMetadata(metadata);
-
     byte[] data = createDeploymentArchive();
-    deployProcessRequest.setBarArchiveBase64(Base64.getEncoder().encodeToString(data));
+    Map<String, ProcessMetadata> metadata = createMetadataMap();
 
-    deployProcessRequest.setDeploymentName(deploymentName);
+    ProcessDeploymentRequest deployProcessRequest =
+        new ProcessDeploymentRequest(Base64.getEncoder().encodeToString(data), deploymentName, metadata);
+
+    log.info("Deployment-Request: " + deployProcessRequest);
 
     return deployProcessRequest;
   }
 
-  private List<Path> readMetadataFiles()
+  private Map<String, ProcessMetadata> createMetadataMap()
+  {
+    Map<String, ProcessMetadata> metadata = new HashMap<>();
+
+    List<Path> metadataFiles = getMetadataFilePathList();
+
+    metadataFiles.forEach(file -> {
+      String fileName = FilenameUtils.removeExtension(file.getFileName().toString());
+      ProcessMetadata processMetadata = readProcessMetadataFromFile(file);
+      metadata.put(fileName, processMetadata);
+    });
+    return metadata;
+  }
+
+  private List<Path> getMetadataFilePathList()
   {
     File metadataFolder = determineMetadataFolder();
 
@@ -143,7 +146,7 @@ public class DeployProcessHandler extends DefaultHandler
     }
   }
 
-  private ProcessMetadata readProcessMetadata(Path file)
+  private ProcessMetadata readProcessMetadataFromFile(Path file)
   {
     try
     {
