@@ -14,12 +14,10 @@ import java.util.Set;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.SerializationUtils;
 import org.gradle.api.GradleException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpServer;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
@@ -28,8 +26,8 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
-import de.seitenbau.ozghub.prozesspipeline.model.request.DeployProcessRequest;
-import de.seitenbau.ozghub.prozesspipeline.model.request.ProcessMetadata;
+import de.seitenbau.ozghub.prozessdeployment.model.request.DeployProcessRequest;
+import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import lombok.SneakyThrows;
 
 public class DeployProcessHandlerTest extends HandlerTestBase
@@ -177,10 +175,11 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   @SneakyThrows
   private void assertRequestBody(byte[] data, boolean withMetadata)
   {
-    DeployProcessRequest actualDeployProcessRequest = SerializationUtils.deserialize(data);
+
+    DeployProcessRequest actualDeployProcessRequest = OBJECT_MAPPER.readValue(data, DeployProcessRequest.class);
 
     byte[] actualDeploymentArchive =
-        Base64.getDecoder().decode(actualDeployProcessRequest.getDeploymentArchiveBase64());
+        Base64.getDecoder().decode(actualDeployProcessRequest.getBarArchiveBase64());
 
     try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(actualDeploymentArchive)))
     {
@@ -193,14 +192,15 @@ public class DeployProcessHandlerTest extends HandlerTestBase
       assertThat(zis.getNextEntry()).isNull();
     }
 
+    assertThat(actualDeployProcessRequest.getDeploymentName()).isEqualTo("deployment1");
+
     if (withMetadata)
     {
       Map<String, ProcessMetadata> actualMetadata = actualDeployProcessRequest.getMetadata();
       assertThat(actualMetadata.entrySet()).hasSize(1);
 
-      ObjectMapper objectMapper = new ObjectMapper();
       ProcessMetadata expectedProcessMetadata =
-          objectMapper.readValue(getFileInProjectDir("/build/models/metadata/example.json"), ProcessMetadata.class);
+          OBJECT_MAPPER.readValue(getFileInProjectDir("/build/models/metadata/example.json"), ProcessMetadata.class);
       assertThat(actualMetadata.get("example")).isEqualToComparingFieldByField(expectedProcessMetadata);
     }
 
@@ -226,8 +226,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
       String engineId)
   {
     Map<String, List<String>> headers = request.getHeaders();
-    assertThat(headers).containsEntry(HTTPHeaderKeys.CONTENT_TYPE, List.of("application/java-archive"));
-    assertThat(headers).containsEntry(HTTPHeaderKeys.PROCESS_DEPLOYMENT_NAME, List.of("deployment1"));
+    assertThat(headers).containsEntry(HTTPHeaderKeys.CONTENT_TYPE, List.of("application/json"));
     assertThat(headers).containsEntry(HTTPHeaderKeys.PROCESS_DUPLICATION, List.of(action.toString()));
 
     if (engineId != null)

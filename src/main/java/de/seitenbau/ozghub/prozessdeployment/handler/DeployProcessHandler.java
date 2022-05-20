@@ -2,6 +2,7 @@ package de.seitenbau.ozghub.prozessdeployment.handler;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Base64;
 import java.util.Collections;
@@ -11,7 +12,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.SerializationUtils;
 import org.gradle.api.GradleException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,8 +22,8 @@ import de.seitenbau.ozghub.prozessdeployment.helper.FileHelper;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
-import de.seitenbau.ozghub.prozesspipeline.model.request.DeployProcessRequest;
-import de.seitenbau.ozghub.prozesspipeline.model.request.ProcessMetadata;
+import de.seitenbau.ozghub.prozessdeployment.model.request.DeployProcessRequest;
+import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -70,10 +70,11 @@ public class DeployProcessHandler extends DefaultHandler
 
     try
     {
-      DeployProcessRequest deployProcessRequest = createDeployProcessRequest();
-
       Map<String, String> headers = getHeaderParameters();
-      byte[] data = SerializationUtils.serialize(deployProcessRequest);
+
+      DeployProcessRequest deployProcessRequest = createDeployProcessRequest();
+      byte[] data = getBody(deployProcessRequest);
+
       ProcessDeploymentResponse response = CONNECTION_HELPER.post(environment, API_PATH, headers, data);
       logEndOfTask(response);
     }
@@ -81,6 +82,13 @@ public class DeployProcessHandler extends DefaultHandler
     {
       throw new GradleException("Fehler: " + e.getMessage(), e);
     }
+  }
+
+  private byte[] getBody(DeployProcessRequest deployProcessRequest) throws IOException
+  {
+    ObjectMapper objectMapper = new ObjectMapper();
+    String deployProcessRequestAsString = objectMapper.writeValueAsString(deployProcessRequest);
+    return deployProcessRequestAsString.getBytes(StandardCharsets.UTF_8);
   }
 
   private DeployProcessRequest createDeployProcessRequest()
@@ -100,7 +108,9 @@ public class DeployProcessHandler extends DefaultHandler
     deployProcessRequest.setMetadata(metadata);
 
     byte[] data = createDeploymentArchive();
-    deployProcessRequest.setDeploymentArchiveBase64(Base64.getEncoder().encodeToString(data));
+    deployProcessRequest.setBarArchiveBase64(Base64.getEncoder().encodeToString(data));
+
+    deployProcessRequest.setDeploymentName(deploymentName);
 
     return deployProcessRequest;
   }
@@ -157,9 +167,8 @@ public class DeployProcessHandler extends DefaultHandler
   private Map<String, String> getHeaderParameters()
   {
     Map<String, String> headers = new HashMap<>();
-    headers.put(HTTPHeaderKeys.PROCESS_DEPLOYMENT_NAME, deploymentName);
     headers.put(HTTPHeaderKeys.PROCESS_DUPLICATION, duplicateProcesskeyAction.toString());
-    headers.put(HTTPHeaderKeys.CONTENT_TYPE, "application/java-archive");
+    headers.put(HTTPHeaderKeys.CONTENT_TYPE, "application/json");
 
     if (engineId != null)
     {
