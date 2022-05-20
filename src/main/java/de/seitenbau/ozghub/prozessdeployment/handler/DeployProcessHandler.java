@@ -23,7 +23,7 @@ import de.seitenbau.ozghub.prozessdeployment.helper.FileHelper;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
-import de.seitenbau.ozghub.prozessdeployment.model.request.DeployProcessRequest;
+import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import lombok.extern.log4j.Log4j2;
 
@@ -73,7 +73,7 @@ public class DeployProcessHandler extends DefaultHandler
     {
       Map<String, String> headers = getHeaderParameters();
 
-      DeployProcessRequest deployProcessRequest = createDeployProcessRequest();
+      ProcessDeploymentRequest deployProcessRequest = createProcessDeploymentRequest();
       byte[] data = getBody(deployProcessRequest);
 
       ProcessDeploymentResponse response = CONNECTION_HELPER.post(environment, API_PATH, headers, data);
@@ -85,14 +85,14 @@ public class DeployProcessHandler extends DefaultHandler
     }
   }
 
-  private byte[] getBody(DeployProcessRequest deployProcessRequest) throws IOException
+  private byte[] getBody(ProcessDeploymentRequest deployProcessRequest) throws IOException
   {
     ObjectMapper objectMapper = new ObjectMapper();
     String deployProcessRequestAsString = objectMapper.writeValueAsString(deployProcessRequest);
     return deployProcessRequestAsString.getBytes(StandardCharsets.UTF_8);
   }
 
-  private DeployProcessRequest createDeployProcessRequest()
+  private ProcessDeploymentRequest createProcessDeploymentRequest()
   {
 
     Map<String, ProcessMetadata> metadata = new HashMap<>();
@@ -105,7 +105,7 @@ public class DeployProcessHandler extends DefaultHandler
       metadata.put(fileName, processMetadata);
     });
 
-    DeployProcessRequest deployProcessRequest = new DeployProcessRequest();
+    ProcessDeploymentRequest deployProcessRequest = new ProcessDeploymentRequest();
     deployProcessRequest.setMetadata(metadata);
 
     byte[] data = createDeploymentArchive();

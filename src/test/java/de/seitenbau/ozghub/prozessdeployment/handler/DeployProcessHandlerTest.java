@@ -26,7 +26,7 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
-import de.seitenbau.ozghub.prozessdeployment.model.request.DeployProcessRequest;
+import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import lombok.SneakyThrows;
 
@@ -176,10 +176,14 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   private void assertRequestBody(byte[] data, boolean withMetadata)
   {
 
-    DeployProcessRequest actualDeployProcessRequest = OBJECT_MAPPER.readValue(data, DeployProcessRequest.class);
+    ProcessDeploymentRequest
+        actualDeployProcessRequest = OBJECT_MAPPER.readValue(data, ProcessDeploymentRequest.class);
+
+    System.out.println(actualDeployProcessRequest.getBarArchiveBase64());
 
     byte[] actualDeploymentArchive =
         Base64.getDecoder().decode(actualDeployProcessRequest.getBarArchiveBase64());
+
 
     try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(actualDeploymentArchive)))
     {

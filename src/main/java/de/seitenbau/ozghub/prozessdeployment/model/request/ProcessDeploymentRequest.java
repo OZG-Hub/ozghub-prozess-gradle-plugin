@@ -5,7 +5,7 @@ import java.util.Map;
 import lombok.Data;
 
 @Data
-public class DeployProcessRequest
+public class ProcessDeploymentRequest
 {
   private String barArchiveBase64;
 
