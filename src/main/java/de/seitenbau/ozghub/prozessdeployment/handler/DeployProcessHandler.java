@@ -3,6 +3,7 @@ package de.seitenbau.ozghub.prozessdeployment.handler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
 import java.util.Collections;
@@ -130,9 +131,7 @@ public class DeployProcessHandler extends DefaultHandler
   {
     Path processModelPath = FileHelper.getCustomFolderOrDefault(projectDir, filePath, MODEL_DIR);
 
-    File file = processModelPath.toFile();
-
-    if (file.isFile())
+    if (Files.isRegularFile(processModelPath))
     {
       String fullPath = FilenameUtils.getFullPath(processModelPath.toString());
 
@@ -140,7 +139,7 @@ public class DeployProcessHandler extends DefaultHandler
     }
     else
     {
-      return new File(processModelPath.toFile(), PROCESS_METADATA_FOLDER_NAME);
+      return new File(processModelPath.toString(), PROCESS_METADATA_FOLDER_NAME);
     }
   }
 

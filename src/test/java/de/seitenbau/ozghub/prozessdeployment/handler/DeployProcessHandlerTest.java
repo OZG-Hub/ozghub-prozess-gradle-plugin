@@ -55,7 +55,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   }
 
   @Test
-  public void deploy()
+  public void deploy_WithMetadata()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
