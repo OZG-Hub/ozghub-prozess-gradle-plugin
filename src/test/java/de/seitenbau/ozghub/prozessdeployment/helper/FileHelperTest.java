@@ -99,7 +99,7 @@ public class FileHelperTest
 
     //assert
     assertThat(actualFiles).hasSize(1);
-    assertThat(actualFiles.get(0)).isEqualTo(Path.of(provided.toString(), "IncludedTestFile.txt"));
+    assertThat(actualFiles.get(0)).isEqualTo(Path.of(provided.toString(),  "IncludedTestFile.txt"));
   }
 
 
@@ -118,8 +118,8 @@ public class FileHelperTest
         Path.of(provided.toString(), "Testfile.txt"),
         Path.of(provided.toString(), "subfolder", "TestSubFile.txt"),
         Path.of(provided.toString(), "subfolder.txt"),
-        Path.of(provided.toString(), "folderContainingReadFilesFolder", "includedTestFile.txt"),
-        Path.of(provided.toString(), "folderContainingReadFilesFolder", "readFiles", "excludedTestFile.txt"));
+        Path.of(provided.toString(), "folderContainingReadFilesFolder", "IncludedTestFile.txt"),
+        Path.of(provided.toString(), "folderContainingReadFilesFolder", "readFiles", "ExcludedTestFile.txt"));
   }
 
 
