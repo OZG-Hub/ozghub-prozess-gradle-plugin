@@ -24,7 +24,7 @@ public class FileHelperTest
   public void createArchiveForFilesInFolder_file()
   {
     // arrange
-    Path provided = getPathFromResources(Path.of(RESOURCES_PATH, "createArchive", "TestFile.txt"));
+    Path provided = getPathToFile();
 
     // act
     byte[] actual = FileHelper.createArchiveForFilesInFolder(provided);
@@ -45,7 +45,7 @@ public class FileHelperTest
   public void createArchiveForFilesInFolder_folder()
   {
     // arrange
-    Path provided = getPathFromResources(Path.of(RESOURCES_PATH, "createArchive"));
+    Path provided = getPathToFolder();
 
     // act
     byte[] actual = FileHelper.createArchiveForFilesInFolder(provided);
@@ -69,27 +69,20 @@ public class FileHelperTest
     }
   }
 
-  @Test
-  public void readFilesFromFolder()
+  private Path getPathToFolder()
   {
-    //arranger
-    Path provided = getPathFromResources(Path.of(RESOURCES_PATH, "readFiles"));
-
-    //act
-    List<Path> actualFiles = FileHelper.readFilesInFolder(provided);
-
-    //assert
-    assertThat(actualFiles).hasSize(2);
-    assertThat(actualFiles).containsExactlyInAnyOrder(
-        Path.of(provided.toString(), "TestFile.txt"),
-        Path.of(provided.toString(), "subfolder", "TestSubFile.txt"));
+    return getPathFromResources(RESOURCES_PATH);
   }
 
+  private Path getPathToFile()
+  {
+    return getPathFromResources(RESOURCES_PATH + "/TestFile.txt");
+  }
 
   @SneakyThrows
-  private Path getPathFromResources(Path path)
+  private Path getPathFromResources(String path)
   {
-    URL url = Thread.currentThread().getContextClassLoader().getResource(path.toString());
+    URL url = Thread.currentThread().getContextClassLoader().getResource(path);
     Objects.requireNonNull(url);
 
     return Path.of(url.toURI());
