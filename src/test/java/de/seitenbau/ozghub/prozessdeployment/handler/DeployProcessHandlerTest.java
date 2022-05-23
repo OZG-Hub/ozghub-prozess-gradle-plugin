@@ -203,7 +203,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
       ProcessMetadata expectedProcessMetadata =
           OBJECT_MAPPER.readValue(getFileInProjectDir("/build/models/metadata/example.json"), ProcessMetadata.class);
-      assertThat(actualMetadata.get("example")).isEqualToComparingFieldByField(expectedProcessMetadata);
+      assertThat(actualMetadata.get("example")).usingRecursiveComparison().isEqualTo(expectedProcessMetadata);
     }
 
   }

@@ -38,7 +38,7 @@ public final class FileHelper
 
     try
     {
-      Files.walk(folder).filter(Files::isRegularFile).filter(path -> includeFile(path, subfoldersToExclude))
+      Files.walk(folder).filter(Files::isRegularFile).filter(path -> includeFile(folder, path, subfoldersToExclude))
           .forEach(f -> files.add(f.toAbsolutePath()));
       log.info("Im Ordner {} wurden {} Dateien gefunden.", folder, files.size());
     }
@@ -50,11 +50,11 @@ public final class FileHelper
     return files;
   }
 
-  private static boolean includeFile(Path path, String... subfoldersToExclude)
+  private static boolean includeFile(Path folder, Path filePath, String... subfoldersToExclude)
   {
     for (String folderName : subfoldersToExclude)
     {
-      if (path.toString().contains(folderName))
+      if (folder.relativize(filePath.getParent()).toString().contains(folderName))
       {
         return false;
       }
@@ -100,7 +100,7 @@ public final class FileHelper
     }
   }
 
-  public static byte[] readAllBytes(Path path)
+  private static byte[] readAllBytes(Path path)
   {
     try
     {

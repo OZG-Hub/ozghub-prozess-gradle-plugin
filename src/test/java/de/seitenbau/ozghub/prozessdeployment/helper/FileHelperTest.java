@@ -24,7 +24,7 @@ public class FileHelperTest
   public void createArchiveForFilesInFolder_file()
   {
     // arrange
-    Path provided = getPathToFile();
+    Path provided = getPathFromResources(Path.of(RESOURCES_PATH, "createArchive", "TestFile.txt"));
 
     // act
     byte[] actual = FileHelper.createArchiveForFilesInFolder(provided);
@@ -45,7 +45,7 @@ public class FileHelperTest
   public void createArchiveForFilesInFolder_folder()
   {
     // arrange
-    Path provided = getPathToFolder();
+    Path provided = getPathFromResources(Path.of(RESOURCES_PATH, "createArchive"));
 
     // act
     byte[] actual = FileHelper.createArchiveForFilesInFolder(provided);
@@ -61,7 +61,7 @@ public class FileHelperTest
 
       zis.getNextEntry();
       contentBytes = IOUtils.toByteArray(zis);
-      actualContents.add( new String(contentBytes));
+      actualContents.add(new String(contentBytes));
 
       List<String> expectedContents = List.of("This is the test-file.", "This is the test-sub-file.");
       assertThat(actualContents).containsExactlyInAnyOrderElementsOf(expectedContents);
@@ -69,20 +69,43 @@ public class FileHelperTest
     }
   }
 
-  private Path getPathToFolder()
+  @Test
+  public void readFilesFromFolder_excludeSubfolder()
   {
-    return getPathFromResources(RESOURCES_PATH);
+    //arranger
+    Path provided = getPathFromResources(Path.of(RESOURCES_PATH, "readFiles"));
+
+    //act
+    List<Path> actualFiles = FileHelper.readFilesInFolder(provided, "subfolder");
+
+    //assert
+    assertThat(actualFiles).hasSize(2);
+        assertThat(actualFiles).containsExactlyInAnyOrder(Path.of(provided.toString(), "Testfile.txt"),
+        Path.of(provided.toString(), "subfolder.txt"));
   }
 
-  private Path getPathToFile()
+
+  @Test
+  public void readFilesFromFolder()
   {
-    return getPathFromResources(RESOURCES_PATH + "/TestFile.txt");
+    //arranger
+    Path provided = getPathFromResources(Path.of(RESOURCES_PATH, "readFiles"));
+
+    //act
+    List<Path> actualFiles = FileHelper.readFilesInFolder(provided);
+
+    //assert
+    assertThat(actualFiles).hasSize(3);
+    assertThat(actualFiles).containsExactlyInAnyOrder(Path.of(provided.toString(), "Testfile.txt"),
+        Path.of(provided.toString(), "subfolder", "TestSubFile.txt"),
+        Path.of(provided.toString(), "subfolder.txt"));
   }
+
 
   @SneakyThrows
-  private Path getPathFromResources(String path)
+  private Path getPathFromResources(Path path)
   {
-    URL url = Thread.currentThread().getContextClassLoader().getResource(path);
+    URL url = Thread.currentThread().getContextClassLoader().getResource(path.toString());
     Objects.requireNonNull(url);
 
     return Path.of(url.toURI());
