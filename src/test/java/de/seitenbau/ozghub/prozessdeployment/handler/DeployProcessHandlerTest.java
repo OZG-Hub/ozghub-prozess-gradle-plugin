@@ -55,7 +55,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   }
 
   @Test
-  public void deploy_WithMetadata()
+  public void deploy_WithDefaultMetadata()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
@@ -68,7 +68,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         null,
         "deployment1",
         DuplicateProcessKeyAction.ERROR,
-        "engine1");
+        "engine1",
+        null);
 
     // act
     sut.deploy();
@@ -96,6 +97,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "src/test/resources/handler/deployProcessHandler/build",
         "deployment1",
         DuplicateProcessKeyAction.IGNORE,
+        null,
         null);
 
     // act
@@ -111,7 +113,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   }
 
   @Test
-  public void deploy_customPathToFile_WithMetadata()
+  public void deploy_customPathToFile_CustomMetadata()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
@@ -124,7 +126,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn",
         "deployment1",
         DuplicateProcessKeyAction.UNDEPLOY,
-        null);
+        null,
+        "src/test/resources/handler/deployProcessHandler/metadata");
 
     // act
     sut.deploy();
@@ -154,6 +157,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         null,
         "deployment1",
         DuplicateProcessKeyAction.UNDEPLOY,
+        null,
         null);
 
     // act
@@ -202,7 +206,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
       assertThat(actualMetadata.entrySet()).hasSize(1);
 
       ProcessMetadata expectedProcessMetadata =
-          OBJECT_MAPPER.readValue(getFileInProjectDir("/build/models/metadata/example.json"), ProcessMetadata.class);
+          OBJECT_MAPPER.readValue(getFileInProjectDir("/metadata/example.json"), ProcessMetadata.class);
       assertThat(actualMetadata.get("example")).usingRecursiveComparison().isEqualTo(expectedProcessMetadata);
     }
 

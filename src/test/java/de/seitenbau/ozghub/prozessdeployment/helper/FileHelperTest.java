@@ -70,40 +70,6 @@ public class FileHelperTest
   }
 
   @Test
-  public void readFilesFromFolder_excludeSubfolder()
-  {
-    //arranger
-    Path provided = getPathFromResources(Path.of(RESOURCES_PATH, "readFiles"));
-
-    //act
-    List<Path> actualFiles = FileHelper.readFilesInFolder(provided, "subfolder");
-
-    //assert
-    assertThat(actualFiles).hasSize(4);
-    assertThat(actualFiles).containsExactlyInAnyOrder(
-        Path.of(provided.toString(), "TestFile.txt"),
-        Path.of(provided.toString(), "Subfolder.txt"),
-        Path.of(provided.toString(), "folderContainingReadFilesFolder", "IncludedTestFile.txt"),
-        Path.of(provided.toString(), "folderContainingReadFilesFolder", "readFiles", "ExcludedTestFile.txt"));
-  }
-
-  @Test
-  public void readFilesFromFolder_excludeSubfolder_folderContainsSubfolderWithSameNameAsParent()
-  {
-    //arranger
-    Path provided =
-        getPathFromResources(Path.of(RESOURCES_PATH, "readFiles", "folderContainingReadFilesFolder"));
-
-    //act
-    List<Path> actualFiles = FileHelper.readFilesInFolder(provided, "readFiles");
-
-    //assert
-    assertThat(actualFiles).hasSize(1);
-    assertThat(actualFiles.get(0)).isEqualTo(Path.of(provided.toString(),  "IncludedTestFile.txt"));
-  }
-
-
-  @Test
   public void readFilesFromFolder()
   {
     //arranger
@@ -113,13 +79,10 @@ public class FileHelperTest
     List<Path> actualFiles = FileHelper.readFilesInFolder(provided);
 
     //assert
-    assertThat(actualFiles).hasSize(5);
+    assertThat(actualFiles).hasSize(2);
     assertThat(actualFiles).containsExactlyInAnyOrder(
         Path.of(provided.toString(), "TestFile.txt"),
-        Path.of(provided.toString(), "subfolder", "TestSubFile.txt"),
-        Path.of(provided.toString(), "Subfolder.txt"),
-        Path.of(provided.toString(), "folderContainingReadFilesFolder", "IncludedTestFile.txt"),
-        Path.of(provided.toString(), "folderContainingReadFilesFolder", "readFiles", "ExcludedTestFile.txt"));
+        Path.of(provided.toString(), "subfolder", "TestSubFile.txt"));
   }
 
 

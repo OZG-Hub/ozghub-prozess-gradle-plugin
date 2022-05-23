@@ -34,7 +34,7 @@ public class DeployProcessHandler extends DefaultHandler
 
   private static final String MODEL_DIR = "/build/models";
 
-  public static final String PROCESS_METADATA_FOLDER_NAME = "metadata";
+  public static final String PROCESS_METADATA_FOLDER_NAME = "/metadata";
 
   private static final ServerConnectionHelper<ProcessDeploymentResponse> CONNECTION_HELPER =
       new ServerConnectionHelper<>(ProcessDeploymentResponse.class);
@@ -51,12 +51,15 @@ public class DeployProcessHandler extends DefaultHandler
 
   private final String engineId;
 
+  private final String metadataFolder;
+
   public DeployProcessHandler(Environment env,
       File projectDir,
       String filePath,
       String deploymentName,
       DuplicateProcessKeyAction duplicateKeyAction,
-      String engineId)
+      String engineId,
+      String metadataFolder)
   {
     super(env);
     this.projectDir = projectDir;
@@ -65,6 +68,7 @@ public class DeployProcessHandler extends DefaultHandler
     this.duplicateProcesskeyAction =
         Objects.requireNonNullElse(duplicateKeyAction, DuplicateProcessKeyAction.ERROR);
     this.engineId = engineId;
+    this.metadataFolder = metadataFolder;
   }
 
   public void deploy()
@@ -129,17 +133,18 @@ public class DeployProcessHandler extends DefaultHandler
 
   private File determineMetadataFolder()
   {
-    Path processModelPath = FileHelper.getCustomFolderOrDefault(projectDir, filePath, MODEL_DIR);
+    Path metadataFolder =
+        FileHelper.getCustomFolderOrDefault(projectDir, this.metadataFolder, PROCESS_METADATA_FOLDER_NAME);
 
-    if (Files.isRegularFile(processModelPath))
+    if (Files.isRegularFile(metadataFolder))
     {
-      String fullPath = FilenameUtils.getFullPath(processModelPath.toString());
+      String fullPath = FilenameUtils.getFullPath(metadataFolder.toString());
 
       return new File(fullPath, PROCESS_METADATA_FOLDER_NAME);
     }
     else
     {
-      return new File(processModelPath.toString(), PROCESS_METADATA_FOLDER_NAME);
+      return new File(metadataFolder.toString());
     }
   }
 
@@ -159,7 +164,7 @@ public class DeployProcessHandler extends DefaultHandler
   {
     Path folder = FileHelper.getCustomFolderOrDefault(projectDir, filePath, MODEL_DIR);
 
-    return FileHelper.createArchiveForFilesInFolder(folder, PROCESS_METADATA_FOLDER_NAME);
+    return FileHelper.createArchiveForFilesInFolder(folder);
   }
 
   private Map<String, String> getHeaderParameters()

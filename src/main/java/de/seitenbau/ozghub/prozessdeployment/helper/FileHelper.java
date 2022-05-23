@@ -25,14 +25,14 @@ public final class FileHelper
   {
   }
 
-  public static byte[] createArchiveForFilesInFolder(Path folder, String... subfoldersToExclude)
+  public static byte[] createArchiveForFilesInFolder(Path folder)
   {
-    List<Path> files = readFilesInFolder(folder, subfoldersToExclude);
+    List<Path> files = readFilesInFolder(folder);
 
     return createArchive(files);
   }
 
-  public static List<Path> readFilesInFolder(Path folder, String... subfoldersToExclude)
+  public static List<Path> readFilesInFolder(Path folder)
   {
     List<Path> files = new ArrayList<>();
 
@@ -40,7 +40,6 @@ public final class FileHelper
     {
       Files.walk(folder)
           .filter(Files::isRegularFile)
-          .filter(path -> includeFile(folder, path, subfoldersToExclude))
           .forEach(f -> files.add(f.toAbsolutePath()));
       log.info("Im Ordner {} wurden {} Dateien gefunden.", folder, files.size());
     }
@@ -50,18 +49,6 @@ public final class FileHelper
     }
 
     return files;
-  }
-
-  private static boolean includeFile(Path folder, Path filePath, String... subfoldersToExclude)
-  {
-    for (String folderName : subfoldersToExclude)
-    {
-      if (folder.relativize(filePath.getParent()).toString().contains("/" + folder + "/"))
-      {
-        return false;
-      }
-    }
-    return true;
   }
 
   public static Path getCustomFolderOrDefault(File projectDir, String customFolder, String defaultFolder)
