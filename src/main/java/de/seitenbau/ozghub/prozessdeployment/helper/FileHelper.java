@@ -56,7 +56,7 @@ public final class FileHelper
   {
     for (String folderName : subfoldersToExclude)
     {
-      if (folder.relativize(filePath.getParent()).toString().contains(folderName))
+      if (folder.relativize(filePath.getParent()).toString().contains("/" + folder + "/"))
       {
         return false;
       }
