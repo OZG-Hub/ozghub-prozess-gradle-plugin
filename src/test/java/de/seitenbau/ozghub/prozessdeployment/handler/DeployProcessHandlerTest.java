@@ -179,8 +179,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     ProcessDeploymentRequest
         actualDeployProcessRequest = OBJECT_MAPPER.readValue(data, ProcessDeploymentRequest.class);
 
-    System.out.println(actualDeployProcessRequest.getBarArchiveBase64());
-
     byte[] actualDeploymentArchive =
         Base64.getDecoder().decode(actualDeployProcessRequest.getBarArchiveBase64());
 

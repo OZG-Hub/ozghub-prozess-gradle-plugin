@@ -39,6 +39,8 @@ public class DeployProcessHandler extends DefaultHandler
   private static final ServerConnectionHelper<ProcessDeploymentResponse> CONNECTION_HELPER =
       new ServerConnectionHelper<>(ProcessDeploymentResponse.class);
 
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
   private final File projectDir;
 
   private final String filePath;
@@ -87,8 +89,7 @@ public class DeployProcessHandler extends DefaultHandler
 
   private byte[] getRequestBody(ProcessDeploymentRequest deployProcessRequest) throws IOException
   {
-    ObjectMapper objectMapper = new ObjectMapper();
-    String deployProcessRequestAsString = objectMapper.writeValueAsString(deployProcessRequest);
+    String deployProcessRequestAsString = OBJECT_MAPPER.writeValueAsString(deployProcessRequest);
     return deployProcessRequestAsString.getBytes(StandardCharsets.UTF_8);
   }
 
@@ -97,12 +98,8 @@ public class DeployProcessHandler extends DefaultHandler
     byte[] data = createDeploymentArchive();
     Map<String, ProcessMetadata> metadata = createMetadataMap();
 
-    ProcessDeploymentRequest deployProcessRequest =
+    return
         new ProcessDeploymentRequest(Base64.getEncoder().encodeToString(data), deploymentName, metadata);
-
-    log.info("Deployment-Request: " + deployProcessRequest);
-
-    return deployProcessRequest;
   }
 
   private Map<String, ProcessMetadata> createMetadataMap()
@@ -150,8 +147,7 @@ public class DeployProcessHandler extends DefaultHandler
   {
     try
     {
-      ObjectMapper objectMapper = new ObjectMapper();
-      return objectMapper.readValue(file.toFile(), ProcessMetadata.class);
+      return OBJECT_MAPPER.readValue(file.toFile(), ProcessMetadata.class);
     }
     catch (IOException e)
     {

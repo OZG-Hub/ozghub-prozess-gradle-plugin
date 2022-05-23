@@ -49,7 +49,7 @@ Zusätzliche Parameter:
 
 #### Metadaten-Dateien
 
-Metadaten-Dateien werden in einem Unterordner _metadata_ des Ordners erwartet, der die
+Metadaten-Dateien werden in einem Unterordner _metadata_ des Ordners erwartet, der die zu deployenden
 Prozessmodell-Dateien enthält. Die Metadaten-Dateien werden im JSON-Format erwartet. Der Name der
 Metadaten-Datei zu einer Prozessmodelldatei muss dabei (nach Entfernen der jeweiligen Extensions) mit 
 dem Namen der Prozessmodell-Datei übereinstimmen. Aktuell wird als Metadaten-Attribut ausschließlich 
