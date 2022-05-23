@@ -81,8 +81,8 @@ public class FileHelperTest
     //assert
     assertThat(actualFiles).hasSize(4);
     assertThat(actualFiles).containsExactlyInAnyOrder(
-        Path.of(provided.toString(), "Testfile.txt"),
-        Path.of(provided.toString(), "subfolder.txt"),
+        Path.of(provided.toString(), "TestFile.txt"),
+        Path.of(provided.toString(), "Subfolder.txt"),
         Path.of(provided.toString(), "folderContainingReadFilesFolder", "IncludedTestFile.txt"),
         Path.of(provided.toString(), "folderContainingReadFilesFolder", "readFiles", "ExcludedTestFile.txt"));
   }
@@ -115,9 +115,9 @@ public class FileHelperTest
     //assert
     assertThat(actualFiles).hasSize(5);
     assertThat(actualFiles).containsExactlyInAnyOrder(
-        Path.of(provided.toString(), "Testfile.txt"),
+        Path.of(provided.toString(), "TestFile.txt"),
         Path.of(provided.toString(), "subfolder", "TestSubFile.txt"),
-        Path.of(provided.toString(), "subfolder.txt"),
+        Path.of(provided.toString(), "Subfolder.txt"),
         Path.of(provided.toString(), "folderContainingReadFilesFolder", "IncludedTestFile.txt"),
         Path.of(provided.toString(), "folderContainingReadFilesFolder", "readFiles", "ExcludedTestFile.txt"));
   }
