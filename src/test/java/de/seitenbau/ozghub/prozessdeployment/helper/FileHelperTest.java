@@ -84,6 +84,20 @@ public class FileHelperTest
         Path.of(provided.toString(), "subfolder.txt"));
   }
 
+    @Test
+  public void readFilesFromFolder_excludeSubfolder_folderContainsSubfolderWithSameNameAsParent()
+  {
+    //arranger
+    Path provided = getPathFromResources(Path.of(RESOURCES_PATH, "readFiles", "folderContainingReadFilesFolder"));
+
+    //act
+    List<Path> actualFiles = FileHelper.readFilesInFolder(provided, "readFiles");
+
+    //assert
+    assertThat(actualFiles).hasSize(1);
+        assertThat(actualFiles.get(0)).isEqualTo(Path.of(provided.toString(), "includedTestfile.txt"));
+  }
+
 
   @Test
   public void readFilesFromFolder()
