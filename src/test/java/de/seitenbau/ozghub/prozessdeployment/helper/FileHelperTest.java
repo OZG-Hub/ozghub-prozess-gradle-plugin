@@ -79,23 +79,27 @@ public class FileHelperTest
     List<Path> actualFiles = FileHelper.readFilesInFolder(provided, "subfolder");
 
     //assert
-    assertThat(actualFiles).hasSize(2);
-        assertThat(actualFiles).containsExactlyInAnyOrder(Path.of(provided.toString(), "Testfile.txt"),
-        Path.of(provided.toString(), "subfolder.txt"));
+    assertThat(actualFiles).hasSize(4);
+    assertThat(actualFiles).containsExactlyInAnyOrder(
+        Path.of(provided.toString(), "Testfile.txt"),
+        Path.of(provided.toString(), "subfolder.txt"),
+        Path.of(provided.toString(), "folderContainingReadFilesFolder", "IncludedTestFile.txt"),
+        Path.of(provided.toString(), "folderContainingReadFilesFolder", "readFiles", "ExcludedTestFile.txt"));
   }
 
-    @Test
+  @Test
   public void readFilesFromFolder_excludeSubfolder_folderContainsSubfolderWithSameNameAsParent()
   {
     //arranger
-    Path provided = getPathFromResources(Path.of(RESOURCES_PATH, "readFiles", "folderContainingReadFilesFolder"));
+    Path provided =
+        getPathFromResources(Path.of(RESOURCES_PATH, "readFiles", "folderContainingReadFilesFolder"));
 
     //act
     List<Path> actualFiles = FileHelper.readFilesInFolder(provided, "readFiles");
 
     //assert
     assertThat(actualFiles).hasSize(1);
-        assertThat(actualFiles.get(0)).isEqualTo(Path.of(provided.toString(), "includedTestfile.txt"));
+    assertThat(actualFiles.get(0)).isEqualTo(Path.of(provided.toString(), "IncludedTestFile.txt"));
   }
 
 
@@ -109,10 +113,13 @@ public class FileHelperTest
     List<Path> actualFiles = FileHelper.readFilesInFolder(provided);
 
     //assert
-    assertThat(actualFiles).hasSize(3);
-    assertThat(actualFiles).containsExactlyInAnyOrder(Path.of(provided.toString(), "Testfile.txt"),
+    assertThat(actualFiles).hasSize(5);
+    assertThat(actualFiles).containsExactlyInAnyOrder(
+        Path.of(provided.toString(), "Testfile.txt"),
         Path.of(provided.toString(), "subfolder", "TestSubFile.txt"),
-        Path.of(provided.toString(), "subfolder.txt"));
+        Path.of(provided.toString(), "subfolder.txt"),
+        Path.of(provided.toString(), "folderContainingReadFilesFolder", "includedTestFile.txt"),
+        Path.of(provided.toString(), "folderContainingReadFilesFolder", "readFiles", "excludedTestFile.txt"));
   }
 
 
