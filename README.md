@@ -43,16 +43,16 @@ Zusätzlich werden (falls vorhanden) in Dateien enthaltene Metadaten zu den Proz
 Zusätzliche Parameter:
 
 - deploymentName: Pflicht. Der Name des Deployments, in dem die Prozessmodelle deployt werden
-- files: Optional, default ist build/models. Der Ordner, in dem die zu deployenden Prozessmodelle
-  liegen. Die darin enthaltenen Prozessmodelle müssen Activiti-flavored BPMN Dateien sein und müssen
-  die Dateiendung .bpmn20.xml haben.
-- metadataFolder: Optional, default ist metadata. Der Ordner, in dem sich die Metadaten-Dateien (s.u.)
-  zu den Prozessmodell-Dateien befinden. 
+- files: Optional, default ist build/models. Pfad zum Ordner, in dem die zu deployenden Prozessmodelle
+  liegen oder Pfad zu einem Prozessmodell. Die Prozessmodelle müssen Activiti-flavored BPMN 
+  Dateien sein und die Dateiendung .bpmn20.xml haben.
+- metadataFolder: Optional, default ist metadata. Pfad zum Ordner, in dem sich die Metadaten-Dateien 
+  zu den Prozessmodell-Dateien befinden oder Pfad zu einer Metadata-Datei.
 
 #### Metadaten-Dateien
 
 Metadaten-Dateien werden default-mäßig im Unterordner _metadata_ des Projektordners erwartet. Über
-den Parameter _metadataFolder_ kann auch ein anderer Ablageort angegeben werden.Die Metadaten-Dateien 
+den Parameter _metadataFolder_ kann auch ein anderer Ablageort angegeben werden. Die Metadaten-Dateien 
 werden im JSON-Format erwartet. Der Name der Metadaten-Datei zu einer Prozessmodelldatei muss dabei 
 (nach Entfernen der jeweiligen Extensions) mit dem Namen der Prozessmodell-Datei übereinstimmen. 
 Aktuell wird als Metadaten-Attribut ausschließlich das Attribut _servicekontolos_ 
@@ -74,9 +74,10 @@ undeployt werden.
 
 Zusätzliche Parameter:
 
-- files: Optional, default ist forms. Der Ordner, in dem die zu deployenden Formulare liegen. Es
-  werden auch die Unterordner dieses Ordners durchsucht. Die Formulare müssen
-  Serviceportal-Formulare sein und müssen die Dateiendung .json haben.
+- files: Optional, default ist forms. Pfaf zum Ordner, in dem die zu deployenden Formulare liegen 
+  oder Pfad zu einer Formular-Datei. Wird ein Ordner angegeben, werden auch die Unterordner dieses 
+  Ordners durchsucht. Die Formulare müssen Serviceportal-Formulare sein und müssen die Dateiendung 
+  .json haben.
 
 ### Task listProcesses
 
