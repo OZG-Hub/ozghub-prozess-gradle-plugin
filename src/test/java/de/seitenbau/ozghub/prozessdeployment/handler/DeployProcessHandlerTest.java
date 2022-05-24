@@ -113,7 +113,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   }
 
   @Test
-  public void deploy_customPathToFile_CustomMetadata()
+  public void deploy_customPathToFile_CustomMetadataFolder()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
@@ -128,6 +128,35 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         "src/test/resources/handler/deployProcessHandler/metadata");
+
+    // act
+    sut.deploy();
+
+    // assert
+    assertResponse(httpHandler);
+
+    HttpHandler.Request actualRequest = httpHandler.getRequest();
+    assertRequest(actualRequest);
+    assertRequestBody(actualRequest.getRequestBody(), true);
+    assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
+  }
+
+    @Test
+  public void deploy_customPathToFile_CustomMetadataFile()
+  {
+    // arrange
+    HttpHandler httpHandler = createAndStartHttpServer();
+
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo3", "bar3");
+
+    sut = new DeployProcessHandler(env,
+        getProjectDir(),
+        "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn",
+        "deployment1",
+        DuplicateProcessKeyAction.UNDEPLOY,
+        null,
+        "src/test/resources/handler/deployProcessHandler/metadata/example.json");
 
     // act
     sut.deploy();

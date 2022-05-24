@@ -110,7 +110,10 @@ public class DeployProcessHandler extends DefaultHandler
   {
     Map<String, ProcessMetadata> metadata = new HashMap<>();
 
-    List<Path> metadataFiles = getMetadataFilePathList();
+    Path metadataFolder =
+        FileHelper.getCustomFolderOrDefault(projectDir, this.metadataFolder, PROCESS_METADATA_FOLDER_NAME);
+
+    List<Path> metadataFiles = FileHelper.readFilesInFolder(metadataFolder);
 
     metadataFiles.forEach(file -> {
       String fileName = FilenameUtils.removeExtension(file.getFileName().toString());
@@ -118,34 +121,6 @@ public class DeployProcessHandler extends DefaultHandler
       metadata.put(fileName, processMetadata);
     });
     return metadata;
-  }
-
-  private List<Path> getMetadataFilePathList()
-  {
-    File metadataFolder = determineMetadataFolder();
-
-    if (metadataFolder.exists())
-    {
-      return FileHelper.readFilesInFolder(metadataFolder.toPath());
-    }
-    return Collections.emptyList();
-  }
-
-  private File determineMetadataFolder()
-  {
-    Path metadataFolder =
-        FileHelper.getCustomFolderOrDefault(projectDir, this.metadataFolder, PROCESS_METADATA_FOLDER_NAME);
-
-    if (Files.isRegularFile(metadataFolder))
-    {
-      String fullPath = FilenameUtils.getFullPath(metadataFolder.toString());
-
-      return new File(fullPath, PROCESS_METADATA_FOLDER_NAME);
-    }
-    else
-    {
-      return new File(metadataFolder.toString());
-    }
   }
 
   private ProcessMetadata readProcessMetadataFromFile(Path file)
