@@ -46,13 +46,13 @@ Zusätzliche Parameter:
 - files: Optional, default ist build/models. Pfad zum Ordner, in dem die zu deployenden Prozessmodelle
   liegen oder Pfad zu einem Prozessmodell. Die Prozessmodelle müssen Activiti-flavored BPMN 
   Dateien sein und die Dateiendung .bpmn20.xml haben.
-- metadataFolder: Optional, default ist metadata. Pfad zum Ordner, in dem sich die Metadaten-Dateien 
+- metadataFiles: Optional, default ist metadata. Pfad zum Ordner, in dem sich die Metadaten-Dateien 
   zu den Prozessmodell-Dateien befinden oder Pfad zu einer Metadata-Datei.
 
 #### Metadaten-Dateien
 
 Metadaten-Dateien werden default-mäßig im Unterordner _metadata_ des Projektordners erwartet. Über
-den Parameter _metadataFolder_ kann auch ein anderer Ablageort angegeben werden. Die Metadaten-Dateien 
+den Parameter _metadataFiles_ kann auch ein anderer Ablageort angegeben werden. Die Metadaten-Dateien 
 werden im JSON-Format erwartet. Der Name der Metadaten-Datei zu einer Prozessmodelldatei muss dabei 
 (nach Entfernen der jeweiligen Extensions) mit dem Namen der Prozessmodell-Datei übereinstimmen. 
 Aktuell wird als Metadaten-Attribut ausschließlich das Attribut _servicekontolos_ 

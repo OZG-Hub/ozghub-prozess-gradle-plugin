@@ -44,7 +44,7 @@ public class DeployProcessTask extends DefaultPluginTask
    */
   @Input
   @Optional
-  private String metadataFolder;
+  private String metadataFiles;
 
   @TaskAction
   public void run()
@@ -56,7 +56,7 @@ public class DeployProcessTask extends DefaultPluginTask
         deploymentName,
         duplicateProcesskeyAction,
         engine,
-        metadataFolder);
+        metadataFiles);
 
     handler.deploy();
   }
