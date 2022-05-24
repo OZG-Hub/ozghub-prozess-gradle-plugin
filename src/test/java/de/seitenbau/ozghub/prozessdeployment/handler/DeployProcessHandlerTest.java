@@ -84,7 +84,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   }
 
   @Test
-  public void deploy_customPathToFolder_NoMetadata()
+  public void deploy_customPathToFolder_noMetadata()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
@@ -98,7 +98,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "deployment1",
         DuplicateProcessKeyAction.IGNORE,
         null,
-        null);
+        "path/to/nonexisting/metadata");
 
     // act
     sut.deploy();
@@ -229,14 +229,18 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     assertThat(actualDeployProcessRequest.getDeploymentName()).isEqualTo("deployment1");
 
+    Map<String, ProcessMetadata> actualMetadata = actualDeployProcessRequest.getMetadata();
     if (withMetadata)
     {
-      Map<String, ProcessMetadata> actualMetadata = actualDeployProcessRequest.getMetadata();
       assertThat(actualMetadata.entrySet()).hasSize(1);
 
       ProcessMetadata expectedProcessMetadata =
           OBJECT_MAPPER.readValue(getFileInProjectDir("/metadata/example.json"), ProcessMetadata.class);
       assertThat(actualMetadata.get("example")).usingRecursiveComparison().isEqualTo(expectedProcessMetadata);
+    }
+    else
+    {
+      assertThat(actualMetadata).isEmpty();
     }
 
   }

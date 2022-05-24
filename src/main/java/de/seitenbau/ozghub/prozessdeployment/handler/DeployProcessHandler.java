@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,10 +109,7 @@ public class DeployProcessHandler extends DefaultHandler
   {
     Map<String, ProcessMetadata> metadata = new HashMap<>();
 
-    Path metadataFolder =
-        FileHelper.getCustomFolderOrDefault(projectDir, this.metadataFolder, PROCESS_METADATA_FOLDER_NAME);
-
-    List<Path> metadataFiles = FileHelper.readFilesInFolder(metadataFolder);
+    List<Path> metadataFiles = getMetadataFilePathList();
 
     metadataFiles.forEach(file -> {
       String fileName = FilenameUtils.removeExtension(file.getFileName().toString());
@@ -119,6 +117,18 @@ public class DeployProcessHandler extends DefaultHandler
       metadata.put(fileName, processMetadata);
     });
     return metadata;
+  }
+
+  private List<Path> getMetadataFilePathList()
+  {
+    Path metadataFolder =
+        FileHelper.getCustomFolderOrDefault(projectDir, this.metadataFolder, PROCESS_METADATA_FOLDER_NAME);
+
+    if (metadataFolder.toFile().exists())
+    {
+      return FileHelper.readFilesInFolder(metadataFolder);
+    }
+    return Collections.emptyList();
   }
 
   private ProcessMetadata readProcessMetadataFromFile(Path file)
