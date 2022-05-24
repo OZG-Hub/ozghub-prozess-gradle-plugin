@@ -38,7 +38,8 @@ public final class FileHelper
 
     try
     {
-      Files.walk(folder).filter(Files::isRegularFile)
+      Files.walk(folder)
+          .filter(Files::isRegularFile)
           .forEach(f -> files.add(f.toAbsolutePath()));
       log.info("Im Ordner {} wurden {} Dateien gefunden.", folder, files.size());
     }

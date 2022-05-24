@@ -1,5 +1,8 @@
 # Aktualisierungen
 
+## 2022.TODO-0
+- Feature: Der Task deployProcess unterstützt nun das Übergeben von Metadaten an die Schnittstelle
+
 ## 2022.04.19-0
 - Bugfix: Datumsausgabe bei `listForms`, `listProcesses` im 24h-Format
 - Optimierung: changelog.md in CHANGELOG.md umbenannt

@@ -1,11 +1,11 @@
 # Übersicht
 
-Dieses Dokument beschreibt die Schnittstellen einer OZG-Hub-Umgebung.
-Teilweise werden diese Schnittstellen durch das Gradle-Plugin genutzt.
+Dieses Dokument beschreibt die Schnittstellen einer OZG-Hub-Umgebung. Teilweise werden diese
+Schnittstellen durch das Gradle-Plugin genutzt.
 
 ## Schnittstellendokumentation
 
-### Schnittstelle zum Deployen eines Prozessmodells
+### Schnittstelle zum Deployen eines Prozessmodells (deprecated)
 
 #### Allgemein
 
@@ -32,6 +32,73 @@ ausgeführt werden.
   Activiti entspricht, siehe
   [Activiti User Guide](https://www.activiti.org/userguide/#_business_archives).
 - Die Schnittstelle verarbeitet die im Hauptordner des Archives abgelegten `*.bpmn20.xml`-Dateien.
+
+#### Rückgabewerte
+
+Ein Objekt mit den Informationen zu den Vorgängen (`application/json`).<br />
+Darunter die ID des erzeugten Deployments, die Prozess-Keys der deployten Prozessdefinitionen und
+die Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
+
+```json
+{
+  "deploymentId": "141",
+  "processKeys": [
+    "m1.testprocess-1",
+    "m1.testprocess-2"
+  ],
+  "duplicateKeys": [
+    "m1.testprocess-1"
+  ],
+  "removedDeploymentIds": [
+    "140"
+  ]
+}
+```
+
+---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum Deployen eines Prozessmodells mit Metadaten
+
+#### Allgemein
+
+Die Schnittstelle ermöglicht das Deployen eines Archives mit den zu einem Prozessmodell gehörenden
+Prozessmodelldateien, auf eine spezifische Prozess-Engine.<br />
+Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt. Der Aufruf muss als POST
+ausgeführt werden. Optional können zu den Prozessmodell-Dateien Metadaten übergeben werden.
+
+#### Pfad
+
+`{URL der Umgebung}/prozess/ozghub/deployWithMetadata`
+
+#### Header-Parameter
+
+| **Name**                  | **Pflicht** | **Typ** | **Beschreibung**     |
+| ------------------------- | ----------- | ------- | -------------------- |
+| X-OZG-Process-Duplication | Ja          | String  | Wie mit Deployments, welche zu deployende Prozess-Keys enthalten, umgegangen werden soll<br />`IGNORE`, `UNDEPLOY`, `ERROR` |
+| X-OZG-Process-Engine      | Nein        | String  | ID der Prozess-Engine, Standard-Prozess-Engine wenn nicht gesetzt |
+
+#### Request-Body
+
+- Die Schnittstelle erwartet als Body ein JSON-Objekt mit folgender Struktur:
+
+```json
+{
+  "deploymentName": "deploymenName",
+  "barArchiveBase64": "barArchiveAlsBase64EncodedString",
+  "metadata": {
+    "prozessmodellDateiNameOhneExtensions": {
+      "servicekontolos": true
+    } 
+  }  
+}
+```
+
+| **Name**                  | **Pflicht** | **Typ** | **Beschreibung**     |
+| ------------------------- | ----------- | ------- | -------------------- |
+| deploymenName             | Ja          | String  | Name des Deployments|
+| barArchiveBase64          | ja          | String  | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String |
+| metadata     | nein       | Map         | Keys ist der Name der Prozessmodell-Datei (ohne Extensions), zu der die Metadaten gehören; Value ist ein Objekt, dessen Attribute die zu übergebenden Metadaten enthalten. Aktuell wird ausschließlich das Attribut _servicekontolos_ (Werte true oder false) unterstützt. |
+
 
 #### Rückgabewerte
 
@@ -153,6 +220,7 @@ Darunter die ID des undeployten Formulars.
   "id": "1:test-formular:v1.0"
 }
 ```
+
 ---------------------------------------------------------------------------------------------------
 
 ### Schnittstelle zum Auflisten der Prozess-Deployments
@@ -253,7 +321,7 @@ Ein Objekt (`application/json`), das eine Liste mit den vorhandenen Deployments 
 
 #### Allgemein
 
-Die Schnittstelle liefert eine paginierte Liste der Log-Einträge der Umgebung im JSON Format. 
+Die Schnittstelle liefert eine paginierte Liste der Log-Einträge der Umgebung im JSON Format.
 Diverse Filter können eingesetzt werden, um die passenden Logeinträge zu finden
 
 Der Aufruf muss als GET ausgeführt werden.
@@ -278,36 +346,38 @@ Der Aufruf muss als GET ausgeführt werden.
 
 #### Rückgabewerte
 
-Ein Objekt (`application/json`), das die gefundenen Logeinträge und die Paging-Informationen enthält.<br />
+Ein Objekt (`application/json`), das die gefundenen Logeinträge und die Paging-Informationen
+enthält.<br />
 
 ```json
-{"items": 
-  [
+{
+  "items": [
     {
-      "id":56,
-      "createDate":1642412152000,
-      "applicationName":"prozess-service",
-      "level":"INFO",
-      "logger":"de.seitenbau.serviceportal.prozess.service.DeploymentService",
-      "message":"Prozessmodell m1.testInternal zum ersten Mal deployed.",
+      "id": 56,
+      "createDate": 1642412152000,
+      "applicationName": "prozess-service",
+      "level": "INFO",
+      "logger": "de.seitenbau.serviceportal.prozess.service.DeploymentService",
+      "message": "Prozessmodell m1.testInternal zum ersten Mal deployed.",
       "exception": "someExceptionStacktrace",
-      "logEntryType":"PROZESS",
-      "mandant":"1",
-      "context":[
+      "logEntryType": "PROZESS",
+      "mandant": "1",
+      "context": [
         {
-          "name":"PROCESS_DEFINITION_ID",
-          "value":"m1.testInternal:1:28"
+          "name": "PROCESS_DEFINITION_ID",
+          "value": "m1.testInternal:1:28"
         },
         {
-          "name":"PROCESS_DEFINITION_KEY",
-          "value":"m1.testInternal"
+          "name": "PROCESS_DEFINITION_KEY",
+          "value": "m1.testInternal"
         }
       ]
     }
   ],
-  "offset":0,
-  "limit":1000,
-  "total":1}
+  "offset": 0,
+  "limit": 1000,
+  "total": 1
+}
 ```
 
 ---------------------------------------------------------------------------------------------------

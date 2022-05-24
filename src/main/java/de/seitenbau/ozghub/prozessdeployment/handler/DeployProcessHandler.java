@@ -1,30 +1,44 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Base64;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.io.FilenameUtils;
 import org.gradle.api.GradleException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.helper.FileHelper;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
+import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
+import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class DeployProcessHandler extends DefaultHandler
 {
-  public static final String API_PATH = "/prozess/ozghub/deploy";
+  public static final String API_PATH = "/prozess/ozghub/deployWithMetadata";
 
   private static final String MODEL_DIR = "/build/models";
 
+  public static final String PROCESS_METADATA_FOLDER_NAME = "/metadata";
+
   private static final ServerConnectionHelper<ProcessDeploymentResponse> CONNECTION_HELPER =
       new ServerConnectionHelper<>(ProcessDeploymentResponse.class);
+
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   private final File projectDir;
 
@@ -36,12 +50,15 @@ public class DeployProcessHandler extends DefaultHandler
 
   private final String engineId;
 
+  private final String metadataFolder;
+
   public DeployProcessHandler(Environment env,
       File projectDir,
       String filePath,
       String deploymentName,
       DuplicateProcessKeyAction duplicateKeyAction,
-      String engineId)
+      String engineId,
+      String metadataFolder)
   {
     super(env);
     this.projectDir = projectDir;
@@ -50,6 +67,7 @@ public class DeployProcessHandler extends DefaultHandler
     this.duplicateProcesskeyAction =
         Objects.requireNonNullElse(duplicateKeyAction, DuplicateProcessKeyAction.ERROR);
     this.engineId = engineId;
+    this.metadataFolder = metadataFolder;
   }
 
   public void deploy()
@@ -58,14 +76,75 @@ public class DeployProcessHandler extends DefaultHandler
 
     try
     {
-      byte[] data = createDeploymentArchive();
       Map<String, String> headers = getHeaderParameters();
+
+      ProcessDeploymentRequest deployProcessRequest = createProcessDeploymentRequest();
+      byte[] data = getRequestBody(deployProcessRequest);
+
       ProcessDeploymentResponse response = CONNECTION_HELPER.post(environment, API_PATH, headers, data);
       logEndOfTask(response);
     }
     catch (Exception e)
     {
       throw new GradleException("Fehler: " + e.getMessage(), e);
+    }
+  }
+
+  private byte[] getRequestBody(ProcessDeploymentRequest deployProcessRequest) throws IOException
+  {
+    String deployProcessRequestAsString = OBJECT_MAPPER.writeValueAsString(deployProcessRequest);
+    return deployProcessRequestAsString.getBytes(StandardCharsets.UTF_8);
+  }
+
+  private ProcessDeploymentRequest createProcessDeploymentRequest()
+  {
+    byte[] data = createDeploymentArchive();
+    Map<String, ProcessMetadata> metadata = createMetadataMap();
+
+    return
+        new ProcessDeploymentRequest(Base64.getEncoder().encodeToString(data), deploymentName, metadata);
+  }
+
+  private Map<String, ProcessMetadata> createMetadataMap()
+  {
+    Map<String, ProcessMetadata> metadata = new HashMap<>();
+
+    List<Path> metadataFiles = getMetadataFilePathList();
+
+    metadataFiles.forEach(file -> {
+      String fileName = FilenameUtils.removeExtension(file.getFileName().toString());
+      ProcessMetadata processMetadata = readProcessMetadataFromFile(file);
+      metadata.put(fileName, processMetadata);
+    });
+    return metadata;
+  }
+
+  private List<Path> getMetadataFilePathList()
+  {
+    Path metadataFolder =
+        FileHelper.getCustomFolderOrDefault(projectDir, this.metadataFolder, PROCESS_METADATA_FOLDER_NAME);
+
+    if (metadataFolder.toFile().exists())
+    {
+      return FileHelper.readFilesInFolder(metadataFolder);
+    }
+    if (this.metadataFolder != null)
+    {
+      throw new RuntimeException(
+          "Die angegebene Quelle für Metadaten (" + metadataFolder.toString() + ") konnte nicht gefunden werden");
+    }
+    return Collections.emptyList();
+  }
+
+  private ProcessMetadata readProcessMetadataFromFile(Path file)
+  {
+    try
+    {
+      return OBJECT_MAPPER.readValue(file.toFile(), ProcessMetadata.class);
+    }
+    catch (IOException e)
+    {
+      throw new RuntimeException("Fehler beim Einlesen der Metadata-Datei " + file, e);
     }
   }
 
@@ -79,9 +158,8 @@ public class DeployProcessHandler extends DefaultHandler
   private Map<String, String> getHeaderParameters()
   {
     Map<String, String> headers = new HashMap<>();
-    headers.put(HTTPHeaderKeys.PROCESS_DEPLOYMENT_NAME, deploymentName);
     headers.put(HTTPHeaderKeys.PROCESS_DUPLICATION, duplicateProcesskeyAction.toString());
-    headers.put(HTTPHeaderKeys.CONTENT_TYPE, "application/java-archive");
+    headers.put(HTTPHeaderKeys.CONTENT_TYPE, "application/json");
 
     if (engineId != null)
     {

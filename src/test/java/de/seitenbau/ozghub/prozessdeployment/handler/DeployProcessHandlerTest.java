@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,8 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
+import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
+import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import lombok.SneakyThrows;
 
 public class DeployProcessHandlerTest extends HandlerTestBase
@@ -53,7 +56,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   }
 
   @Test
-  public void deploy()
+  public void deploy_WithDefaultMetadata()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
@@ -66,7 +69,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         null,
         "deployment1",
         DuplicateProcessKeyAction.ERROR,
-        "engine1");
+        "engine1",
+        null);
 
     // act
     sut.deploy();
@@ -76,12 +80,12 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
+    assertRequestBody(actualRequest.getRequestBody(), true);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.ERROR, "engine1");
   }
 
   @Test
-  public void deploy_customPathToFolder()
+  public void deploy_customPathToFolder_NonExistentCustomMetadataFolder()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
@@ -94,6 +98,34 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "src/test/resources/handler/deployProcessHandler/build",
         "deployment1",
         DuplicateProcessKeyAction.IGNORE,
+        null,
+        "path/to/nonexisting/metadata");
+
+    // act
+    assertThatThrownBy(() -> sut.deploy())
+        .isExactlyInstanceOf(GradleException.class)
+        .hasMessage("Fehler: Die angegebene Quelle für Metadaten (" + Path.of("path/to/nonexisting/metadata").toString() + ")" +
+            " konnte nicht gefunden werden");
+
+    // assert
+    assertThat(httpHandler.countRequests()).isEqualTo(0);
+  }
+
+    @Test
+  public void deploy_customPathToFolder_NonExistentDefaultMetadataFolder()
+  {
+    // arrange
+    HttpHandler httpHandler = createAndStartHttpServer();
+
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo2", "bar2");
+
+    sut = new DeployProcessHandler(env,
+        new File(getProjectDir(), "projectWithoutMetadata"),
+        "src/test/resources/handler/deployProcessHandler/build",
+        "deployment1",
+        DuplicateProcessKeyAction.IGNORE,
+        null,
         null);
 
     // act
@@ -104,12 +136,12 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
+    assertRequestBody(actualRequest.getRequestBody(), false);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.IGNORE, null);
   }
 
   @Test
-  public void deploy_customPathToFile()
+  public void deploy_customPathToFile_CustomMetadataFolder()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
@@ -122,7 +154,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn",
         "deployment1",
         DuplicateProcessKeyAction.UNDEPLOY,
-        null);
+        null,
+        "src/test/resources/handler/deployProcessHandler/metadata");
 
     // act
     sut.deploy();
@@ -132,7 +165,36 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
+    assertRequestBody(actualRequest.getRequestBody(), true);
+    assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
+  }
+
+  @Test
+  public void deploy_customPathToFile_CustomMetadataFile()
+  {
+    // arrange
+    HttpHandler httpHandler = createAndStartHttpServer();
+
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo3", "bar3");
+
+    sut = new DeployProcessHandler(env,
+        getProjectDir(),
+        "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn",
+        "deployment1",
+        DuplicateProcessKeyAction.UNDEPLOY,
+        null,
+        "src/test/resources/handler/deployProcessHandler/metadata/example.json");
+
+    // act
+    sut.deploy();
+
+    // assert
+    assertResponse(httpHandler);
+
+    HttpHandler.Request actualRequest = httpHandler.getRequest();
+    assertRequest(actualRequest);
+    assertRequestBody(actualRequest.getRequestBody(), true);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
   }
 
@@ -152,6 +214,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         null,
         "deployment1",
         DuplicateProcessKeyAction.UNDEPLOY,
+        null,
         null);
 
     // act
@@ -166,14 +229,22 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody());
+    assertRequestBody(actualRequest.getRequestBody(), true);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
   }
 
   @SneakyThrows
-  private void assertRequestBody(byte[] data)
+  private void assertRequestBody(byte[] data, boolean withMetadata)
   {
-    try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(data)))
+
+    ProcessDeploymentRequest
+        actualDeployProcessRequest = OBJECT_MAPPER.readValue(data, ProcessDeploymentRequest.class);
+
+    byte[] actualDeploymentArchive =
+        Base64.getDecoder().decode(actualDeployProcessRequest.getBarArchiveBase64());
+
+
+    try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(actualDeploymentArchive)))
     {
       zis.getNextEntry();
       byte[] actualContentBytes = IOUtils.toByteArray(zis);
@@ -183,6 +254,23 @@ public class DeployProcessHandlerTest extends HandlerTestBase
       assertThat(actualContent).isEqualTo(expectedContent);
       assertThat(zis.getNextEntry()).isNull();
     }
+
+    assertThat(actualDeployProcessRequest.getDeploymentName()).isEqualTo("deployment1");
+
+    Map<String, ProcessMetadata> actualMetadata = actualDeployProcessRequest.getMetadata();
+    if (withMetadata)
+    {
+      assertThat(actualMetadata.entrySet()).hasSize(1);
+
+      ProcessMetadata expectedProcessMetadata =
+          OBJECT_MAPPER.readValue(getFileInProjectDir("/metadata/example.json"), ProcessMetadata.class);
+      assertThat(actualMetadata.get("example")).usingRecursiveComparison().isEqualTo(expectedProcessMetadata);
+    }
+    else
+    {
+      assertThat(actualMetadata).isEmpty();
+    }
+
   }
 
   private void assertResponse(HttpHandler handler)
@@ -205,8 +293,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
       String engineId)
   {
     Map<String, List<String>> headers = request.getHeaders();
-    assertThat(headers).containsEntry(HTTPHeaderKeys.CONTENT_TYPE, List.of("application/java-archive"));
-    assertThat(headers).containsEntry(HTTPHeaderKeys.PROCESS_DEPLOYMENT_NAME, List.of("deployment1"));
+    assertThat(headers).containsEntry(HTTPHeaderKeys.CONTENT_TYPE, List.of("application/json"));
     assertThat(headers).containsEntry(HTTPHeaderKeys.PROCESS_DUPLICATION, List.of(action.toString()));
 
     if (engineId != null)

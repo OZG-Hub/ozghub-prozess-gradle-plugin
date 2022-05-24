@@ -61,7 +61,7 @@ public class FileHelperTest
 
       zis.getNextEntry();
       contentBytes = IOUtils.toByteArray(zis);
-      actualContents.add( new String(contentBytes));
+      actualContents.add(new String(contentBytes));
 
       List<String> expectedContents = List.of("This is the test-file.", "This is the test-sub-file.");
       assertThat(actualContents).containsExactlyInAnyOrderElementsOf(expectedContents);
