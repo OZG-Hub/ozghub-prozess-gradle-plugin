@@ -128,6 +128,11 @@ public class DeployProcessHandler extends DefaultHandler
     {
       return FileHelper.readFilesInFolder(metadataFolder);
     }
+    if (this.metadataFolder != null)
+    {
+      throw new RuntimeException(
+          "Die angegebene Quelle für Metadaten (" + metadataFolder + ") konnte nicht gefunden werden");
+    }
     return Collections.emptyList();
   }
 

@@ -84,7 +84,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   }
 
   @Test
-  public void deploy_customPathToFolder_noMetadata()
+  public void deploy_customPathToFolder_NonExistentCustomMetadataFolder()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
@@ -99,6 +99,33 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         DuplicateProcessKeyAction.IGNORE,
         null,
         "path/to/nonexisting/metadata");
+
+    // act
+    assertThatThrownBy(() -> sut.deploy())
+        .isExactlyInstanceOf(GradleException.class)
+        .hasMessage("Fehler: Die angegebene Quelle für Metadaten (path\\to\\nonexisting\\metadata) konnte " +
+                "nicht gefunden werden");
+
+    // assert
+    assertThat(httpHandler.countRequests()).isEqualTo(0);
+  }
+
+    @Test
+  public void deploy_customPathToFolder_NonExistentDefaultMetadataFolder()
+  {
+    // arrange
+    HttpHandler httpHandler = createAndStartHttpServer();
+
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo2", "bar2");
+
+    sut = new DeployProcessHandler(env,
+        new File(getProjectDir(), "projectWithoutMetadata"),
+        "src/test/resources/handler/deployProcessHandler/build",
+        "deployment1",
+        DuplicateProcessKeyAction.IGNORE,
+        null,
+        null);
 
     // act
     sut.deploy();
@@ -141,7 +168,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
   }
 
-    @Test
+  @Test
   public void deploy_customPathToFile_CustomMetadataFile()
   {
     // arrange
