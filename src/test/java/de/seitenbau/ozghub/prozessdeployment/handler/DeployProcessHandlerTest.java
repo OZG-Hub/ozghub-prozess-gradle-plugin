@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -103,8 +104,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     // act
     assertThatThrownBy(() -> sut.deploy())
         .isExactlyInstanceOf(GradleException.class)
-        .hasMessage("Fehler: Die angegebene Quelle für Metadaten (path\\to\\nonexisting\\metadata) konnte " +
-                "nicht gefunden werden");
+        .hasMessage("Fehler: Die angegebene Quelle für Metadaten (" + Path.of("path/to/nonexisting/metadata").toString() + ")" +
+            " konnte nicht gefunden werden");
 
     // assert
     assertThat(httpHandler.countRequests()).isEqualTo(0);
