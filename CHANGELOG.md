@@ -1,6 +1,6 @@
 # Aktualisierungen
 
-## 2022.TODO-0
+## 2022.06.14-0
 - Feature: Der Task deployProcess unterstützt nun das Übergeben von Metadaten an die Schnittstelle
 
 ## 2022.04.19-0
