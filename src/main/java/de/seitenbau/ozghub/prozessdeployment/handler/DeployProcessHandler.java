@@ -130,8 +130,8 @@ public class DeployProcessHandler extends DefaultHandler
     }
     if (this.metadataFolder != null)
     {
-      throw new RuntimeException(
-          "Die angegebene Quelle für Metadaten (" + metadataFolder.toString() + ") konnte nicht gefunden werden");
+      throw new RuntimeException("Die angegebene Quelle für Metadaten (" + metadataFolder.toString()
+          + ") konnte nicht gefunden werden");
     }
     return Collections.emptyList();
   }
