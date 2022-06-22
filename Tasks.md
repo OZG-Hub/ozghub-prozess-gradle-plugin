@@ -123,3 +123,21 @@ Die Liste mit den enthaltenen Informationen wird auf der Konsole ausgegeben.
 
 Der Task `listForms` liefert die Liste aller auf der Umgebung vorhandenen Formular-Deployments.<br />
 Die Liste mit den enthaltenen Informationen wird auf der Konsole ausgegeben.
+
+---------------------------------------------------------------------------------------------------
+
+### Task zum Verschlüsseln eines Prozessparameterwertes
+
+#### Allgemein
+
+Der Task `encryptParameterValue` verschlüsselt einen Prozessparameterwert und gibt den verschlüsselten Wert auf der Konsole aus.
+
+#### Parameter
+
+| **Name**                  | **Default-Wert** | **Beschreibung**                                                                                         |
+| ------------------------- |------------------|----------------------------------------------------------------------------------------------------------|
+| processDefinitionKey      |                  | Der Prozess-Definitions-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll |
+| parameterValue            |                  | Der zu verschlüsselnde Prozessparameterwert                                                              |
+
+---------------------------------------------------------------------------------------------------
+

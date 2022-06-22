@@ -21,6 +21,7 @@ Das Gradle-Plugin stellt die folgenden Tasks zur Verfügung:
 - listForms: Zeigt eine Liste aller deployten Formulare an
 - undeployProcess: Löscht ein Prozess-Deployment
 - undeployForm: Löscht ein Formular-Deployment
+- encryptParameterValue: Verschlüsselt einen Prozessparameterwert
 
 Diese Tasks werden im Folgenden genauer beschrieben.
 
@@ -108,7 +109,7 @@ dieser Prozessdefinitionen gelöscht.
 
 Zusätzliche Parameter:
 
-- deploymentId : Pflicht, die Id des zu löschenden Deployments
+- deploymentId : Pflicht, die Id des zu löschenden Deployments.
 - deleteProcessInstances : Optional, default ist false. Muss auf true gesetzt werden, um Deployments
   zu löschen, bei deren Undeployment auch Prozessinstanzen gelöscht werden würden.
 
@@ -121,6 +122,14 @@ Es wird nicht geprüft, ob das Formular noch von Prozessen benutzt wird.
 Zusätzliche Parameter:
 
 - deploymentId : Pflicht, die Id des zu löschenden Formular-Deployments
+
+### Task encryptParameterValue
+
+Verschlüsselt einen Prozessparameterwert.
+
+Zusätzliche Parameter:
+- processDefinitionKey : Pflicht, der Prozess-Definitions-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll.
+- parameterValue : Pflicht, der zu verschlüsselnde Prozessparameterwert.
 
 ## (weitere) Schnittstellen des OZG-Hubs
 

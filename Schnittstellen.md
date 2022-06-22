@@ -93,11 +93,11 @@ ausgeführt werden. Optional können zu den Prozessmodell-Dateien Metadaten übe
 }
 ```
 
-| **Name**                  | **Pflicht** | **Typ** | **Beschreibung**     |
-| ------------------------- | ----------- | ------- | -------------------- |
-| deploymenName             | Ja          | String  | Name des Deployments|
-| barArchiveBase64          | ja          | String  | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String |
-| metadata     | nein       | Map         | Keys ist der Name der Prozessmodell-Datei (ohne Extensions), zu der die Metadaten gehören; Value ist ein Objekt, dessen Attribute die zu übergebenden Metadaten enthalten. Aktuell wird ausschließlich das Attribut _servicekontolos_ (Werte true oder false) unterstützt. |
+| **Name**         | **Pflicht** | **Typ** | **Beschreibung**                                                                                                                                                                                                                                                           |
+|------------------|-------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| deploymenName    | Ja          | String  | Name des Deployments                                                                                                                                                                                                                                                       |
+| barArchiveBase64 | Ja          | String  | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String                                                                                                                                                                                           |
+| metadata         | Nein        | Map     | Keys ist der Name der Prozessmodell-Datei (ohne Extensions), zu der die Metadaten gehören; Value ist ein Objekt, dessen Attribute die zu übergebenden Metadaten enthalten. Aktuell wird ausschließlich das Attribut _servicekontolos_ (Werte true oder false) unterstützt. |
 
 
 #### Rückgabewerte
@@ -377,6 +377,46 @@ enthält.<br />
   "offset": 0,
   "limit": 1000,
   "total": 1
+}
+```
+
+---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum Verschlüsseln eines Prozessparameters
+
+#### Allgemein
+
+Die Schnittstelle verschlüsselt einen Prozessparameter.
+
+Der Aufruf muss als POST ausgeführt werden.
+
+#### Pfad
+
+`{URL der Umgebung}/prozessparameter/parameter/encryptParameterValue`
+
+#### Request-Body
+
+- Die Schnittstelle erwartet als Body ein JSON-Objekt mit folgender Struktur:
+
+```json
+{
+  "processDefinitionKey": "Prozess-Definitions-Schlüssel",
+  "parameterValue": "Prozess-Parameterwert"
+}
+```
+
+| **Name**             | **Pflicht** | **Typ** | **Beschreibung**                                                                                         |
+|----------------------|-------------| ------- |----------------------------------------------------------------------------------------------------------|
+| processDefinitionKey | Ja          | String  | Der Prozess-Definitions-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll |
+| parameterValue       | Ja          | String  | Der zu verschlüsselnde Prozessparameterwert                                                              |
+
+#### Rückgabewerte
+
+Ein Objekt (`application/json`), das den verschlüsselten Prozessparameterwert enthält.<br />
+
+```json
+{
+  "encryptedParameterValue": "ozghub:cu:PRPQaRkSuZYAjGPF2dKBZw==:/QQXGErMbU0=:s8WyOiUzZ91HADzjnlJJQw=="
 }
 ```
 
