@@ -48,7 +48,7 @@ public class EncryptParameterValueHandlerTest
     // arrange
     prepareLogging();
 
-    String processDefinitionKey = "m1.prozessDefinitionKey";
+    String processKey = "m1.prozessDefinitionKey";
     String parameterValue = "test value";
 
     EncryptParameterValueResponse encryptParameterValueResponse = EncryptParameterValueResponse.builder()
@@ -61,7 +61,7 @@ public class EncryptParameterValueHandlerTest
     Environment env = new Environment(url, "foo1", "bar1");
 
     EncryptParameterValueHandler sut =
-        new EncryptParameterValueHandler(env, processDefinitionKey, parameterValue);
+        new EncryptParameterValueHandler(env, processKey, parameterValue);
 
     // act
     sut.encryptParameterValue();

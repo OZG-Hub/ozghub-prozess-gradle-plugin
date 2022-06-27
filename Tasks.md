@@ -134,10 +134,10 @@ Der Task `encryptParameterValue` verschlüsselt einen Prozessparameterwert und g
 
 #### Parameter
 
-| **Name**                  | **Default-Wert** | **Beschreibung**                                                                                         |
-| ------------------------- |------------------|----------------------------------------------------------------------------------------------------------|
-| processDefinitionKey      |                  | Der Prozess-Definitions-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll |
-| parameterValue            |                  | Der zu verschlüsselnde Prozessparameterwert                                                              |
+| **Name**       | **Default-Wert** | **Beschreibung**                                                                              |
+|----------------|------------------|-----------------------------------------------------------------------------------------------|
+| processKey     |                  | Der Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll  |
+| parameterValue |                  | Der zu verschlüsselnde Prozessparameterwert                                                   |
 
 ---------------------------------------------------------------------------------------------------
 

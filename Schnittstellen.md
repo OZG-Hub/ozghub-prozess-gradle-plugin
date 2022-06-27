@@ -400,15 +400,15 @@ Der Aufruf muss als POST ausgeführt werden.
 
 ```json
 {
-  "processDefinitionKey": "Prozess-Definitions-Schlüssel",
+  "processKey": "Prozess-Schlüssel",
   "parameterValue": "Prozess-Parameterwert"
 }
 ```
 
-| **Name**             | **Pflicht** | **Typ** | **Beschreibung**                                                                                         |
-|----------------------|-------------| ------- |----------------------------------------------------------------------------------------------------------|
-| processDefinitionKey | Ja          | String  | Der Prozess-Definitions-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll |
-| parameterValue       | Ja          | String  | Der zu verschlüsselnde Prozessparameterwert                                                              |
+| **Name**       | **Pflicht** | **Typ** | **Beschreibung**                                                                              |
+|----------------|-------------| ------- |-----------------------------------------------------------------------------------------------|
+| processKey     | Ja          | String  | Der Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll  |
+| parameterValue | Ja          | String  | Der zu verschlüsselnde Prozessparameterwert                                                   |
 
 #### Rückgabewerte
 

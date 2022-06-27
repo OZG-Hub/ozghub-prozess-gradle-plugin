@@ -27,14 +27,14 @@ public class EncryptParameterValueHandler extends DefaultHandler
   private static final ServerConnectionHelper<EncryptParameterValueResponse> CONNECTION_HELPER =
       new ServerConnectionHelper<>(EncryptParameterValueResponse.class);
 
-  private final String processDefinitionKey;
+  private final String processKey;
 
   private final String parameterValue;
 
-  public EncryptParameterValueHandler(Environment env, String processDefinitionKey, String parameterValue)
+  public EncryptParameterValueHandler(Environment env, String processKey, String parameterValue)
   {
     super(env);
-    this.processDefinitionKey = processDefinitionKey;
+    this.processKey = processKey;
     this.parameterValue = parameterValue;
   }
 
@@ -46,7 +46,7 @@ public class EncryptParameterValueHandler extends DefaultHandler
     {
       Map<String, String> headers = getHeaderParameters();
       EncryptParameterValueRequest encryptParameterValueRequest = EncryptParameterValueRequest.builder()
-          .processDefinitionKey(processDefinitionKey)
+          .processKey(processKey)
           .parameterValue(parameterValue)
           .build();
 

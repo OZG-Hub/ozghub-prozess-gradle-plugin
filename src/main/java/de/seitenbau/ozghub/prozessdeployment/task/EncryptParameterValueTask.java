@@ -12,10 +12,10 @@ import lombok.Setter;
 public class EncryptParameterValueTask extends DefaultPluginTask
 {
   /**
-   * Der Prozess-Deployment-Schlüssel (Process Deployment Key)
+   * Der Prozess-Schlüssel (Process Key)
    */
   @Input
-  private String processDefinitionKey;
+  private String processKey;
 
   /**
    * Der zu verschlüsselnde Parameterwert.
@@ -27,7 +27,7 @@ public class EncryptParameterValueTask extends DefaultPluginTask
   public void run()
   {
     EncryptParameterValueHandler handler =
-        new EncryptParameterValueHandler(getEnvironment(), processDefinitionKey, parameterValue);
+        new EncryptParameterValueHandler(getEnvironment(), processKey, parameterValue);
 
     handler.encryptParameterValue();
   }

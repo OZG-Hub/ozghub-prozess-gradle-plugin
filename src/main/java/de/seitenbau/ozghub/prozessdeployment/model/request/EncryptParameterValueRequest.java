@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EncryptParameterValueRequest
 {
-  private String processDefinitionKey;
+  private String processKey;
 
   private String parameterValue;
 }

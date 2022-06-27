@@ -128,7 +128,7 @@ Zusätzliche Parameter:
 Verschlüsselt einen Prozessparameterwert.
 
 Zusätzliche Parameter:
-- processDefinitionKey : Pflicht, der Prozess-Definitions-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll.
+- processKey : Pflicht, der Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll.
 - parameterValue : Pflicht, der zu verschlüsselnde Prozessparameterwert.
 
 ## (weitere) Schnittstellen des OZG-Hubs
