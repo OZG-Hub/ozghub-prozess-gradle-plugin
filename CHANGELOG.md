@@ -1,5 +1,8 @@
 # Aktualisierungen
 
+## 2022.06.22-0
+- Feature: Der Task encryptParameterValue wurde hinzugefügt
+
 ## 2022.06.14-0
 - Feature: Der Task deployProcess unterstützt nun das Übergeben von Metadaten an die Schnittstelle
 

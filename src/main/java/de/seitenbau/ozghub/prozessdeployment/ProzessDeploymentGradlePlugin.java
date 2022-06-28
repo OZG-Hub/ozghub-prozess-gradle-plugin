@@ -6,6 +6,7 @@ import org.gradle.api.tasks.TaskContainer;
 
 import de.seitenbau.ozghub.prozessdeployment.task.DeployFormsTask;
 import de.seitenbau.ozghub.prozessdeployment.task.DeployProcessTask;
+import de.seitenbau.ozghub.prozessdeployment.task.EncryptParameterValueTask;
 import de.seitenbau.ozghub.prozessdeployment.task.ListFormsTask;
 import de.seitenbau.ozghub.prozessdeployment.task.ListProcessesTask;
 import de.seitenbau.ozghub.prozessdeployment.task.UndeployFormTask;
@@ -34,5 +35,8 @@ public class ProzessDeploymentGradlePlugin implements Plugin<Project>
 
     tasks.create("listForms", ListFormsTask.class, (task) -> {
     }).setDescription("Zeigt eine Liste aller deployten Formulare an");
+
+    tasks.create("encryptParameterValue", EncryptParameterValueTask.class, (task) -> {
+    }).setDescription("Verschlüsselt einen Prozessparameterwert");
   }
 }
