@@ -56,9 +56,10 @@ public class EncryptParameterValueHandler extends DefaultHandler
       EncryptParameterValueResponse encryptParameterValueResponse =
           CONNECTION_HELPER.post(environment, API_PATH, headers, encryptedParameterValueRequestBytes);
 
-      log.info("Die Verschlüsselung des Parameterwertes '{}' wurde erfolgreich abgeschlossen. "
-              + "Der verschlüsselte Parameterwert ist: {}",
-          parameterValue, encryptParameterValueResponse.getEncryptedParameterValue());
+      log.info("Die Verschluesselung des Parameterwertes '{}' wurde erfolgreich abgeschlossen.",
+          parameterValue);
+      log.info("Der verschluesselte Parameterwert ist: {}",
+          encryptParameterValueResponse.getEncryptedParameterValue());
     }
     catch (Exception e)
     {

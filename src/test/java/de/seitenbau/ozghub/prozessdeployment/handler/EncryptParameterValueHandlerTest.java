@@ -94,15 +94,11 @@ public class EncryptParameterValueHandlerTest
 
   private void assertEncryptParameterValueLogMessage(List<String> actualLogMessages, String parameterValue)
   {
-    String expectedLogMessage = createExpectedLogMessage(parameterValue);
-    assertThat(actualLogMessages).contains(expectedLogMessage);
-  }
-
-  private String createExpectedLogMessage(String parameterValue)
-  {
-    return "INFO Die Verschlüsselung des Parameterwertes '"
-        + parameterValue
-        + "' wurde erfolgreich abgeschlossen. Der verschlüsselte Parameterwert ist: ozghub:cu:TEST_test_Test";
+    String expectedLogMessage1 = "INFO Die Verschluesselung des Parameterwertes '" + parameterValue +
+        "' wurde erfolgreich abgeschlossen.";
+    String expectedLogMessage2 = "INFO Der verschluesselte Parameterwert ist: ozghub:cu:TEST_test_Test";
+    assertThat(actualLogMessages).contains(expectedLogMessage1);
+    assertThat(actualLogMessages).contains(expectedLogMessage2);
   }
 
   private void assertRequest(HttpHandler.Request request)
