@@ -1,7 +1,8 @@
 pipeline {
     parameters {
         string defaultValue: '', description: 'Versionsnummer im Format YYYY.MM.DD-Nr', name: 'PLUGIN_VERSION'
-        booleanParam defaultValue: false, description: 'Lädt offizielle Version in das öffentliche Gradle-Repository hoch, sofern eine PLUGIN_VERSION gesetzt ist ', name: 'UPLOAD_TO_GRADLE_REPO'
+        booleanParam defaultValue: true, description: 'Lädt in das Seitenbau-Maven-Repository hoch', name: 'UPLOAD_TO_SB_MAVEN_REPO'
+        booleanParam defaultValue: false, description: 'Lädt offizielle Version in das öffentliche Gradle-Repository hoch, sofern eine PLUGIN_VERSION gesetzt ist', name: 'UPLOAD_TO_GRADLE_REPO'
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '30'))
@@ -54,6 +55,9 @@ pipeline {
             }
         }
         stage('Publish Artifact to SB-Maven-repository') {
+            when {
+                expression { params.UPLOAD_TO_SB_MAVEN_REPO }
+            }
             steps {
                 script {
                     def pluginVersion = getPluginVersion()
