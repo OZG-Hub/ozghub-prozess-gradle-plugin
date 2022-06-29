@@ -1,6 +1,6 @@
 # Aktualisierungen
 
-## 2022.06.22-0
+## 2022.06.29-0
 - Feature: Der Task encryptParameterValue wurde hinzugefügt
 
 ## 2022.06.14-0
