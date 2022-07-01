@@ -59,6 +59,10 @@
 
 <!-- Checkstyle-Configuration für service-bw -->
 <module name="Checker">
+  <module name="LineLength">
+    <property name="max" value="110" />
+    <property name="ignorePattern" value="^$|^import.*$|^ *\* *@version \$Id\:.*$" />
+  </module>
   <module name="BeforeExecutionExclusionFileFilter">
     <property name="fileNamePattern" value=".*[/\\](generated|generated-java|VAADIN)[/\\].*"/>
   </module>
@@ -106,10 +110,6 @@
       <property name="max" value="100" />
     </module>
     <module name="AnonInnerLength" />
-    <module name="LineLength">
-      <property name="max" value="110" />
-      <property name="ignorePattern" value="^$|^import.*$|^ *\* *@version \$Id\:.*$" />
-    </module>
     <module name="MethodLength" />
     <module name="ParameterNumber" />
     <module name="ModifierOrder" />

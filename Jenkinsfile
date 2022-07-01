@@ -54,6 +54,15 @@ pipeline {
                 }
             }
         }
+        stage('Dependency Check') {
+            steps {
+                container('gradle') {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh 'gradle dependencyCheckAnalyze --no-daemon -PpluginVersion=' + getPluginVersion()
+                    }
+                }
+            }
+        }
         stage('Publish Artifact to SB-Maven-repository') {
             when {
                 expression { params.UPLOAD_TO_SB_MAVEN_REPO }
@@ -107,7 +116,8 @@ pipeline {
             recordIssues(tools: [
                     java(),
                     spotBugs(pattern: 'build/**/spotbugs/**/*.xml'),
-                    checkStyle(pattern: 'build/**/checkstyle/**/*.xml', reportEncoding: 'UTF-8')])
+                    checkStyle(pattern: 'build/**/checkstyle/**/*.xml', reportEncoding: 'UTF-8'),
+                    owaspDependencyCheck()])
             jacoco()
         }
     }
