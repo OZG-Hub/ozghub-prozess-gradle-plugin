@@ -1,3 +1,9 @@
+buildscript {
+    dependencies {
+        classpath 'org.owasp:dependency-check-gradle:7.1.1'
+    }
+}
+
 plugins {
     id 'java'
     id 'java-gradle-plugin'
@@ -79,6 +85,13 @@ spotbugsTest.enabled = false
 checkstyle {
     toolVersion = '10.3.1'
     checkstyleTest.enabled = false
+}
+
+apply plugin: 'org.owasp.dependencycheck'
+
+dependencyCheck {
+    suppressionFile = file('config/dependency-suppression.xml')
+    formats = ['HTML', 'JSON']
 }
 
 // ##########  Lokaler Build  ##########
