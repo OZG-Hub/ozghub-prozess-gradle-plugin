@@ -1,163 +1,24 @@
-<?xml version="1.0" encoding="WINDOWS-1252" standalone="yes"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:yaoqiang="http://bpmn.sourceforge.net" exporter="Yaoqiang BPMN Editor" exporterVersion="5.3" expressionLanguage="http://www.w3.org/1999/XPath" id="_1635252175623" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://bpmn.sourceforge.net/schemas/BPMN20.xsd">
-  <process id="Beispielprozess" isClosed="false" isExecutable="true" name="Beispielprozess" processType="None">
-    <extensionElements>
-      <yaoqiang:description/>
-      <yaoqiang:pageFormat height="841.8897637795276" imageableHeight="831.8897637795276" imageableWidth="588.1102362204724" imageableX="5.0" imageableY="5.0" orientation="0" width="598.1102362204724"/>
-      <yaoqiang:page background="#FFFFFF" horizontalCount="1" verticalCount="1"/>
-    </extensionElements>
-    <startEvent id="startevent1" isInterrupting="true" name="Start" parallelMultiple="false">
-      <outgoing>flow1</outgoing>
-      <outputSet/>
-    </startEvent>
-    <endEvent id="endevent1" name="End">
-      <incoming>flow5</incoming>
-      <inputSet/>
-    </endEvent>
-    <userTask activiti:assignee="${startedBy}" activiti:formKey="formular:{IBAN1}" completionQuantity="1" id="getIban1" implementation="##unspecified" isForCompensation="false" name="Hole IBAN 1" startQuantity="1">
-      <incoming>flow1</incoming>
-      <outgoing>flow2</outgoing>
-    </userTask>
-    <userTask activiti:assignee="${startedBy}" activiti:formKey="formular:1:IBAN2:v1.0" completionQuantity="1" id="getIban2" implementation="##unspecified" isForCompensation="false" name="Hole IBAN 2" startQuantity="1">
-      <incoming>flow3</incoming>
-      <outgoing>flow4</outgoing>
-    </userTask>
-    <scriptTask activiti:autoStoreVariables="false" completionQuantity="1" id="ValidateIban1" isForCompensation="false" name="Validiere IBAN 1" scriptFormat="groovy" startQuantity="1">
-      <incoming>flow2</incoming>
-      <outgoing>flow3</outgoing>
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="ELEKTRONISCHER_ANTRAG">
+  <process id="m99.BenutzerinfoAuslesen" name="Benutzerinfo Auslesen (Vorlage)" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <sequenceFlow id="flow6" sourceRef="startevent1" targetRef="readPostfachHandle"></sequenceFlow>
+    <scriptTask id="readPostfachHandle" name="Nachricht-Empfänger vorbereiten" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script><![CDATA[def startParameter = execution.getVariable("startParameter")
+def startedByUser = startParameter.getStartedByUser()
+execution.setVariable("startedBy", startedByUser.getUserId())
+String empfaenger = startedByUser.getPostfachHandle()
+execution.setVariable("postfachHandle", empfaenger)]]></script>
     </scriptTask>
-    <scriptTask activiti:autoStoreVariables="false" completionQuantity="1" id="ValidateIban2" isForCompensation="false" name="Validiere IBAN 2" scriptFormat="groovy" startQuantity="1">
-      <incoming>flow4</incoming>
-      <outgoing>flow5</outgoing>
-    </scriptTask>
-    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="getIban1"/>
-    <sequenceFlow id="flow2" sourceRef="getIban1" targetRef="ValidateIban1"/>
-    <sequenceFlow id="flow3" sourceRef="ValidateIban1" targetRef="getIban2"/>
-    <sequenceFlow id="flow4" sourceRef="getIban2" targetRef="ValidateIban2"/>
-    <sequenceFlow id="flow5" sourceRef="ValidateIban2" targetRef="endevent1"/>
-    <callActivity calledElement="testprozess" completionQuantity="1" id="subprozess" isForCompensation="false" name="Subprozess" startQuantity="1"/>
-    <callActivity calledElement="m1.testprozess_mandant" completionQuantity="1" id="callactivityWithMandant" isForCompensation="false" name="Subprozess mit Mandanteninfo" startQuantity="1"/>
-    <callActivity calledElement="m0.testprozess" completionQuantity="1" id="callactivity_42" isForCompensation="false" name="Subprozess mit 0" startQuantity="1"/>
-    <userTask activiti:formKey="formular::test:v1.0" completionQuantity="1" id="usertask" implementation="##unspecified" isForCompensation="false" name="Formular ohne Mandant" startQuantity="1"/>
-    <userTask activiti:formKey="formular:0:test:v1.0" completionQuantity="1" id="usertask1" implementation="##unspecified" isForCompensation="false" name="Formular Mandant 0" startQuantity="1"/>
-    <userTask activiti:formKey="formular:1:test:v1.0" completionQuantity="1" id="usertask2" implementation="##unspecified" isForCompensation="false" name="Formular anderer Mandant" startQuantity="1"/>
-    <userTask activiti:formKey="showOnce" completionQuantity="1" id="usertask3" implementation="##unspecified" isForCompensation="false" name="Sondertask" startQuantity="1"/>
+    <sequenceFlow id="flow7" sourceRef="readPostfachHandle" targetRef="form"></sequenceFlow>
+    <userTask id="form" name="Benutzerdaten anzeigen" activiti:assignee="${startedBy}" activiti:formKey="formular:99:benutzerAuslesen:v1.0"></userTask>
+    <sequenceFlow id="flow8" sourceRef="form" targetRef="endMessage"></sequenceFlow>
+    <userTask id="endMessage" name="Der Prozess wurde beendet" activiti:assignee="${startedBy}" activiti:formKey="showOnce">
+      <documentation>Der Prozess wurde beendet.
+        {{STARTSEITE}}
+        {{AUFGABENLISTE}}</documentation>
+    </userTask>
+    <sequenceFlow id="flow9" sourceRef="endMessage" targetRef="endevent1"></sequenceFlow>
+    <endEvent id="endevent1" name="End"></endEvent>
   </process>
-  <bpmndi:BPMNDiagram id="Yaoqiang_Diagram-Beispielprozess" name="Untitled Diagram" resolution="96.0">
-    <bpmndi:BPMNPlane bpmnElement="Beispielprozess">
-      <bpmndi:BPMNShape bpmnElement="startevent1" id="Yaoqiang-startevent1">
-        <omgdc:Bounds height="32.0" width="32.0" x="230.0" y="80.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="29.0" x="231.5" y="120.02"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="endevent1" id="Yaoqiang-endevent1">
-        <omgdc:Bounds height="32.0" width="32.0" x="900.0" y="80.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="24.0" x="904.0" y="120.02"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="getIban1" id="Yaoqiang-getIban1">
-        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="70.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="63.0" x="341.0" y="89.58"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="getIban2" id="Yaoqiang-getIban2">
-        <omgdc:Bounds height="55.0" width="105.0" x="600.0" y="70.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="63.0" x="621.0" y="89.58"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="ValidateIban1" id="Yaoqiang-ValidateIban1">
-        <omgdc:Bounds height="55.0" width="105.0" x="460.0" y="70.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="84.0" x="470.5" y="89.58"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="ValidateIban2" id="Yaoqiang-ValidateIban2">
-        <omgdc:Bounds height="55.0" width="105.0" x="750.0" y="70.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="84.0" x="760.5" y="89.58"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="subprozess" id="Yaoqiang-subprozess" isExpanded="false">
-        <omgdc:Bounds height="55.0" width="105.0" x="470.0" y="170.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="65.0" x="490.0" y="189.58"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="callactivityWithMandant" id="Yaoqiang-callactivityWithMandant" isExpanded="false">
-        <omgdc:Bounds height="55.0" width="105.0" x="470.0" y="260.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="34.84" width="81.0" x="482.0" y="272.08"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="callactivity_42" id="Yaoqiang-callactivity_42" isExpanded="false">
-        <omgdc:Bounds height="55.0" width="105.0" x="470.0" y="340.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="90.0" x="477.5" y="359.58"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask" id="Yaoqiang-usertask">
-        <omgdc:Bounds height="55.0" width="105.0" x="646.0" y="170.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="34.84" width="75.0" x="661.0" y="182.08"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask1" id="Yaoqiang-usertask1">
-        <omgdc:Bounds height="55.0" width="105.0" x="646.0" y="260.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="34.84" width="92.0" x="652.5" y="272.08"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask2" id="Yaoqiang-usertask2">
-        <omgdc:Bounds height="55.0" width="105.0" x="646.0" y="340.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="34.84" width="89.0" x="654.0" y="352.08"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask3" id="Yaoqiang-usertask3">
-        <omgdc:Bounds height="55.0" width="105.0" x="646.0" y="420.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="61.0" x="668.0" y="439.58"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="flow5" id="Yaoqiang-flow5">
-        <omgdi:waypoint x="855.5" y="97.5"/>
-        <omgdi:waypoint x="900.5008680791043" y="96.0"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="6.0" x="874.5" y="86.33"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow4" id="Yaoqiang-flow4">
-        <omgdi:waypoint x="705.5" y="97.5"/>
-        <omgdi:waypoint x="750.5" y="97.5"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="6.0" x="725.0" y="87.58"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow3" id="Yaoqiang-flow3">
-        <omgdi:waypoint x="565.5" y="97.5"/>
-        <omgdi:waypoint x="600.5" y="97.5"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="6.0" x="580.0" y="87.58"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow2" id="Yaoqiang-flow2">
-        <omgdi:waypoint x="425.5" y="97.5"/>
-        <omgdi:waypoint x="460.5" y="97.5"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="6.0" x="440.0" y="87.58"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow1" id="Yaoqiang-flow1">
-        <omgdi:waypoint x="262.49913192089565" y="96.0"/>
-        <omgdi:waypoint x="320.5" y="97.5"/>
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="19.84" width="6.0" x="288.0" y="87.33"/>
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-    </bpmndi:BPMNPlane>
-  </bpmndi:BPMNDiagram>
 </definitions>
