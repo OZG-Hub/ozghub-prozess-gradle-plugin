@@ -133,7 +133,7 @@ else {
     }
 
     artifactory {
-        contextUrl = 'https://shadow-artifactory.infra.dev.seitenbau.net/artifactory'
+        contextUrl = 'http://shadow-artifactory.infra.dev.seitenbau.net/artifactory'
         publish {
             repository {
                 repoKey = repositoryKey
