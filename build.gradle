@@ -120,8 +120,6 @@ if (System.getenv('JENKINS_HOME') == null || System.getenv('JENKINS_HOME').isEmp
 
 // ##########  Build auf Jenkins  ##########
 else {
-    apply plugin: 'com.jfrog.artifactory'
-
     def repositoryKey = project.hasProperty('repositoryKey') ? repositoryKey : 'ci-snapshots'
 
     publishing {
