@@ -141,3 +141,5 @@ zum Zugriff auf Logdateien.
 ## Referenzen
 
 - [Schnittstellen-Dokumentation](Schnittstellen.md)
+- [Task-Dokumentation](Tasks.md)
+- [Change-Log](CHANGELOG.md)

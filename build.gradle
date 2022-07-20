@@ -113,9 +113,7 @@ dependencyCheck {
 if (System.getenv('JENKINS_HOME') == null || System.getenv('JENKINS_HOME').isEmpty()) {
     publishing {
         repositories {
-            maven {
-                url mavenLocal()
-            }
+            mavenLocal()
         }
     }
 }
@@ -135,7 +133,7 @@ else {
     }
 
     artifactory {
-        contextUrl = 'http://shadow-artifactory.infra.dev.seitenbau.net/artifactory'
+        contextUrl = 'https://shadow-artifactory.infra.dev.seitenbau.net/artifactory'
         publish {
             repository {
                 repoKey = repositoryKey
