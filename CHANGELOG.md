@@ -1,5 +1,8 @@
 # Aktualisierungen
 
+## 2022.07.20-0
+- Feature: Dependencies aktualisiert 
+
 ## 2022.06.29-0
 - Feature: Der Task encryptParameterValue wurde hinzugefügt
 

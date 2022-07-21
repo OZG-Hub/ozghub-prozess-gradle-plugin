@@ -7,7 +7,7 @@ werden.
 
 ## System-Anforderungen
 
-- Das Plugin ist mit Gradle 6.7 getestet. Eventuell sind die Funktionen auch mit niedrigeren
+- Das Plugin ist mit Gradle 7.5 getestet. Eventuell sind die Funktionen auch mit niedrigeren
   Gradle-Versionen verfügbar.
 - Das verwendete Gradle muss minimal unter Java 11 laufen
 
@@ -141,3 +141,5 @@ zum Zugriff auf Logdateien.
 ## Referenzen
 
 - [Schnittstellen-Dokumentation](Schnittstellen.md)
+- [Task-Dokumentation](Tasks.md)
+- [Change-Log](CHANGELOG.md)
