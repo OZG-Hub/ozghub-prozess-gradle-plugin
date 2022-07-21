@@ -151,7 +151,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     sut = new DeployProcessHandler(env,
         getProjectDir(),
-        "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn",
+        "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn20.xml",
         "deployment1",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
@@ -180,7 +180,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     sut = new DeployProcessHandler(env,
         getProjectDir(),
-        "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn",
+        "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn20.xml",
         "deployment1",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
@@ -249,7 +249,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
       zis.getNextEntry();
       byte[] actualContentBytes = IOUtils.toByteArray(zis);
       String actualContent = new String(actualContentBytes);
-      String expectedContent = Files.readString(getFileInProjectDir("/build/models/example.bpmn").toPath());
+      String expectedContent = Files.readString(getFileInProjectDir("/build/models/example.bpmn20.xml").toPath());
 
       assertThat(actualContent).isEqualTo(expectedContent);
       assertThat(zis.getNextEntry()).isNull();
