@@ -15,6 +15,8 @@ Die folgenden Parameter werden von allen Tasks verpflichted benötigt.
 | user     | Benutzername zur Authentifizierung |
 | password | Password zur Authentifizierung     |
 
+Die Tasks funktionieren nur, wenn der Mandant des Prozessmodells / Formulars dem angegebenen Benutzer entspricht.
+
 ## Task-Dokumentation
 
 ### Task zum Deployen eines Prozessmodells
