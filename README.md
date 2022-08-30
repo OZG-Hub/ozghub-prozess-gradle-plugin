@@ -52,10 +52,10 @@ Zusätzliche Parameter:
 
 #### Metadaten-Dateien
 
-Metadaten-Dateien werden default-mäßig im Unterordner _metadata_ des Projektordners erwartet. Über
+Metadaten-Dateien werden defaultmäßig im Unterordner _metadata_ des Projektordners erwartet. Über
 den Parameter _metadataFiles_ kann auch ein anderer Ablageort angegeben werden. Die Metadaten-Dateien 
 werden im JSON-Format erwartet. Der Name der Metadaten-Datei zu einer Prozessmodelldatei muss dabei 
-(nach Entfernen der jeweiligen Extensions) mit dem Namen der Prozessmodell-Datei übereinstimmen. 
+(nach Entfernen der jeweiligen Extensions) mit dem Namen der Prozessmodelldatei übereinstimmen. 
 Aktuell wird als Metadaten-Attribut ausschließlich das Attribut _servicekontolos_ 
 (mit Werten true oder false) unterstützt.
 
@@ -80,7 +80,7 @@ undeployt werden.
 
 Zusätzliche Parameter:
 
-- files: Optional, default ist forms. Pfaf zum Ordner, in dem die zu deployenden Formulare liegen 
+- files: Optional, default ist forms. Pfad zum Ordner, in dem die zu deployenden Formulare liegen 
   oder Pfad zu einer Formular-Datei. Wird ein Ordner angegeben, werden auch die Unterordner dieses 
   Ordners durchsucht. Die Formulare müssen Serviceportal-Formulare sein und müssen die Dateiendung 
   .json haben.
@@ -90,7 +90,7 @@ Zusätzliche Parameter:
 Zeigt eine Liste aller deployten Prozesse an.
 
 Ausgegeben wird eine Liste aller vorhandenen Prozessdeployments. Für jedes Prozessdeployment wird in
-einer Zeile der Deployment-Zeitpunkt, der Name des Deployments und die Deployment-Id ausgegegeben.
+einer Zeile der Deployment-Zeitpunkt, der Name des Deployments und die Deployment-Id ausgegeben.
 Direkt unter der Deployment-Zeile folgen in weiteren Zeilen, die jeweils mit einem Spiegelstrich
 beginnen, die Keys und die Namen der enthaltenen Prozessmodelle. Die nächste Zeile ohne
 Spiegelstrich enthält dann das nächste Deployment.
@@ -109,8 +109,8 @@ dieser Prozessdefinitionen gelöscht.
 
 Zusätzliche Parameter:
 
-- deploymentId : Pflicht, die Id des zu löschenden Deployments.
-- deleteProcessInstances : Optional, default ist false. Muss auf true gesetzt werden, um Deployments
+- deploymentId: Pflicht, die Id des zu löschenden Deployments.
+- deleteProcessInstances: Optional, default ist false. Muss auf true gesetzt werden, um Deployments
   zu löschen, bei deren Undeployment auch Prozessinstanzen gelöscht werden würden.
 
 ### Task undeployForm
@@ -121,15 +121,15 @@ Es wird nicht geprüft, ob das Formular noch von Prozessen benutzt wird.
 
 Zusätzliche Parameter:
 
-- deploymentId : Pflicht, die Id des zu löschenden Formular-Deployments
+- deploymentId: Pflicht, die Id des zu löschenden Formular-Deployments
 
 ### Task encryptParameterValue
 
 Verschlüsselt einen Prozessparameterwert.
 
 Zusätzliche Parameter:
-- processKey : Pflicht, der Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll.
-- parameterValue : Pflicht, der zu verschlüsselnde Prozessparameterwert.
+- processKey: Pflicht, der Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll.
+- parameterValue: Pflicht, der zu verschlüsselnde Prozessparameterwert.
 
 ## (weitere) Schnittstellen des OZG-Hubs
 

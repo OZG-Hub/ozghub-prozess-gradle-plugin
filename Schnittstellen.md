@@ -12,7 +12,7 @@ Schnittstellen durch das Gradle-Plugin genutzt.
 Die Schnittstelle ermöglicht das Deployen eines Archives mit den zu einem Prozessmodell gehörenden
 Prozessmodelldateien, auf eine spezifische Prozess-Engine.<br />
 Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt. Der Aufruf muss als POST
-ausgeführt werden. Optional können zu den Prozessmodell-Dateien Metadaten übergeben werden.
+ausgeführt werden. Optional können zu den Prozessmodelldateien Metadaten übergeben werden.
 
 #### Pfad
 
@@ -20,10 +20,10 @@ ausgeführt werden. Optional können zu den Prozessmodell-Dateien Metadaten übe
 
 #### Header-Parameter
 
-| **Name**                  | **Pflicht** | **Typ** | **Beschreibung**     |
-| ------------------------- | ----------- | ------- | -------------------- |
+| **Name**                  | **Pflicht** | **Typ** | **Beschreibung**                                                                                                            |
+|---------------------------|-------------|---------|-----------------------------------------------------------------------------------------------------------------------------|
 | X-OZG-Process-Duplication | Ja          | String  | Wie mit Deployments, welche zu deployende Prozess-Keys enthalten, umgegangen werden soll<br />`IGNORE`, `UNDEPLOY`, `ERROR` |
-| X-OZG-Process-Engine      | Nein        | String  | ID der Prozess-Engine, Standard-Prozess-Engine wenn nicht gesetzt |
+| X-OZG-Process-Engine      | Nein        | String  | ID der Prozess-Engine, Standard-Prozess-Engine wenn nicht gesetzt                                                           |
 
 #### Request-Body
 
@@ -31,7 +31,7 @@ ausgeführt werden. Optional können zu den Prozessmodell-Dateien Metadaten übe
 
 ```json
 {
-  "deploymentName": "deploymenName",
+  "deploymentName": "deploymentName",
   "barArchiveBase64": "barArchiveAlsBase64EncodedString",
   "metadata": {
     "prozessmodellDateiNameOhneExtensions": {
@@ -43,7 +43,7 @@ ausgeführt werden. Optional können zu den Prozessmodell-Dateien Metadaten übe
 
 | **Name**         | **Pflicht** | **Typ** | **Beschreibung**                                                                                                                                                                                                                                                           |
 |------------------|-------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| deploymenName    | Ja          | String  | Name des Deployments                                                                                                                                                                                                                                                       |
+| deploymentName   | Ja          | String  | Name des Deployments                                                                                                                                                                                                                                                       |
 | barArchiveBase64 | Ja          | String  | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String                                                                                                                                                                                           |
 | metadata         | Nein        | Map     | Keys ist der Name der Prozessmodell-Datei (ohne Extensions), zu der die Metadaten gehören; Value ist ein Objekt, dessen Attribute die zu übergebenden Metadaten enthalten. Aktuell wird ausschließlich das Attribut _servicekontolos_ (Werte true oder false) unterstützt. |
 
@@ -77,7 +77,7 @@ die Prozess-Keys, welche bereits Teil eines Deployments auf der Umgebung waren.
 #### Allgemein
 
 Die Schnittstelle ermöglicht das Deployen eines Formulars. Der Aufruf muss als POST ausgeführt
-werden. Ist für das im Body übergebene Formular-JSON bereits eines deployed, welches die gleiche Id
+werden. Ist für das im Body übergebene Formular-JSON bereits eines deployt, welches die gleiche Id
 hat, so wird das vorhandene ersetzt.
 
 #### Pfad
@@ -119,9 +119,9 @@ ausgeführt, wird der Aufruf mit einer Fehlermeldung abgebrochen.
 
 #### Header-Parameter
 
-| **Name**                                | **Pflicht** | **Typ** | **Beschreibung**   |
-| --------------------------------------- | ----------- | ------- | ------------------ |
-| X-OZG-Deployment-ID                     | Ja          | String  | ID des Deployments |
+| **Name**                                | **Pflicht** | **Typ** | **Beschreibung**                                                                                          |
+|-----------------------------------------|-------------|---------|-----------------------------------------------------------------------------------------------------------|
+| X-OZG-Deployment-ID                     | Ja          | String  | ID des Deployments                                                                                        |
 | X-OZG-Deployment-DeleteProcessInstances | Ja          | boolean | Wenn `true` werden aktive Prozessinstanzen beendet, wenn `false` dürfen keine Prozessinstanzen existieren |
 
 #### Rückgabewerte
@@ -154,9 +154,9 @@ Der Aufruf muss als DELETE ausgeführt werden.
 
 #### Header-Parameter
 
-| **Name**             | **Pflicht** | **Typ**  | **Beschreibung**   |
-| -------------------- | ----------- | -------- | ------------------ |
-| X-OZG-Deployment-ID  | Ja          | Ganzzahl | ID des Deployments |
+| **Name**            | **Pflicht** | **Typ**  | **Beschreibung**   |
+|---------------------|-------------|----------|--------------------|
+| X-OZG-Deployment-ID | Ja          | Ganzzahl | ID des Deployments |
 
 #### Rückgabewerte
 
@@ -280,17 +280,17 @@ Der Aufruf muss als GET ausgeführt werden.
 
 #### Query-Parameter
 
-| **Name**             | **Pflicht** | **Typ**  | **Beschreibung**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| -------------------- | ----------- | -------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| sortProperty         | Nein        | String   | Eigenschaft, welche zur Sortierung herangezogen werden soll. Mögliche Werte: id, createDate, applicationName, level (Sortierung nach Alphabet, nicht semantisch!), logger, message, exception, logEntryType, mandant. Default: createDate                                                                                                                                                                                                                                                                                               |
-| sortDirection        | Nein        | String   | Ob aufsteigend (ASC) oder absteigend (DESC) sortiert werden soll. Default: DESC                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| from                 | Nein        | Long     | Untere Grenze für das Datum der angezeigten Logeinträge, als Unix Timestamp. Default : keine untere Grenze                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| to                   | Nein        | Long     | Obere Grenze für das Datum der angezeigten Logeinträge, als Unix Timestamp. Default : keine obere Grenze                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| mandant              | Nein        | String   | Id des Mandanten, dessen Logeinträge angezeigt werden sollen. Default : es werden Logeinträge aller Mandanten angezeigt.  Gilt nur für Supermandenten                                                                                                                                                                                                                                                                                                                                                                                   |
-| attributeMatch       | Nein        | String   | Filtert nach weiteren Attributen eines Logeintrags. Das Format ist attributeName=value1,value2,value3... Die Values werden verodert. Der Query-Parameter kann mehrfach verwendet werden, in diesem Fall werden die mehreren Verwendungen verundet. Erlaubte Attributnamen sind id, createDate, applicationName, level, logger, message, exception und logEntryType. Die Suche nach message findet auch Einträge, die den gesuchten String in der Message enthalten; für alle anderen Attribute wird nach einem exakten Treffer gesucht. |
-| contextMatch         | Nein        | String   | Filter nach Einträgen in der Context-Map eines Logeintrags. Das Format ist contextKey=value1,value2,value3... Die Values werden verodert. Der Query-Parameter kann mehrfach verwendet werden, in diesem Fall werden die mehreren Verwendungen verundet.                                                                                                                                                                                                                                                                                 |
-| page                 | Nein        | int      | Die Nummer der Seite für die Paginierung. Default ist 0.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| pageSize             | Nein        | int      | Wie groß eine Seite der Paginierung sein soll. Muss einen Wert zwischen 1 und 1000 enthalten. Default ist 1000.                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| **Name**       | **Pflicht** | **Typ** | **Beschreibung**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+|----------------|-------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| sortProperty   | Nein        | String  | Eigenschaft, welche zur Sortierung herangezogen werden soll. Mögliche Werte: id, createDate, applicationName, level (Sortierung nach Alphabet, nicht semantisch!), logger, message, exception, logEntryType, mandant. Default: createDate                                                                                                                                                                                                                                                                                               |
+| sortDirection  | Nein        | String  | Ob aufsteigend (ASC) oder absteigend (DESC) sortiert werden soll. Default: DESC                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| from           | Nein        | Long    | Untere Grenze für das Datum der angezeigten Logeinträge, als Unix Timestamp. Default : keine untere Grenze                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| to             | Nein        | Long    | Obere Grenze für das Datum der angezeigten Logeinträge, als Unix Timestamp. Default : keine obere Grenze                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| mandant        | Nein        | String  | Id des Mandanten, dessen Logeinträge angezeigt werden sollen. Default : es werden Logeinträge aller Mandanten angezeigt.  Gilt nur für Supermandanten                                                                                                                                                                                                                                                                                                                                                                                   |
+| attributeMatch | Nein        | String  | Filtert nach weiteren Attributen eines Logeintrags. Das Format ist attributeName=value1,value2,value3... Die Values werden verodert. Der Query-Parameter kann mehrfach verwendet werden, in diesem Fall werden die mehreren Verwendungen verundet. Erlaubte Attributnamen sind id, createDate, applicationName, level, logger, message, exception und logEntryType. Die Suche nach message findet auch Einträge, die den gesuchten String in der Message enthalten; für alle anderen Attribute wird nach einem exakten Treffer gesucht. |
+| contextMatch   | Nein        | String  | Filter nach Einträgen in der Context-Map eines Logeintrags. Das Format ist contextKey=value1,value2,value3... Die Values werden verodert. Der Query-Parameter kann mehrfach verwendet werden, in diesem Fall werden die mehreren Verwendungen verundet.                                                                                                                                                                                                                                                                                 |
+| page           | Nein        | int     | Die Nummer der Seite für die Paginierung. Default ist 0.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| pageSize       | Nein        | int     | Wie groß eine Seite der Paginierung sein soll. Muss einen Wert zwischen 1 und 1000 enthalten. Default ist 1000.                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 #### Rückgabewerte
 
@@ -353,10 +353,10 @@ Der Aufruf muss als POST ausgeführt werden.
 }
 ```
 
-| **Name**       | **Pflicht** | **Typ** | **Beschreibung**                                                                              |
-|----------------|-------------| ------- |-----------------------------------------------------------------------------------------------|
-| processKey     | Ja          | String  | Der Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll  |
-| parameterValue | Ja          | String  | Der zu verschlüsselnde Prozessparameterwert                                                   |
+| **Name**       | **Pflicht** | **Typ** | **Beschreibung**                                                                             |
+|----------------|-------------|---------|----------------------------------------------------------------------------------------------|
+| processKey     | Ja          | String  | Der Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll |
+| parameterValue | Ja          | String  | Der zu verschlüsselnde Prozessparameterwert                                                  |
 
 #### Rückgabewerte
 

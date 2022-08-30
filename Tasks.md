@@ -7,10 +7,10 @@ Dieses Dokument beschreibt die verfügbaren Tasks dieses Gradle-Plugins.
 Parameter der Tasks werden als Kommandozeilen-Parameter übergeben.<br />
 Die Reihenfolge der Parameter spielt dabei keine Rolle.
 
-Die folgenden Parameter werden von allen Tasks verpflichted benötigt.
+Die folgenden Parameter werden von allen Tasks verpflichtet benötigt.
 
 | **Name** | **Beschreibung**                   |
-| -------- | ---------------------------------- |
+|----------|------------------------------------|
 | url      | URL zu einer OZG-Hub-Umgebung      |
 | user     | Benutzername zur Authentifizierung |
 | password | Password zur Authentifizierung     |
@@ -29,17 +29,17 @@ Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt.
 
 #### Parameter
 
-| **Name**                  | **Default-Wert** | **Beschreibung**                   |
-| ------------------------- | ---------------- | ---------------------------------- |
-| files                     | /build/models    | Ordner aus dem Prozessmodelle gelesen werden. Es werden auch Unterordner berücksichtigt |
-| metadataFiles             | /metadata        | Ordner aus dem Metadaten-Dateien gelesen werden. Es werden auch Unterordner berücksichtigt |
-| deploymentName            |                  | Name des Deployments |
-| duplicateProcesskeyAction | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll |
+| **Name**                  | **Default-Wert** | **Beschreibung**                                                                                                  |
+|---------------------------|------------------|-------------------------------------------------------------------------------------------------------------------|
+| files                     | /build/models    | Ordner aus dem Prozessmodelle gelesen werden. Es werden auch Unterordner berücksichtigt                           |
+| metadataFiles             | /metadata        | Ordner aus dem Metadaten-Dateien gelesen werden. Es werden auch Unterordner berücksichtigt                        |
+| deploymentName            |                  | Name des Deployments                                                                                              |
+| duplicateProcesskeyAction | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll                                      |
 | engine                    | `null`           | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet |
 
 Die Metadaten-Dateien sind optional und werden im JSON-Format erwartet.
 Der Name der Metadaten-Datei zu einer Prozessmodelldatei muss dabei
-(nach Entfernen der jeweiligen Extensions) mit dem Namen der Prozessmodell-Datei übereinstimmen.
+(nach Entfernen der jeweiligen Extensions) mit dem Namen der Prozessmodelldatei übereinstimmen.
 Zum Prozessmodell _test.bpmn20.xml_ gehört folglich die Metadaten-Datei _test.json_.
 
 Der Parameter `duplicateProcesskeyAction` definiert, was geschehen soll, wenn vor dem Deployment der
@@ -57,14 +57,14 @@ eines Deployments ist. Die folgenden Optionen sind möglich:
 #### Allgemein
 
 Der Task `deployForms` ermöglicht das Deployen von Formularen.<br />
-Ist für ein Formular-JSON bereits eines mit der gleichen Id deployed, so wird das vorhandene
+Ist für ein Formular-JSON bereits eines mit der gleichen Id deployt, so wird das vorhandene
 ersetzt.
 
 #### Parameter
 
-| **Name**                   | **Default-Wert** | **Beschreibung**                   |
-| -------------------------- | ---------------- | ---------------------------------- |
-| files                      | /forms           | Ordner aus dem Formulare gelesen werden. Es werden auch Unterordner berücksichtigt |
+| **Name** | **Default-Wert** | **Beschreibung**                                                                   |
+|----------|------------------|------------------------------------------------------------------------------------|
+| files    | /forms           | Ordner aus dem Formulare gelesen werden. Es werden auch Unterordner berücksichtigt |
 
 ---------------------------------------------------------------------------------------------------
 
@@ -81,9 +81,9 @@ ausgeführt, wird der Task mit einer Fehlermeldung abgebrochen.
 
 #### Parameter
 
-| **Name**               | **Default-Wert** | **Beschreibung**             |
-| ---------------------- | ---------------- | ---------------------------- |
-| deploymentId           |                  | ID eines Prozess-Deployments |
+| **Name**               | **Default-Wert** | **Beschreibung**                                 |
+|------------------------|------------------|--------------------------------------------------|
+| deploymentId           |                  | ID eines Prozess-Deployments                     |
 | deleteProcessInstances | `false`          | Ob aktive Prozessinstanzen beendet werden sollen |
 
 Der Parameter `deleteProcessInstances` definiert, was geschehen soll, wenn vor dem Undeployment
@@ -105,7 +105,7 @@ Formulare, die Teil des Deployments sind, werden undeployt.
 #### Parameter
 
 | **Name**     | **Beschreibung**              |
-| ------------ | ----------------------------- |
+|--------------|-------------------------------|
 | deploymentId | ID eines Formular-Deployments |
 
 ---------------------------------------------------------------------------------------------------
