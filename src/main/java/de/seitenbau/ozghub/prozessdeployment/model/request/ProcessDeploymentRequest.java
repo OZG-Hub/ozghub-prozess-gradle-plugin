@@ -13,7 +13,9 @@ public class ProcessDeploymentRequest
 {
   private String barArchiveBase64;
 
-  private String deploymentName;
+  private String processName;
+
+  private String versionName;
 
   private Map<String, ProcessMetadata> metadata;
 }

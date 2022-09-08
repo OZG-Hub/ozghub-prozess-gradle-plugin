@@ -42,7 +42,7 @@ public class ListProcessesHandlerTest
   private ListAppender listAppender;
 
   @AfterEach
-  private void after()
+  public void after()
   {
     if (httpServer != null)
     {

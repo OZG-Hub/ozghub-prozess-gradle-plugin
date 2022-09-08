@@ -41,7 +41,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   private DeployProcessHandler sut;
 
   @AfterEach
-  private void after()
+  public void after()
   {
     if (httpServer != null)
     {
@@ -67,7 +67,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         null,
-        "deployment1",
+        "process1",
+        "v1.0",
         DuplicateProcessKeyAction.ERROR,
         "engine1",
         null);
@@ -96,15 +97,16 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         "src/test/resources/handler/deployProcessHandler/build",
-        "deployment1",
+        "process1",
+        "v1.0",
         DuplicateProcessKeyAction.IGNORE,
         null,
-        "path/to/nonexisting/metadata");
+        "path/to/non-existing/metadata");
 
     // act
     assertThatThrownBy(() -> sut.deploy())
         .isExactlyInstanceOf(GradleException.class)
-        .hasMessage("Fehler: Die angegebene Quelle für Metadaten (" + Path.of("path/to/nonexisting/metadata").toString() + ")" +
+        .hasMessage("Fehler: Die angegebene Quelle für Metadaten (" + Path.of("path/to/non-existing/metadata") + ")" +
             " konnte nicht gefunden werden");
 
     // assert
@@ -123,7 +125,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     sut = new DeployProcessHandler(env,
         new File(getProjectDir(), "projectWithoutMetadata"),
         "src/test/resources/handler/deployProcessHandler/build",
-        "deployment1",
+        "process1",
+        "v1.0",
         DuplicateProcessKeyAction.IGNORE,
         null,
         null);
@@ -152,7 +155,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn20.xml",
-        "deployment1",
+        "process1",
+        "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         "src/test/resources/handler/deployProcessHandler/metadata");
@@ -181,7 +185,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn20.xml",
-        "deployment1",
+        "process1",
+        "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         "src/test/resources/handler/deployProcessHandler/metadata/example.json");
@@ -212,7 +217,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         null,
-        "deployment1",
+        "process1",
+        "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         null);
@@ -255,7 +261,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
       assertThat(zis.getNextEntry()).isNull();
     }
 
-    assertThat(actualDeployProcessRequest.getDeploymentName()).isEqualTo("deployment1");
+    assertThat(actualDeployProcessRequest.getProcessName()).isEqualTo("process1");
+    assertThat(actualDeployProcessRequest.getVersionName()).isEqualTo("v1.0");
 
     Map<String, ProcessMetadata> actualMetadata = actualDeployProcessRequest.getMetadata();
     if (withMetadata)

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class ProcessDeployment
 {
   /**
-   * Die Keys und Namen der im Deployment enthaltenenen Prozessmodelle
+   * Die Keys und Namen der im Deployment enthaltenen Prozessmodelle
    */
   private Map<String, String> processDefinitionKeysAndNames;
 

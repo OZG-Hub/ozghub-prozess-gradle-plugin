@@ -31,21 +31,23 @@ ausgeführt werden. Optional können zu den Prozessmodelldateien Metadaten über
 
 ```json
 {
-  "deploymentName": "deploymentName",
+  "processName": "Beispiel Prozessname",
+  "versionName": "v1.0",
   "barArchiveBase64": "barArchiveAlsBase64EncodedString",
   "metadata": {
-    "prozessmodellDateiNameOhneExtensions": {
+    "prozessmodellDateiNameOhneErweiterungen": {
       "servicekontolos": true
     } 
   }  
 }
 ```
 
-| **Name**         | **Pflicht** | **Typ** | **Beschreibung**                                                                                                                                                                                                                                                           |
-|------------------|-------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| deploymentName   | Ja          | String  | Name des Deployments                                                                                                                                                                                                                                                       |
-| barArchiveBase64 | Ja          | String  | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String                                                                                                                                                                                           |
-| metadata         | Nein        | Map     | Keys ist der Name der Prozessmodell-Datei (ohne Extensions), zu der die Metadaten gehören; Value ist ein Objekt, dessen Attribute die zu übergebenden Metadaten enthalten. Aktuell wird ausschließlich das Attribut _servicekontolos_ (Werte true oder false) unterstützt. |
+| **Name**         | **Pflicht** | **Typ** | **Beschreibung**                                                                                                                                                                                                                                                  |
+|------------------|-------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| processName      | Ja          | String  | Name des Prozesses                                                                                                                                                                                                                                                |
+| versionName      | Ja          | String  | Name des Versions                                                                                                                                                                                                                                                 |
+| barArchiveBase64 | Ja          | String  | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String                                                                                                                                                                                  |
+| metadata         | Nein        | Map     | Keys ist der Name der Prozessmodell-Datei (ohne Erweiterungen), zu der die Metadaten gehören; Value ist ein Objekt, dessen Attribute die zu übergebenden Metadaten enthalten. Aktuell wird ausschließlich das Attribut _servicekontolos_ (Werte true oder false) unterstützt. |
 
 
 #### Rückgabewerte
@@ -200,20 +202,20 @@ einer Liste der vorhandenen Deployments.<br />
   "value": [
     {
       "processDefinitionKeysAndNames": {
-        "processKey1": "processName1",
-        "processKey2": "processName2"
+        "processKey1": "processKey1",
+        "processKey2": "processKey2"
       },
       "deploymentDate": 1635270704000,
-      "deploymentName": "deploymentName1",
+      "deploymentName": "processName1:v1.0",
       "deploymentId": "141"
     },
     {
       "processDefinitionKeysAndNames": {
-        "processKey3": "processName3",
-        "processKey4": "processName4"
+        "processKey3": "processKey3",
+        "processKey4": "processKey4"
       },
       "deploymentDate": 1629293345000,
-      "deploymentName": "deploymentName2",
+      "deploymentName": "processName2:v1.0",
       "deploymentId": "142"
     }
   ]

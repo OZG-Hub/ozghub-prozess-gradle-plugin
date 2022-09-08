@@ -4,17 +4,17 @@ plugins {
     id 'checkstyle'
 
     // https://plugins.gradle.org/plugin/com.github.spotbugs
-    id 'com.github.spotbugs' version '5.0.9'
+    id 'com.github.spotbugs' version '5.0.12'
 
     // https://plugins.gradle.org/plugin/com.jfrog.artifactory
-    id "com.jfrog.artifactory" version "4.28.4"
+    id "com.jfrog.artifactory" version "4.29.0"
 
     // https://plugins.gradle.org/plugin/com.gradle.plugin-publish
     // com.gradle.plugin-publish auto-applies `java-gradle-plugin` and `maven-publish` plugins
     id 'com.gradle.plugin-publish' version '1.0.0'
 
     // https://plugins.gradle.org/plugin/org.owasp.dependencycheck
-    id "org.owasp.dependencycheck" version "7.1.1"
+    id "org.owasp.dependencycheck" version "7.1.2"
 
     // https://plugins.gradle.org/plugin/com.github.ben-manes.versions
     id "com.github.ben-manes.versions" version "0.42.0"
@@ -46,17 +46,17 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.18.0'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4'
 
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
-    compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.7.1'
+    compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.7.2'
 
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
     testImplementation 'org.assertj:assertj-core:3.23.1'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
 
     // https://mvnrepository.com/artifact/com.h3xstream.findsecbugs/findsecbugs-plugin
     // https://github.com/spotbugs/spotbugs-gradle-plugin#spotbugs-version-mapping

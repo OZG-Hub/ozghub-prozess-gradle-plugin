@@ -30,7 +30,7 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
   private UndeployProcessHandler sut;
 
   @AfterEach
-  private void after()
+  public void after()
   {
     if (httpServer != null)
     {

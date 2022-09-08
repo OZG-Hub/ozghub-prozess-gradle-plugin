@@ -44,7 +44,9 @@ public class DeployProcessHandler extends DefaultHandler
 
   private final String filePath;
 
-  private final String deploymentName;
+  private final String processName;
+
+  private final String versionName;
 
   private final DuplicateProcessKeyAction duplicateProcesskeyAction;
 
@@ -55,7 +57,8 @@ public class DeployProcessHandler extends DefaultHandler
   public DeployProcessHandler(Environment env,
       File projectDir,
       String filePath,
-      String deploymentName,
+      String processName,
+      String versionName,
       DuplicateProcessKeyAction duplicateKeyAction,
       String engineId,
       String metadataFolder)
@@ -63,7 +66,8 @@ public class DeployProcessHandler extends DefaultHandler
     super(env);
     this.projectDir = projectDir;
     this.filePath = filePath;
-    this.deploymentName = deploymentName;
+    this.processName = processName;
+    this.versionName = versionName;
     this.duplicateProcesskeyAction =
         Objects.requireNonNullElse(duplicateKeyAction, DuplicateProcessKeyAction.ERROR);
     this.engineId = engineId;
@@ -102,7 +106,7 @@ public class DeployProcessHandler extends DefaultHandler
     Map<String, ProcessMetadata> metadata = createMetadataMap();
 
     return
-        new ProcessDeploymentRequest(Base64.getEncoder().encodeToString(data), deploymentName, metadata);
+        new ProcessDeploymentRequest(Base64.getEncoder().encodeToString(data), processName, versionName, metadata);
   }
 
   private Map<String, ProcessMetadata> createMetadataMap()

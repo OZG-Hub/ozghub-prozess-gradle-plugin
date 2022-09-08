@@ -36,7 +36,7 @@ public class DeployFormsHandlerTest extends HandlerTestBase
   private DeployFormsHandler sut;
 
   @AfterEach
-  private void after()
+  public void after()
   {
     if (httpServer != null)
     {

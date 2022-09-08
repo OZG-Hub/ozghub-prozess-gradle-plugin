@@ -7,7 +7,7 @@ werden.
 
 ## System-Anforderungen
 
-- Das Plugin ist mit Gradle 7.5 getestet. Eventuell sind die Funktionen auch mit niedrigeren
+- Das Plugin ist mit Gradle 7.5.1 getestet. Eventuell sind die Funktionen auch mit niedrigeren
   Gradle-Versionen verfügbar.
 - Das verwendete Gradle muss minimal unter Java 11 laufen
 
@@ -43,7 +43,8 @@ Zusätzlich werden (falls vorhanden) in Dateien enthaltene Metadaten zu den Proz
 
 Zusätzliche Parameter:
 
-- deploymentName: Pflicht. Der Name des Deployments, in dem die Prozessmodelle deployt werden
+- processName: Pflicht. Der Name des Prozesses, in dem die Prozessmodelle deployt werden
+- versionName: Pflicht. Der Name des Versions, in dem die Prozessmodelle deployt werden
 - files: Optional, default ist build/models. Pfad zum Ordner, in dem die zu deployenden Prozessmodelle
   liegen oder Pfad zu einem Prozessmodell. Die Prozessmodelle müssen Activiti-flavored BPMN 
   Dateien sein und die Dateiendung .bpmn20.xml haben.

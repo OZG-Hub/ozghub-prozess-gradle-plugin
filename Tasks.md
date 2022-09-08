@@ -33,13 +33,14 @@ Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt.
 |---------------------------|------------------|-------------------------------------------------------------------------------------------------------------------|
 | files                     | /build/models    | Ordner aus dem Prozessmodelle gelesen werden. Es werden auch Unterordner berücksichtigt                           |
 | metadataFiles             | /metadata        | Ordner aus dem Metadaten-Dateien gelesen werden. Es werden auch Unterordner berücksichtigt                        |
-| deploymentName            |                  | Name des Deployments                                                                                              |
+| processName               |                  | Name des Prozesses                                                                                                |
+| versionName               |                  | Name des Versions                                                                                                 |
 | duplicateProcesskeyAction | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll                                      |
 | engine                    | `null`           | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet |
 
 Die Metadaten-Dateien sind optional und werden im JSON-Format erwartet.
 Der Name der Metadaten-Datei zu einer Prozessmodelldatei muss dabei
-(nach Entfernen der jeweiligen Extensions) mit dem Namen der Prozessmodelldatei übereinstimmen.
+(nach Entfernen der jeweiligen Erweiterungen) mit dem Namen der Prozessmodelldatei übereinstimmen.
 Zum Prozessmodell _test.bpmn20.xml_ gehört folglich die Metadaten-Datei _test.json_.
 
 Der Parameter `duplicateProcesskeyAction` definiert, was geschehen soll, wenn vor dem Deployment der
