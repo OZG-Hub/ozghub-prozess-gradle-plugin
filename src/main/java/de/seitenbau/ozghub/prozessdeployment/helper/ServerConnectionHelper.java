@@ -191,7 +191,7 @@ public class ServerConnectionHelper<T>
 
     if (!url.getProtocol().equals("http") && !url.getProtocol().equals("https"))
     {
-      throw new RuntimeException("URL " + serverUrl + " muss das Protokoll HTTP oder HTTP haben");
+      throw new RuntimeException("URL " + serverUrl + " muss das Protokoll HTTP oder HTTPS haben");
     }
 
     HttpURLConnection http = (HttpURLConnection) url.openConnection();
