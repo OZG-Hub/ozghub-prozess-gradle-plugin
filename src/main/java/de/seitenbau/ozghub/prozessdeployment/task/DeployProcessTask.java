@@ -21,9 +21,9 @@ public class DeployProcessTask extends DefaultPluginTask
   @Optional
   private String files;
 
-  /** Name des Prozesses. */
+  /** Name des Deployments. */
   @Input
-  private String processName;
+  private String deploymentName;
 
   /** Name des Versions. */
   @Input
@@ -57,7 +57,7 @@ public class DeployProcessTask extends DefaultPluginTask
         getEnvironment(),
         getProjectDir(),
         files,
-        processName,
+        deploymentName,
         versionName,
         duplicateProcesskeyAction,
         engine,

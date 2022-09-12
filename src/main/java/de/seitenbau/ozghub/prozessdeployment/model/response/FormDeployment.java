@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class FormDeployment
 {
   /**
-   * Die Id des Mandanten, für den das Formular deployed wurde
+   * Die Id des Mandanten, für den das Formular deployt wurde
    */
   private String mandantId;
 

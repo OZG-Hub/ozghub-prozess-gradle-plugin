@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -36,9 +37,9 @@ public final class FileHelper
   {
     List<Path> files = new ArrayList<>();
 
-    try
+    try (Stream<Path> pathStream = Files.walk(folder))
     {
-      Files.walk(folder)
+      pathStream
           .filter(Files::isRegularFile)
           .forEach(f -> files.add(f.toAbsolutePath()));
       log.info("Im Ordner {} wurden {} Dateien gefunden.", folder, files.size());

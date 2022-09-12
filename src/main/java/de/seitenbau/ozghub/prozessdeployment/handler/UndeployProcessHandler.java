@@ -23,9 +23,9 @@ public class UndeployProcessHandler extends DefaultHandler
 
   private final boolean deleteProcessInstances;
 
-  public UndeployProcessHandler(Environment env, String deploymentId, boolean deleteProcessInstances)
+  public UndeployProcessHandler(Environment environment, String deploymentId, boolean deleteProcessInstances)
   {
-    super(env);
+    super(environment);
     this.deploymentId = deploymentId;
     this.deleteProcessInstances = deleteProcessInstances;
   }

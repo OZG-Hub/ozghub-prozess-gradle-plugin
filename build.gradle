@@ -94,7 +94,7 @@ jacocoTestReport {
 spotbugsMain {
     ignoreFailures = true
     effort = 'max'
-    excludeFilter = file('src/main/resources/spotbugs-exclude.xml')
+    excludeFilter.set(file('src/main/resources/spotbugs-exclude.xml'))
 }
 
 // https://github.com/spotbugs/spotbugs-gradle-plugin/issues/391

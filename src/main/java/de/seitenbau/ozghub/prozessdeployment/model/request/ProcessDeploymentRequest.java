@@ -13,7 +13,7 @@ public class ProcessDeploymentRequest
 {
   private String barArchiveBase64;
 
-  private String processName;
+  private String deploymentName;
 
   private String versionName;
 
