@@ -43,8 +43,8 @@ Zusätzlich werden (falls vorhanden) in Dateien enthaltene Metadaten zu den Proz
 
 Zusätzliche Parameter:
 
-- processName: Pflicht. Der Name des Prozesses, in dem die Prozessmodelle deployt werden
-- versionName: Pflicht. Der Name der Version, in dem die Prozessmodelle deployt werden
+- deploymentName: Pflicht. Der Name des Deployments, in dem die Prozessmodelle deployt werden
+- versionName: Pflicht. Der Name der Version, die mit diesem Deployment verknüpft werden soll
 - files: Optional, default ist build/models. Pfad zum Ordner, in dem die zu deployenden Prozessmodelle
   liegen oder Pfad zu einem Prozessmodell. Die Prozessmodelle müssen Activiti-flavored BPMN 
   Dateien sein und die Dateiendung .bpmn20.xml haben.

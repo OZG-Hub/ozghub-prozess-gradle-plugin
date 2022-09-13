@@ -31,7 +31,7 @@ ausgeführt werden. Optional können zu den Prozessmodelldateien Metadaten über
 
 ```json
 {
-  "processName": "Beispiel Prozessname",
+  "deploymentName": "deploymentName",
   "versionName": "v1.0",
   "barArchiveBase64": "barArchiveAlsBase64EncodedString",
   "metadata": {
@@ -42,11 +42,11 @@ ausgeführt werden. Optional können zu den Prozessmodelldateien Metadaten über
 }
 ```
 
-| **Name**         | **Pflicht** | **Typ** | **Beschreibung**                                                                                                                                                                                                                                                             |
-|------------------|-------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| processName      | Ja          | String  | Name des Prozesses                                                                                                                                                                                                                                                           |
-| versionName      | Ja          | String  | Name der Version                                                                                                                                                                                                                                                             |
-| barArchiveBase64 | Ja          | String  | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String                                                                                                                                                                                             |
+| **Name**         | **Pflicht** | **Typ** | **Beschreibung**                                                                                                                                                                                                                                                              |
+|------------------|-------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| deploymentName   | Ja          | String  | Name des Deployments                                                                                                                                                                                                                                                          |
+| versionName      | Ja          | String  | Name der Version                                                                                                                                                                                                                                                              |
+| barArchiveBase64 | Ja          | String  | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String                                                                                                                                                                                              |
 | metadata         | Nein        | Map     | Keys ist der Name der Prozessmodell-Datei (ohne Erweiterungen), zu der die Metadaten gehören; Value ist ein Objekt, dessen Attribute die zu übergebenden Metadaten enthalten. Aktuell wird ausschließlich das Attribut _servicekontolos_ (Werte true oder false) unterstützt. |
 
 
@@ -206,7 +206,7 @@ einer Liste der vorhandenen Deployments.<br />
         "processKey2": "processKey2"
       },
       "deploymentDate": 1635270704000,
-      "deploymentName": "processName1:v1.0",
+      "deploymentName": "deploymentName1",
       "deploymentId": "141"
     },
     {
@@ -215,7 +215,7 @@ einer Liste der vorhandenen Deployments.<br />
         "processKey4": "processKey4"
       },
       "deploymentDate": 1629293345000,
-      "deploymentName": "processName2:v1.0",
+      "deploymentName": "deploymentName2",
       "deploymentId": "142"
     }
   ]
