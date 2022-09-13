@@ -33,4 +33,9 @@ public class ProcessDeployment
    * Die Deployment-ID
    */
   private String deploymentId;
+
+  /**
+   * Der Name der Version
+   */
+  private String versionName;
 }

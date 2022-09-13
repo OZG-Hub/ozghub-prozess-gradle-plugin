@@ -29,13 +29,13 @@ Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt.
 
 #### Parameter
 
-| **Name**                  | **Default-Wert** | **Beschreibung**                                                                                                  |
-|---------------------------|------------------|-------------------------------------------------------------------------------------------------------------------|
-| files                     | /build/models    | Ordner aus dem Prozessmodelle gelesen werden. Es werden auch Unterordner berücksichtigt                           |
-| metadataFiles             | /metadata        | Ordner aus dem Metadaten-Dateien gelesen werden. Es werden auch Unterordner berücksichtigt                        |
-| processName               |                  | Name des Prozesses                                                                                                |
-| versionName               |                  | Name des Versions                                                                                                 |
-| duplicateProcesskeyAction | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll                                      |
+| **Name**                  | **Default-Wert** | **Beschreibung**                                                                                                 |
+|---------------------------|------------------|------------------------------------------------------------------------------------------------------------------|
+| files                     | /build/models    | Ordner aus dem Prozessmodelle gelesen werden. Es werden auch Unterordner berücksichtigt                          |
+| metadataFiles             | /metadata        | Ordner aus dem Metadaten-Dateien gelesen werden. Es werden auch Unterordner berücksichtigt                       |
+| processName               |                  | Name des Prozesses                                                                                               |
+| versionName               |                  | Name der Version                                                                                                 |
+| duplicateProcesskeyAction | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll                                     |
 | engine                    | `null`           | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet |
 
 Die Metadaten-Dateien sind optional und werden im JSON-Format erwartet.

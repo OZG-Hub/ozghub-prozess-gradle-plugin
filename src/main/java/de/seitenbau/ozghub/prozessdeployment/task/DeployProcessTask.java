@@ -25,7 +25,7 @@ public class DeployProcessTask extends DefaultPluginTask
   @Input
   private String deploymentName;
 
-  /** Name des Versions. */
+  /** Name der Version. */
   @Input
   private String versionName;
 

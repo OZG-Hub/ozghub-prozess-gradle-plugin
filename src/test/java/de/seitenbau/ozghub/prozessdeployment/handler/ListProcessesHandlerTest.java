@@ -158,14 +158,16 @@ public class ListProcessesHandlerTest
   {
     SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
     String expectedDeploymentDateString = format.format(deploymentDate);
-
+    String expectedVersionName = deployment.getVersionName() == null ? "" : deployment.getVersionName();
     return "INFO Vorhandene Deployments:\n"
-        + "Deployment-Datum    | Deployment-Id | Deployment-Name\n"
+        + "Deployment-Datum    | Deployment-Id | Version-Name | Deployment-Name\n"
         + " - Prozesskey Prozessname\n"
-        + "--------------------+---------------+----------------\n"
+        + "--------------------+---------------+--------------+----------------\n"
         + expectedDeploymentDateString
         + " | "
         + StringUtils.leftPad(deployment.getDeploymentId(), "Deployment-Id".length())
+        + " | "
+        + StringUtils.rightPad(expectedVersionName, "Version-Name".length())
         + " | "
         + deployment.getDeploymentName()
         + "\n"
