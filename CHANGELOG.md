@@ -1,13 +1,17 @@
 # Aktualisierungen
 
+## 2022.09.13-0
+- Feature: Der Task `deployProcess` benötigt den neuen Parameter `versionName`
+- Feature: Der Task `listProcesses` zeigt den Wert von `versionName` an
+
 ## 2022.07.20-0
 - Feature: Dependencies aktualisiert 
 
 ## 2022.06.29-0
-- Feature: Der Task encryptParameterValue wurde hinzugefügt
+- Feature: Der Task `encryptParameterValue` wurde hinzugefügt
 
 ## 2022.06.14-0
-- Feature: Der Task deployProcess unterstützt nun das Übergeben von Metadaten an die Schnittstelle
+- Feature: Der Task `deployProcess` unterstützt nun das Übergeben von Metadaten an die Schnittstelle
 
 ## 2022.04.19-0
 - Bugfix: Datumsausgabe bei `listForms`, `listProcesses` im 24h-Format
