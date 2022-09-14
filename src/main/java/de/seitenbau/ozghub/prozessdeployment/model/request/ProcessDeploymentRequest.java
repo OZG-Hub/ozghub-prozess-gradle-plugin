@@ -15,5 +15,7 @@ public class ProcessDeploymentRequest
 
   private String deploymentName;
 
+  private String versionName;
+
   private Map<String, ProcessMetadata> metadata;
 }

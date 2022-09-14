@@ -26,9 +26,9 @@ import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
-import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
+import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
 import lombok.SneakyThrows;
 
 public class DeployProcessHandlerTest extends HandlerTestBase
@@ -41,7 +41,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   private DeployProcessHandler sut;
 
   @AfterEach
-  private void after()
+  public void after()
   {
     if (httpServer != null)
     {
@@ -68,6 +68,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         getProjectDir(),
         null,
         "deployment1",
+        "v1.0",
         DuplicateProcessKeyAction.ERROR,
         "engine1",
         null);
@@ -97,21 +98,23 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         getProjectDir(),
         "src/test/resources/handler/deployProcessHandler/build",
         "deployment1",
+        "v1.0",
         DuplicateProcessKeyAction.IGNORE,
         null,
-        "path/to/nonexisting/metadata");
+        "path/to/non-existing/metadata");
 
     // act
     assertThatThrownBy(() -> sut.deploy())
         .isExactlyInstanceOf(GradleException.class)
-        .hasMessage("Fehler: Die angegebene Quelle für Metadaten (" + Path.of("path/to/nonexisting/metadata").toString() + ")" +
-            " konnte nicht gefunden werden");
+        .hasMessage(
+            "Fehler: Die angegebene Quelle für Metadaten (" + Path.of("path/to/non-existing/metadata") + ")" +
+                " konnte nicht gefunden werden");
 
     // assert
     assertThat(httpHandler.countRequests()).isEqualTo(0);
   }
 
-    @Test
+  @Test
   public void deploy_customPathToFolder_NonExistentDefaultMetadataFolder()
   {
     // arrange
@@ -124,6 +127,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         new File(getProjectDir(), "projectWithoutMetadata"),
         "src/test/resources/handler/deployProcessHandler/build",
         "deployment1",
+        "v1.0",
         DuplicateProcessKeyAction.IGNORE,
         null,
         null);
@@ -153,6 +157,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         getProjectDir(),
         "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn20.xml",
         "deployment1",
+        "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         "src/test/resources/handler/deployProcessHandler/metadata");
@@ -182,6 +187,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         getProjectDir(),
         "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn20.xml",
         "deployment1",
+        "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         "src/test/resources/handler/deployProcessHandler/metadata/example.json");
@@ -213,6 +219,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         getProjectDir(),
         null,
         "deployment1",
+        "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         null);
@@ -249,13 +256,15 @@ public class DeployProcessHandlerTest extends HandlerTestBase
       zis.getNextEntry();
       byte[] actualContentBytes = IOUtils.toByteArray(zis);
       String actualContent = new String(actualContentBytes);
-      String expectedContent = Files.readString(getFileInProjectDir("/build/models/example.bpmn20.xml").toPath());
+      String expectedContent =
+          Files.readString(getFileInProjectDir("/build/models/example.bpmn20.xml").toPath());
 
       assertThat(actualContent).isEqualTo(expectedContent);
       assertThat(zis.getNextEntry()).isNull();
     }
 
     assertThat(actualDeployProcessRequest.getDeploymentName()).isEqualTo("deployment1");
+    assertThat(actualDeployProcessRequest.getVersionName()).isEqualTo("v1.0");
 
     Map<String, ProcessMetadata> actualMetadata = actualDeployProcessRequest.getMetadata();
     if (withMetadata)

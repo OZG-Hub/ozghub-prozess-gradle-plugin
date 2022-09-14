@@ -30,7 +30,7 @@ public class ServerConnectionHelperTest
   private final ServerConnectionHelper<TestResponse> sut = new ServerConnectionHelper<>(TestResponse.class);
 
   @AfterEach
-  private void after()
+  public void after()
   {
     if (httpServer != null)
     {

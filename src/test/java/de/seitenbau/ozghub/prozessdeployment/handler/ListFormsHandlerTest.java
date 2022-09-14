@@ -41,7 +41,7 @@ public class ListFormsHandlerTest
   private ListAppender listAppender;
 
   @AfterEach
-  private void after()
+  public void after()
   {
     if (httpServer != null)
     {

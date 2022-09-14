@@ -29,7 +29,7 @@ public class UndeployFormHandlerTest extends HandlerTestBase
   private UndeployFormHandler sut;
 
   @AfterEach
-  private void after()
+  public void after()
   {
     if (httpServer != null)
     {

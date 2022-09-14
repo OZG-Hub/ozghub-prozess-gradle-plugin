@@ -25,6 +25,10 @@ public class DeployProcessTask extends DefaultPluginTask
   @Input
   private String deploymentName;
 
+  /** Name der Version. */
+  @Input
+  private String versionName;
+
   /** Aktion, wenn mindestens ein Prozess-Key bereits Teil eines Deployments ist. */
   @Input
   @Optional
@@ -54,6 +58,7 @@ public class DeployProcessTask extends DefaultPluginTask
         getProjectDir(),
         files,
         deploymentName,
+        versionName,
         duplicateProcesskeyAction,
         engine,
         metadataFiles);

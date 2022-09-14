@@ -23,28 +23,29 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
       log.warn("Es konnten nicht alle Deployments von allen Prozessengines abgerufen werden.");
     }
     StringBuilder sb = new StringBuilder();
-    sb.append("Vorhandene Deployments:\n");
-    sb.append("Deployment-Datum    | Deployment-Id | Deployment-Name\n");
-    sb.append(" - Prozesskey Prozessname\n");
-    sb.append("--------------------+---------------+----------------\n");
+    sb.append("Vorhandene Deployments:\n")
+        .append("Deployment-Datum    | Deployment-Id | Version-Name | Deployment-Name\n")
+        .append(" - Prozesskey Prozessname\n")
+        .append("--------------------+---------------+--------------+----------------\n");
     deploymentList.getValue().forEach(
         deployment -> {
-          sb.append(formatDate(deployment.getDeploymentDate()));
-          sb.append(" | ");
-          sb.append(StringUtils.leftPad(deployment.getDeploymentId(), "Deployment-Id".length()));
-          sb.append(" | ");
-          sb.append(deployment.getDeploymentName());
-          sb.append("\n");
+          String versionName = deployment.getVersionName() == null ? "" : deployment.getVersionName();
+          sb.append(formatDate(deployment.getDeploymentDate()))
+              .append(" | ")
+              .append(StringUtils.leftPad(deployment.getDeploymentId(), "Deployment-Id".length()))
+              .append(" | ")
+              .append(StringUtils.rightPad(versionName, "Version-Name".length()))
+              .append(" | ")
+              .append(deployment.getDeploymentName())
+              .append("\n");
           deployment.getProcessDefinitionKeysAndNames().entrySet()
               .stream()
               .sorted((e1, e2) -> String.CASE_INSENSITIVE_ORDER.compare(e1.getKey(), e2.getKey()))
-              .forEachOrdered(entry -> {
-                sb.append(" - ");
-                sb.append(entry.getKey());
-                sb.append(" ");
-                sb.append(entry.getValue());
-                sb.append("\n");
-              });
+              .forEachOrdered(entry -> sb.append(" - ")
+                  .append(entry.getKey())
+                  .append(" ")
+                  .append(entry.getValue())
+                  .append("\n"));
         });
     log.info(sb.toString());
   }

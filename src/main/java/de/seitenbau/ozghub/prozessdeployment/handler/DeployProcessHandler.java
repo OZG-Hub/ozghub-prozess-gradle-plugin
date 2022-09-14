@@ -46,29 +46,35 @@ public class DeployProcessHandler extends DefaultHandler
 
   private final String deploymentName;
 
+  private final String versionName;
+
   private final DuplicateProcessKeyAction duplicateProcesskeyAction;
 
   private final String engineId;
 
   private final String metadataFolder;
 
-  public DeployProcessHandler(Environment env,
+  // CHECKSTYLE:OFF ParameterNumberCheck
+  public DeployProcessHandler(Environment environment,
       File projectDir,
       String filePath,
       String deploymentName,
+      String versionName,
       DuplicateProcessKeyAction duplicateKeyAction,
       String engineId,
       String metadataFolder)
   {
-    super(env);
+    super(environment);
     this.projectDir = projectDir;
     this.filePath = filePath;
     this.deploymentName = deploymentName;
+    this.versionName = versionName;
     this.duplicateProcesskeyAction =
         Objects.requireNonNullElse(duplicateKeyAction, DuplicateProcessKeyAction.ERROR);
     this.engineId = engineId;
     this.metadataFolder = metadataFolder;
   }
+  // CHECKSTYLE:ON ParameterNumberCheck
 
   public void deploy()
   {
@@ -102,7 +108,8 @@ public class DeployProcessHandler extends DefaultHandler
     Map<String, ProcessMetadata> metadata = createMetadataMap();
 
     return
-        new ProcessDeploymentRequest(Base64.getEncoder().encodeToString(data), deploymentName, metadata);
+        new ProcessDeploymentRequest(Base64.getEncoder().encodeToString(data), deploymentName, versionName,
+            metadata);
   }
 
   private Map<String, ProcessMetadata> createMetadataMap()
@@ -130,7 +137,7 @@ public class DeployProcessHandler extends DefaultHandler
     }
     if (this.metadataFolder != null)
     {
-      throw new RuntimeException("Die angegebene Quelle für Metadaten (" + metadataFolder.toString()
+      throw new RuntimeException("Die angegebene Quelle für Metadaten (" + metadataFolder
           + ") konnte nicht gefunden werden");
     }
     return Collections.emptyList();

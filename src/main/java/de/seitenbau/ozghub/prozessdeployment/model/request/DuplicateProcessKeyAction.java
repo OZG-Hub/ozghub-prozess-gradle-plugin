@@ -4,5 +4,5 @@ public enum DuplicateProcessKeyAction
 {
   IGNORE,
   UNDEPLOY,
-  ERROR;
+  ERROR
 }
