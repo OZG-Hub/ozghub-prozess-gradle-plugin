@@ -126,10 +126,18 @@ Zusätzliche Parameter:
 
 ### Task encryptParameterValue
 
-Verschlüsselt einen Prozessparameterwert.
+Verschlüsselt einen Prozessparameterwert. 
+
+Der so verschlüsselte Wert kann bei Jesaja eingespielt werden und wird 
+vom OZG-Hub für Prozesse mit dem angegebenen Prozesskey automatisch entschlüsselt.
+Die Verschlüsselung muss auf der Umgebung (Prod, Dev, Test, ...) stattfinden,
+auf der der Parameter nachher entschlüsselt wird, da der Schlüssel je Umgebung
+unterschiedlich ist.
 
 Zusätzliche Parameter:
-- processKey: Pflicht, der Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll.
+- processKey: Pflicht, der Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert 
+  eingesetzt werden soll. Achtung, nur für den Prozess mit diesem Prozess-Key kann
+  der verschlüsselte Wert entschlüsselt werden!
 - parameterValue: Pflicht, der zu verschlüsselnde Prozessparameterwert.
 
 ## (weitere) Schnittstellen des OZG-Hubs
