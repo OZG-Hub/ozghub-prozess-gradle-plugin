@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -22,6 +24,8 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public final class FileHelper
 {
+  private static final Pattern HOME_FOLDER_PATTERN = Pattern.compile("^~");
+
   private FileHelper()
   {
   }
@@ -56,8 +60,14 @@ public final class FileHelper
   {
     if (customFolder != null)
     {
-      return new File(customFolder).toPath();
+      String userHome = System.getProperty("user.home");
+      String actualFolder = HOME_FOLDER_PATTERN
+          .matcher(customFolder)
+          .replaceFirst(Matcher.quoteReplacement(userHome));
+      Path path = Path.of(actualFolder);
+      return path.isAbsolute() ? path : Paths.get(projectDir.getPath(), actualFolder);
     }
+
     return Paths.get(projectDir.getPath(), defaultFolder);
   }
 

@@ -3,6 +3,7 @@ package de.seitenbau.ozghub.prozessdeployment.helper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import lombok.SneakyThrows;
 
@@ -67,6 +70,79 @@ public class FileHelperTest
       assertThat(actualContents).containsExactlyInAnyOrderElementsOf(expectedContents);
       assertThat(zis.getNextEntry()).isNull();
     }
+  }
+
+  @Test
+  public void getCustomFolderOrDefault_null()
+  {
+    // arrange
+    File projectDir = getPathToFolder().toFile();
+    Path expected = Path.of(projectDir.getPath(), "default");
+
+    // act
+    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, null, "default");
+
+    // assert
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  public void getCustomFolderOrDefault_relative()
+  {
+    // arrange
+    File projectDir = getPathToFolder().toFile();
+    Path expected = Path.of(projectDir.getPath(), "custom");
+
+    // act
+    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, "custom", "default");
+
+    // assert
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  @EnabledOnOs(OS.WINDOWS)
+  public void getCustomFolderOrDefault_absolute_windows()
+  {
+    // arrange
+    File projectDir = getPathToFolder().toFile();
+    Path expected = Path.of(projectDir.getPath(), "custom");
+
+    // act
+    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, "custom", null);
+
+    // assert
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  @EnabledOnOs(OS.LINUX)
+  public void getCustomFolderOrDefault_absolute_linux()
+  {
+    // arrange
+    File projectDir = getPathToFolder().toFile();
+    Path expected = Path.of("/custom");
+
+    // act
+    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, "/custom", null);
+
+    // assert
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  public void getCustomFolderOrDefault_tilde()
+  {
+    // arrange
+    File projectDir = getPathToFolder().toFile();
+    String userHome = System.getProperty("user.home");
+    Path expected = Path.of(userHome, "custom");
+
+    // act
+    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, "~/custom", null);
+
+    // assert
+    assertThat(actual).isEqualTo(expected);
   }
 
   private Path getPathToFolder()

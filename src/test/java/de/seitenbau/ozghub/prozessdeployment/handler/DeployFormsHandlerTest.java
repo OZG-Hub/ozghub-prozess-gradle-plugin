@@ -1,12 +1,14 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -56,7 +58,6 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
-
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo1", "bar1");
 
@@ -75,18 +76,16 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     assertRequestHeaders(actualRequest, env);
   }
 
-
   @Test
   public void deploy_customPathToFolder()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
-
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo1", "bar1");
 
-    sut = new DeployFormsHandler(env, getProjectDir(), "src/test/resources/handler/deployFormsHandler/forms");
+    sut = new DeployFormsHandler(env, getProjectDir(), "forms");
 
     // act
     sut.deploy();
@@ -101,19 +100,16 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     assertRequestHeaders(actualRequest, env);
   }
 
-
   @Test
   public void deploy_customPathToFile()
   {
     // arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
-
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo1", "bar1");
 
-    sut = new DeployFormsHandler(env, getProjectDir(),
-        "src/test/resources/handler/deployFormsHandler/forms/form1.json");
+    sut = new DeployFormsHandler(env, getProjectDir(), "forms/form1.json");
 
     // act
     sut.deploy();
@@ -126,6 +122,26 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     assertRequest(actualRequest);
     assertRequestBody(actualRequest.getRequestBody(), "/forms/form1.json");
     assertRequestHeaders(actualRequest, env);
+  }
+
+  @Test
+  public void deploy_customPathToFile_notFound()
+  {
+    // arrange
+    HttpHandler httpHandler = createAndStartHttpServer();
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo1", "bar1");
+
+    sut = new DeployFormsHandler(env, getProjectDir(), "forms/form2.json");
+
+    // act
+    assertThatExceptionOfType(GradleException.class)
+        .isThrownBy(() -> sut.deploy())
+        .withMessage("Fehler: Fehler beim Lesen der Dateien in Ordner "
+            + Path.of("src/test/resources/handler/deployFormsHandler/forms/form2.json"));
+
+    // assert
+    assertThat(httpHandler.countRequests()).isZero();
   }
 
   @Test
@@ -137,8 +153,7 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo1", "bar1");
 
-    sut = new DeployFormsHandler(env, getProjectDir(),
-        "src/test/resources/handler/deployFormsHandler/multipleForms");
+    sut = new DeployFormsHandler(env, getProjectDir(), "multipleForms");
 
     // act
     sut.deploy();
@@ -160,8 +175,10 @@ public class DeployFormsHandlerTest extends HandlerTestBase
             Collectors.toList());
 
     List<String> expectedRequestBodyContents = new ArrayList<>();
-    expectedRequestBodyContents.add(Files.readString(getFileInProjectDir("/multipleForms/form1.json").toPath()));
-    expectedRequestBodyContents.add(Files.readString(getFileInProjectDir("/multipleForms/form2.json").toPath()));
+    expectedRequestBodyContents.add(
+        Files.readString(getFileInProjectDir("/multipleForms/form1.json").toPath()));
+    expectedRequestBodyContents.add(
+        Files.readString(getFileInProjectDir("/multipleForms/form2.json").toPath()));
 
     assertThat(actualRequestBodyContents).containsExactlyInAnyOrderElementsOf(expectedRequestBodyContents);
   }
@@ -196,7 +213,6 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     assertRequestBody(actualRequest.getRequestBody(), "/forms/form1.json");
     assertRequestHeaders(actualRequest, env);
   }
-
 
   @SneakyThrows
   private void assertRequestBody(byte[] data, String filePathInProjectDir)
