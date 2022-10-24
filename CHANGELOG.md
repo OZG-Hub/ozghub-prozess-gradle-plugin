@@ -1,5 +1,8 @@
 # Aktualisierungen
 
+## 2022.10.24-0
+- Bugfix: Relative Dateipfade bei `deployProcess` und `deployForms` immmer relativ zum Projektordner
+
 ## 2022.09.13-0
 - Feature: Der Task `deployProcess` benötigt den neuen Parameter `versionName`
 - Feature: Der Task `listProcesses` zeigt den Wert von `versionName` an
