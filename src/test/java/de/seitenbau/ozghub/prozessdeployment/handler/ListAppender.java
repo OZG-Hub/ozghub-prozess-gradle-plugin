@@ -23,7 +23,7 @@ import lombok.Getter;
 public class ListAppender extends AbstractAppender
 {
   @Getter
-  private List<String> eventList = new ArrayList<>();
+  private final List<String> eventList = new ArrayList<>();
 
   protected ListAppender(String name, Filter filter)
   {
