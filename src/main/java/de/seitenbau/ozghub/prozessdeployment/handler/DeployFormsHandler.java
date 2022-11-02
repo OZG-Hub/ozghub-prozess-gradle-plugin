@@ -35,13 +35,13 @@ public class DeployFormsHandler extends DefaultHandler
 
   private final File projectDir;
 
-  private final String formFilesDir;
+  private final String formFiles;
 
-  public DeployFormsHandler(Environment environment, File projectDir, String formFilesDir)
+  public DeployFormsHandler(Environment environment, File projectDir, String formFiles)
   {
     super(environment);
     this.projectDir = projectDir;
-    this.formFilesDir = formFilesDir;
+    this.formFiles = formFiles;
   }
 
   public void deploy()
@@ -50,7 +50,7 @@ public class DeployFormsHandler extends DefaultHandler
 
     try
     {
-      Path path = FileHelper.getCustomFolderOrDefault(projectDir, formFilesDir, DEFAULT_FORMS_DIR);
+      Path path = FileHelper.getCustomFolderOrDefault(projectDir, formFiles, DEFAULT_FORMS_DIR);
       List<Path> files = FileHelper.readFilesInFolder(path);
 
       Map<String, String> headers = getHeaderParameters();
