@@ -106,10 +106,10 @@ public class FileHelperTest
   {
     // arrange
     File projectDir = getPathToFolder().toFile();
-    Path expected = Path.of(projectDir.getPath(), "custom");
+    Path expected = Path.of("C:\\custom");
 
     // act
-    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, "custom", null);
+    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, "C:\\custom", null);
 
     // assert
     assertThat(actual).isEqualTo(expected);

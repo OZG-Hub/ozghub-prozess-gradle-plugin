@@ -29,14 +29,14 @@ Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt.
 
 #### Parameter
 
-| **Name**                  | **Default-Wert** | **Beschreibung**                                                                                                  |
-|---------------------------|------------------|-------------------------------------------------------------------------------------------------------------------|
-| files                     | /build/models    | Ordner aus dem Prozessmodelle gelesen werden. Es werden auch Unterordner berücksichtigt                           |
-| metadataFiles             | /metadata        | Ordner aus dem Metadaten-Dateien gelesen werden. Es werden auch Unterordner berücksichtigt                        |
-| deploymentName            |                  | Name des Deployments                                                                                              |
-| versionName               |                  | Name der Version                                                                                                  |
-| duplicateProcesskeyAction | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll                                      |
-| engine                    | `null`           | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet |
+| **Name**                  | **Default-Wert** | **Beschreibung**                                                                                                                           |
+|---------------------------|------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| files                     | /build/models    | Ordner aus dem Prozessmodelle gelesen werden. Es werden auch Unterordner berücksichtigt. Ein relativer Pfad ist relativ zum Projektordner. |
+| metadataFiles             | /metadata        | Ordner aus dem Metadaten-Dateien gelesen werden. Es werden auch Unterordner berücksichtigt                                                 |
+| deploymentName            |                  | Name des Deployments                                                                                                                       |
+| versionName               |                  | Name der Version                                                                                                                           |
+| duplicateProcesskeyAction | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll                                                               |
+| engine                    | `null`           | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet                          |
 
 Die Metadaten-Dateien sind optional und werden im JSON-Format erwartet.
 Der Name der Metadaten-Datei zu einer Prozessmodelldatei muss dabei
@@ -63,9 +63,9 @@ ersetzt.
 
 #### Parameter
 
-| **Name** | **Default-Wert** | **Beschreibung**                                                                   |
-|----------|------------------|------------------------------------------------------------------------------------|
-| files    | /forms           | Ordner aus dem Formulare gelesen werden. Es werden auch Unterordner berücksichtigt |
+| **Name** | **Default-Wert** | **Beschreibung**                                                                                                                      |
+|----------|------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| files    | /forms           | Ordner aus dem Formulare gelesen werden. Es werden auch Unterordner berücksichtigt. Ein relativer Pfad ist relativ zum Projektordner. |
 
 ---------------------------------------------------------------------------------------------------
 
