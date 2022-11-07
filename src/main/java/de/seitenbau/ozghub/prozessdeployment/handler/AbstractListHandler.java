@@ -61,7 +61,7 @@ public abstract class AbstractListHandler<T> extends DefaultHandler
 
   protected abstract void writeLogEntries(T list) throws IOException;
 
-  protected T getList() throws java.io.IOException
+  protected T getList() throws IOException
   {
     ServerConnectionHelper<T> serverConnectionHelper = new ServerConnectionHelper<>(responseType);
     return serverConnectionHelper.get(environment, apiPath, getHeaderParameters());

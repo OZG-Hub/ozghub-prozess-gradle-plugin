@@ -47,9 +47,11 @@ Zusätzliche Parameter:
 - versionName: Pflicht. Der Name der Version, die mit diesem Deployment verknüpft werden soll
 - files: Optional, default ist build/models. Pfad zum Ordner, in dem die zu deployenden Prozessmodelle
   liegen oder Pfad zu einem Prozessmodell. Die Prozessmodelle müssen Activiti-flavored BPMN 
-  Dateien sein und die Dateiendung .bpmn20.xml haben.
+  Dateien sein und die Dateiendung .bpmn20.xml haben. Ein relativer Pfad ist relativ zum
+  Projektordner.
 - metadataFiles: Optional, default ist metadata. Pfad zum Ordner, in dem sich die Metadaten-Dateien 
-  zu den Prozessmodell-Dateien befinden oder Pfad zu einer Metadata-Datei.
+  zu den Prozessmodell-Dateien befinden oder Pfad zu einer Metadata-Datei. Ein relativer Pfad ist
+  relativ zum Projektordner.
 
 #### Metadaten-Dateien
 
@@ -84,7 +86,7 @@ Zusätzliche Parameter:
 - files: Optional, default ist forms. Pfad zum Ordner, in dem die zu deployenden Formulare liegen 
   oder Pfad zu einer Formular-Datei. Wird ein Ordner angegeben, werden auch die Unterordner dieses 
   Ordners durchsucht. Die Formulare müssen Serviceportal-Formulare sein und müssen die Dateiendung 
-  .json haben.
+  .json haben. Ein relativer Pfad ist relativ zum Projektordner.
 
 ### Task listProcesses
 

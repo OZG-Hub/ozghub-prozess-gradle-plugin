@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="ELEKTRONISCHER_ANTRAG">
+  <process id="m99.BenutzerinfoAuslesen" name="Benutzerinfo Auslesen (Vorlage)" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <sequenceFlow id="flow6" sourceRef="startevent1" targetRef="readPostfachHandle"></sequenceFlow>
+    <scriptTask id="readPostfachHandle" name="Nachricht-Empfänger vorbereiten" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script><![CDATA[def startParameter = execution.getVariable("startParameter")
+def startedByUser = startParameter.getStartedByUser()
+execution.setVariable("startedBy", startedByUser.getUserId())
+String empfaenger = startedByUser.getPostfachHandle()
+execution.setVariable("postfachHandle", empfaenger)]]></script>
+    </scriptTask>
+    <sequenceFlow id="flow7" sourceRef="readPostfachHandle" targetRef="form"></sequenceFlow>
+    <userTask id="form" name="Benutzerdaten anzeigen" activiti:assignee="${startedBy}" activiti:formKey="formular:99:benutzerAuslesen:v1.0"></userTask>
+    <sequenceFlow id="flow8" sourceRef="form" targetRef="endMessage"></sequenceFlow>
+    <userTask id="endMessage" name="Der Prozess wurde beendet" activiti:assignee="${startedBy}" activiti:formKey="showOnce">
+      <documentation>Der Prozess wurde beendet.
+        {{STARTSEITE}}
+        {{AUFGABENLISTE}}</documentation>
+    </userTask>
+    <sequenceFlow id="flow9" sourceRef="endMessage" targetRef="endevent1"></sequenceFlow>
+    <endEvent id="endevent1" name="End"></endEvent>
+  </process>
+</definitions>

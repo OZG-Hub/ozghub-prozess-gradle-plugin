@@ -35,7 +35,7 @@ public class DeployProcessTask extends DefaultPluginTask
   private DuplicateProcessKeyAction duplicateProcesskeyAction;
 
   /**
-   * ID der Prozess-Engine, auf welche deployt werden soll. Ist keine Engine-ID gegeben wird die
+   * ID der Prozess-Engine, auf welche deployt werden soll. Ist keine Engine-ID gegeben, wird die
    * Standard-Prozess-Engine verwendet.
    */
   @Input

@@ -96,7 +96,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     sut = new DeployProcessHandler(env,
         getProjectDir(),
-        "src/test/resources/handler/deployProcessHandler/build",
+        "build",
         "deployment1",
         "v1.0",
         DuplicateProcessKeyAction.IGNORE,
@@ -107,8 +107,10 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     assertThatThrownBy(() -> sut.deploy())
         .isExactlyInstanceOf(GradleException.class)
         .hasMessage(
-            "Fehler: Die angegebene Quelle für Metadaten (" + Path.of("path/to/non-existing/metadata") + ")" +
-                " konnte nicht gefunden werden");
+            "Fehler: Die angegebene Quelle für Metadaten (" +
+                Path.of(
+                    "src/test/resources/handler/deployProcessHandler/path/to/non-existing/metadata")
+                + ") konnte nicht gefunden werden");
 
     // assert
     assertThat(httpHandler.countRequests()).isEqualTo(0);
@@ -125,7 +127,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     sut = new DeployProcessHandler(env,
         new File(getProjectDir(), "projectWithoutMetadata"),
-        "src/test/resources/handler/deployProcessHandler/build",
+        "build",
         "deployment1",
         "v1.0",
         DuplicateProcessKeyAction.IGNORE,
@@ -155,12 +157,12 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     sut = new DeployProcessHandler(env,
         getProjectDir(),
-        "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn20.xml",
+        "build/models/example.bpmn20.xml",
         "deployment1",
         "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
-        "src/test/resources/handler/deployProcessHandler/metadata");
+        "metadata");
 
     // act
     sut.deploy();
@@ -185,12 +187,12 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     sut = new DeployProcessHandler(env,
         getProjectDir(),
-        "src/test/resources/handler/deployProcessHandler/build/models/example.bpmn20.xml",
+        "build/models/example.bpmn20.xml",
         "deployment1",
         "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
-        "src/test/resources/handler/deployProcessHandler/metadata/example.json");
+        "metadata/example.json");
 
     // act
     sut.deploy();
@@ -243,13 +245,11 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   @SneakyThrows
   private void assertRequestBody(byte[] data, boolean withMetadata)
   {
-
     ProcessDeploymentRequest
         actualDeployProcessRequest = OBJECT_MAPPER.readValue(data, ProcessDeploymentRequest.class);
 
     byte[] actualDeploymentArchive =
         Base64.getDecoder().decode(actualDeployProcessRequest.getBarArchiveBase64());
-
 
     try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(actualDeploymentArchive)))
     {
@@ -279,7 +279,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     {
       assertThat(actualMetadata).isEmpty();
     }
-
   }
 
   private void assertResponse(HttpHandler handler)

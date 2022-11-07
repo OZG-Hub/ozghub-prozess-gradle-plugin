@@ -31,7 +31,7 @@ public class DeployFormsHandler extends DefaultHandler
   private static final ServerConnectionHelper<FormDeploymentResponse> CONNECTION_HELPER =
       new ServerConnectionHelper<>(FormDeploymentResponse.class);
 
-  public static final String FILE_EXTENSION_JSON = "json";
+  private static final String FILE_EXTENSION_JSON = "json";
 
   private final File projectDir;
 
@@ -66,7 +66,7 @@ public class DeployFormsHandler extends DefaultHandler
     log.info("Ende des Tasks: Deployment von Formularen");
   }
 
-  private int deployFiles(Map<String, String> headers, List<Path> filePaths) throws java.io.IOException
+  private int deployFiles(Map<String, String> headers, List<Path> filePaths) throws IOException
   {
     int deployedFilesCounter = 0;
     for (Path path : filePaths)
@@ -75,8 +75,7 @@ public class DeployFormsHandler extends DefaultHandler
 
       if (!FILE_EXTENSION_JSON.equals(FilenameUtils.getExtension(file.getName())))
       {
-        log.info("Datei {} scheint keine json-Datei zu sein und wird übersprungen.",
-            file.getName());
+        log.info("Datei {} scheint keine json-Datei zu sein und wird übersprungen.", file.getName());
         continue;
       }
 
@@ -96,17 +95,15 @@ public class DeployFormsHandler extends DefaultHandler
         CONNECTION_HELPER.post(environment, API_PATH, headers, formJson);
 
     log.info("Das Deployment von Formular {} wurde erfolgreich abgeschlossen. "
-            + "ID des Deployments: {}",
-        formId, response.getDeploymentId());
+        + "ID des Deployments: {}", formId, response.getDeploymentId());
   }
 
-  private String readFormId(byte[] formJson) throws java.io.IOException
+  private String readFormId(byte[] formJson) throws IOException
   {
     ObjectMapper objectMapper = new ObjectMapper();
     ObjectNode formAndMapping = objectMapper.readValue(formJson, ObjectNode.class);
     return formAndMapping.get("id").textValue();
   }
-
 
   private Map<String, String> getHeaderParameters()
   {

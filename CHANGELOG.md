@@ -1,5 +1,10 @@
 # Aktualisierungen
 
+## 2022.11.07-0
+- Bugfix: Relative Dateipfade bei `deployProcess` und `deployForms` immmer relativ zum Projektordner
+- Bugfix: Tilde in Dateipfaden korrekt auflösen
+- Feature: Dependencies aktualisiert
+
 ## 2022.09.13-0
 - Feature: Der Task `deployProcess` benötigt den neuen Parameter `versionName`
 - Feature: Der Task `listProcesses` zeigt den Wert von `versionName` an
