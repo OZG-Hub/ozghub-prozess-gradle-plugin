@@ -19,7 +19,6 @@ import de.seitenbau.ozghub.prozessdeployment.helper.FileHelper;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
 import de.seitenbau.ozghub.prozessdeployment.model.request.EncryptParameterValueRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.response.EncryptParameterValueResponse;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -89,7 +88,7 @@ public class EncryptParameterValueHandler extends DefaultHandler
     log.info("Ende des Tasks: encryptParameterValue");
   }
 
-  private String getParameterValue() throws IOException
+  private String getParameterValue()
   {
     // Als String
     if (parameterValue != null)
@@ -133,7 +132,6 @@ public class EncryptParameterValueHandler extends DefaultHandler
     return CONNECTION_HELPER.post(environment, API_PATH, headers, bytes);
   }
 
-  @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
   private void logOrStoreResult(EncryptParameterValueResponse response) throws IOException
   {
     log.info("Die Verschlüsselung des Parameterwertes wurde erfolgreich abgeschlossen.");

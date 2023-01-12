@@ -127,7 +127,7 @@ public final class FileHelper
     }
   }
 
-  public static String readFile(Path path, Charset charset) throws IOException
+  public static String readFile(Path path, Charset charset)
   {
     File file = path.toFile();
 
@@ -138,7 +138,7 @@ public final class FileHelper
     if (!file.isFile())
     {
       throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht gelesen werden,"
-          + " da es keine regulaere Datei ist.");
+          + " da es keine normale Datei ist.");
     }
 
     try
@@ -150,6 +150,11 @@ public final class FileHelper
       throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht gelesen werden."
           + " Die Datei kann nicht " + charset + " kodiert gelesen werden.", e);
     }
+    catch (Exception e)
+    {
+      throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht gelesen werden: "
+          + e.getMessage(), e);
+    }
   }
 
   public static void writeFile(Path path, String content) throws IOException
@@ -159,10 +164,18 @@ public final class FileHelper
 
     if (!file.isFile())
     {
-      throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht geschrieben werden,"
-          + " da es keine regulaere Datei ist.");
+      throw new RuntimeException("In die Datei (" + path.toAbsolutePath() + ") konnte nicht geschrieben"
+          + " werden, da es keine normale Datei ist.");
     }
 
-    Files.writeString(path, content, StandardOpenOption.APPEND);
+    try
+    {
+      Files.writeString(path, content, StandardOpenOption.APPEND);
+    }
+    catch (Exception e)
+    {
+      throw new RuntimeException("In die Datei (" + path.toAbsolutePath() + ") konnte nicht geschrieben"
+          + " werden: " + e.getMessage(), e);
+    }
   }
 }

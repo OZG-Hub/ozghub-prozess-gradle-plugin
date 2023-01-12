@@ -162,14 +162,16 @@ public class FileHelperTest
     // act
     Charset actual1 = FileHelper.getCharset("ASCII", null);
     Charset actual2 = FileHelper.getCharset("UTF-8", null);
-    Charset actual3 = FileHelper.getCharset("ISO-8859-1", null);
-    Charset actual4 = FileHelper.getCharset(null, StandardCharsets.UTF_8);
+    Charset actual3 = FileHelper.getCharset("utf-8", null);
+    Charset actual4 = FileHelper.getCharset("ISO-8859-1", null);
+    Charset actual5 = FileHelper.getCharset(null, StandardCharsets.UTF_8);
 
     // assert
     assertThat(actual1).isEqualTo(StandardCharsets.US_ASCII);
     assertThat(actual2).isEqualTo(StandardCharsets.UTF_8);
-    assertThat(actual3).isEqualTo(StandardCharsets.ISO_8859_1);
-    assertThat(actual4).isEqualTo(StandardCharsets.UTF_8);
+    assertThat(actual3).isEqualTo(StandardCharsets.UTF_8);
+    assertThat(actual4).isEqualTo(StandardCharsets.ISO_8859_1);
+    assertThat(actual5).isEqualTo(StandardCharsets.UTF_8);
   }
 
   @Test
@@ -207,7 +209,7 @@ public class FileHelperTest
     assertThatExceptionOfType(RuntimeException.class)
         .isThrownBy(() -> FileHelper.readFile(provided, StandardCharsets.US_ASCII))
         .withMessage("Die Datei (" + provided.toAbsolutePath() + ") konnte nicht gelesen werden,"
-            + " da es keine regulaere Datei ist.");
+            + " da es keine normale Datei ist.");
   }
 
   @Test
@@ -263,8 +265,8 @@ public class FileHelperTest
     // act & assert
     assertThatExceptionOfType(RuntimeException.class)
         .isThrownBy(() -> FileHelper.writeFile(provided, ""))
-        .withMessage("Die Datei (" + provided.toAbsolutePath() + ") konnte nicht geschrieben werden,"
-            + " da es keine regulaere Datei ist.");
+        .withMessage("In die Datei (" + provided.toAbsolutePath() + ") konnte nicht geschrieben werden,"
+            + " da es keine normale Datei ist.");
   }
 
   private Path getPathToFolder()

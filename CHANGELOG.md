@@ -1,6 +1,6 @@
 # Aktualisierungen
 
-## 2023.01.12-0
+## 2023.01.13-0
 - Feature: Der Task `encryptParameterValue` wurde um Attribute zum Lesen von Parametern aus Dateien
   zum und Schreiben verschlüsselter Parameter in Dateien ergänzt
 
