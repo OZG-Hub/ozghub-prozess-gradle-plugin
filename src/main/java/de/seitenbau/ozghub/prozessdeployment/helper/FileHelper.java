@@ -5,9 +5,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -110,5 +113,56 @@ public final class FileHelper
     {
       throw new RuntimeException("Fehler beim Lesen der Datei " + path, e);
     }
+  }
+
+  public static Charset getCharset(String charset, Charset nullDefault)
+  {
+    try
+    {
+      return charset == null ? nullDefault : Charset.forName(charset);
+    }
+    catch (Exception e)
+    {
+      throw new RuntimeException("Das Charset " + charset + " wird nicht unterstützt.", e);
+    }
+  }
+
+  public static String readFile(Path path, Charset charset) throws IOException
+  {
+    File file = path.toFile();
+
+    if (!file.exists())
+    {
+      throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht gefunden werden.");
+    }
+    if (!file.isFile())
+    {
+      throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht gelesen werden,"
+          + " da es keine regulaere Datei ist.");
+    }
+
+    try
+    {
+      return Files.readString(path, charset);
+    }
+    catch (MalformedInputException e)
+    {
+      throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht gelesen werden."
+          + " Die Datei kann nicht " + charset + " kodiert gelesen werden.", e);
+    }
+  }
+
+  public static void writeFile(Path path, String content) throws IOException
+  {
+    File file = path.toFile();
+    file.createNewFile();
+
+    if (!file.isFile())
+    {
+      throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht geschrieben werden,"
+          + " da es keine regulaere Datei ist.");
+    }
+
+    Files.writeString(path, content, StandardOpenOption.APPEND);
   }
 }

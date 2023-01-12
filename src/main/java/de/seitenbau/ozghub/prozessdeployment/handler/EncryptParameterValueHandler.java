@@ -1,5 +1,11 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,9 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
+import de.seitenbau.ozghub.prozessdeployment.helper.FileHelper;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
 import de.seitenbau.ozghub.prozessdeployment.model.request.EncryptParameterValueRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.response.EncryptParameterValueResponse;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -27,16 +35,41 @@ public class EncryptParameterValueHandler extends DefaultHandler
   private static final ServerConnectionHelper<EncryptParameterValueResponse> CONNECTION_HELPER =
       new ServerConnectionHelper<>(EncryptParameterValueResponse.class);
 
+  private final File projectDir;
+
   private final String processKey;
 
   private final String parameterValue;
 
-  public EncryptParameterValueHandler(Environment environment, String processKey, String parameterValue)
+  private final String inputFilePath;
+
+  private final String charsetName;
+
+  private final boolean base64;
+
+  private final String outpuFilePath;
+
+  // CHECKSTYLE:OFFF ParameterNumber
+  public EncryptParameterValueHandler(
+      Environment environment,
+      File projectDir,
+      String processKey,
+      String parameterValue,
+      String inputFilePath,
+      String charsetName,
+      boolean base64,
+      String outpuFilePath)
   {
     super(environment);
+    this.projectDir = projectDir;
     this.processKey = processKey;
     this.parameterValue = parameterValue;
+    this.inputFilePath = inputFilePath;
+    this.charsetName = charsetName;
+    this.base64 = base64;
+    this.outpuFilePath = outpuFilePath;
   }
+  // CHECKSTYLE:ON ParameterNumber
 
   public void encryptParameterValue()
   {
@@ -44,22 +77,9 @@ public class EncryptParameterValueHandler extends DefaultHandler
 
     try
     {
-      Map<String, String> headers = getHeaderParameters();
-      EncryptParameterValueRequest encryptParameterValueRequest = EncryptParameterValueRequest.builder()
-          .processKey(processKey)
-          .parameterValue(parameterValue)
-          .build();
-
-      byte[] encryptedParameterValueRequestBytes =
-          OBJECT_MAPPER.writeValueAsBytes(encryptParameterValueRequest);
-
-      EncryptParameterValueResponse encryptParameterValueResponse =
-          CONNECTION_HELPER.post(environment, API_PATH, headers, encryptedParameterValueRequestBytes);
-
-      log.info("Die Verschluesselung des Parameterwertes '{}' wurde erfolgreich abgeschlossen.",
-          parameterValue);
-      log.info("Der verschluesselte Parameterwert ist: {}",
-          encryptParameterValueResponse.getEncryptedParameterValue());
+      String value = getParameterValue();
+      EncryptParameterValueResponse response = encrypt(value);
+      logOrStoreResult(response);
     }
     catch (Exception e)
     {
@@ -67,6 +87,68 @@ public class EncryptParameterValueHandler extends DefaultHandler
     }
 
     log.info("Ende des Tasks: encryptParameterValue");
+  }
+
+  private String getParameterValue() throws IOException
+  {
+    // Als String
+    if (parameterValue != null)
+    {
+      if (inputFilePath != null)
+      {
+        throw new IllegalArgumentException("Der zu verschluesselnde Parameter muss entweder als Text oder als"
+            + " Datei angegeben werden. Beides ist nicht erlaubt.");
+      }
+
+      return encode(parameterValue, StandardCharsets.UTF_8);
+    }
+
+    // Als Datei
+    if (inputFilePath != null)
+    {
+      Charset charset = FileHelper.getCharset(charsetName, StandardCharsets.UTF_8);
+      Path path = FileHelper.getCustomFolderOrDefault(projectDir, inputFilePath, null);
+      String content = FileHelper.readFile(path, charset);
+      return encode(content, charset);
+    }
+
+    throw new IllegalArgumentException("Der zu verschluesselnde Parameter muss entweder als Text oder als"
+        + " Datei angegeben werden.");
+  }
+
+  private String encode(String str, Charset charset)
+  {
+    return base64 ? Base64.getEncoder().encodeToString(str.getBytes(charset)) : str;
+  }
+
+  private EncryptParameterValueResponse encrypt(String plaintext) throws IOException
+  {
+    Map<String, String> headers = getHeaderParameters();
+    EncryptParameterValueRequest request = EncryptParameterValueRequest.builder()
+        .processKey(processKey)
+        .parameterValue(plaintext)
+        .build();
+    byte[] bytes = OBJECT_MAPPER.writeValueAsBytes(request);
+
+    return CONNECTION_HELPER.post(environment, API_PATH, headers, bytes);
+  }
+
+  @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
+  private void logOrStoreResult(EncryptParameterValueResponse response) throws IOException
+  {
+    log.info("Die Verschlüsselung des Parameterwertes wurde erfolgreich abgeschlossen.");
+
+    // Loggen
+    if (outpuFilePath == null)
+    {
+      log.info("Der verschlüsselte Parameterwert ist: {}", response.getEncryptedParameterValue());
+      return;
+    }
+
+    // In Datei schreiben
+    Path path = FileHelper.getCustomFolderOrDefault(projectDir, outpuFilePath, null).toAbsolutePath();
+    FileHelper.writeFile(path, response.getEncryptedParameterValue());
+    log.info("Der verschlüsselte Parameterwert wurde in die folgende Datei geschrieben: {}", path);
   }
 
   private Map<String, String> getHeaderParameters()

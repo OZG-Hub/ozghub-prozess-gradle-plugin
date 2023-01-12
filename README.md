@@ -15,22 +15,22 @@ werden.
 
 Das Gradle-Plugin stellt die folgenden Tasks zur Verfügung:
 
-- deployProcess: Deployt Prozessdefinitionen
-- deployForms: Deployt Formulare
-- listProcesses: Zeigt eine Liste aller deployten Prozesse an
-- listForms: Zeigt eine Liste aller deployten Formulare an
-- undeployProcess: Löscht ein Prozess-Deployment
-- undeployForm: Löscht ein Formular-Deployment
-- encryptParameterValue: Verschlüsselt einen Prozessparameterwert
+- `deployProcess`: Deployt Prozessdefinitionen
+- `deployForms`: Deployt Formulare
+- `listProcesses`: Zeigt eine Liste aller deployten Prozesse an
+- `listForms`: Zeigt eine Liste aller deployten Formulare an
+- `undeployProcess`: Löscht ein Prozess-Deployment
+- `undeployForm`: Löscht ein Formular-Deployment
+- `encryptParameterValue`: Verschlüsselt einen Prozessparameterwert
 
 Diese Tasks werden im Folgenden genauer beschrieben.
 
 Alle Tasks benötigen die folgenden Pflichtparameter:
 
-- url: die URL zum Service-Gateway einer OZG-Hub-Umgebung,
+- `url`: die URL zum Service-Gateway einer OZG-Hub-Umgebung,
   z.B. https://sgw.behoerden-serviceportal.de
-- user: Benutzername des Schnittstellenbenutzers
-- password: Passwort des Schnittstellenbenutzers
+- `user`: Benutzername des Schnittstellenbenutzers
+- `password`: Passwort des Schnittstellenbenutzers
 
 ### Task deployProcess
 
@@ -43,15 +43,12 @@ Zusätzlich werden (falls vorhanden) in Dateien enthaltene Metadaten zu den Proz
 
 Zusätzliche Parameter:
 
-- deploymentName: Pflicht. Der Name des Deployments, in dem die Prozessmodelle deployt werden
-- versionName: Pflicht. Der Name der Version, die mit diesem Deployment verknüpft werden soll
-- files: Optional, default ist build/models. Pfad zum Ordner, in dem die zu deployenden Prozessmodelle
-  liegen oder Pfad zu einem Prozessmodell. Die Prozessmodelle müssen Activiti-flavored BPMN 
-  Dateien sein und die Dateiendung .bpmn20.xml haben. Ein relativer Pfad ist relativ zum
-  Projektordner.
-- metadataFiles: Optional, default ist metadata. Pfad zum Ordner, in dem sich die Metadaten-Dateien 
-  zu den Prozessmodell-Dateien befinden oder Pfad zu einer Metadata-Datei. Ein relativer Pfad ist
-  relativ zum Projektordner.
+| **Name**       | **Pflicht** | **Beschreibung**                                                                                                                                                                                                                                                                        | 
+| -------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| deploymentName | Ja          | Der Name des Deployments, in dem die Prozessmodelle deployt werden.                                                                                                                                                                                                                     |
+| versionName    | Ja          | Der Name der Version, die mit diesem Deployment verknüpft werden soll.                                                                                                                                                                                                                  |
+| files          | Nein        | Pfad zum Ordner, in dem die zu deployenden Prozessmodelle liegen oder Pfad zu einem Prozessmodell. Die Prozessmodelle müssen Activiti-flavored BPMN-Dateien sein und die Dateiendung `.bpmn20.xml` haben. Ein relativer Pfad ist relativ zum Projektordner. Default ist `build/models`. |
+| metadataFiles  | Nein        | Pfad zum Ordner, in dem sich die Metadaten-Dateien zu den Prozessmodell-Dateien befinden oder Pfad zu einer Metadata-Datei. Ein relativer Pfad ist relativ zum Projektordner. Default ist `metadata`.                                                                                   |
 
 #### Metadaten-Dateien
 
@@ -83,10 +80,9 @@ undeployt werden.
 
 Zusätzliche Parameter:
 
-- files: Optional, default ist forms. Pfad zum Ordner, in dem die zu deployenden Formulare liegen 
-  oder Pfad zu einer Formular-Datei. Wird ein Ordner angegeben, werden auch die Unterordner dieses 
-  Ordners durchsucht. Die Formulare müssen Serviceportal-Formulare sein und müssen die Dateiendung 
-  .json haben. Ein relativer Pfad ist relativ zum Projektordner.
+| **Name** | **Pflicht** | **Beschreibung**                                                                                                                                                                                                                                                                                                                                    | 
+| -------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| files    | Nein        | Pfad zum Ordner, in dem die zu deployenden Formulare liegen oder Pfad zu einer Formular-Datei. Wird ein Ordner angegeben, werden auch die Unterordner dieses Ordners durchsucht. Die Formulare müssen Serviceportal-Formulare sein und müssen die Dateiendung `.json` haben. Ein relativer Pfad ist relativ zum Projektordner. Default ist `forms`. |
 
 ### Task listProcesses
 
@@ -111,10 +107,11 @@ Löscht ein Prozess-Deployment. Dadurch werden alle enthaltenen Prozessdefinitio
 dieser Prozessdefinitionen gelöscht.
 
 Zusätzliche Parameter:
-
-- deploymentId: Pflicht, die Id des zu löschenden Deployments.
-- deleteProcessInstances: Optional, default ist false. Muss auf true gesetzt werden, um Deployments
-  zu löschen, bei deren Undeployment auch Prozessinstanzen gelöscht werden würden.
+ 
+| **Name**               | **Pflicht** | **Beschreibung**                                                                                                                                     | 
+| ---------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| deploymentId           | Ja          | ID des zu löschenden Deployments.                                                                                                                    |
+| deleteProcessInstances | Nein        | Muss auf `true` gesetzt werden, um Deployments zu löschen, bei deren Undeployment auch Prozessinstanzen gelöscht werden würden. Default ist `false`. |
 
 ### Task undeployForm
 
@@ -124,7 +121,9 @@ Es wird nicht geprüft, ob das Formular noch von Prozessen benutzt wird.
 
 Zusätzliche Parameter:
 
-- deploymentId: Pflicht, die Id des zu löschenden Formular-Deployments
+| **Name**       | **Pflicht** | **Beschreibung**                          | 
+| -------------- | ----------- | ----------------------------------------- |
+| deploymentId   | Ja          | ID des zu löschenden Formular-Deployments |
 
 ### Task encryptParameterValue
 
@@ -137,10 +136,15 @@ auf der der Parameter nachher entschlüsselt wird, da der Schlüssel je Umgebung
 unterschiedlich ist.
 
 Zusätzliche Parameter:
-- processKey: Pflicht, der Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert 
-  eingesetzt werden soll. Achtung, nur für den Prozess mit diesem Prozess-Key kann
-  der verschlüsselte Wert entschlüsselt werden!
-- parameterValue: Pflicht, der zu verschlüsselnde Prozessparameterwert.
+
+| **Name**       | **Pflicht** | **Beschreibung**                                                                                                                                                                                                                                                                                | 
+| -------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| processKey     | Ja          | Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll. Achtung, nur für den Prozess mit diesem Prozess-Key kann der verschlüsselte Wert entschlüsselt werden!                                                                                                |
+| parameterValue | Nein        | Der zu verschlüsselnde Prozessparameterwert. Entweder dieser Parameter oder `inputFile` muss gesetzt sein.                                                                                                                                                                                      |
+| inputFile      | Nein        | Datei deren Inhalt der zu verschlüsselnden Prozessparameterwert ist. Entweder dieser Parameter oder `parameterValue` muss gesetzt sein. Datei muss existieren und eine reguläre Datei sein. Ein relativer Pfad ist relativ zum Projektordner.                                                   |
+| charset        | Nein        | Zeichenkodierung des Dateiinhalts, wenn `inputFile` gesetzt ist. Default ist `UTF-8`. Unterstützt werden zum Beispiel `ASCII`, `UTF-8` und `ISO-8859-1`.                                                                                                                                                         |
+| base64         | Nein        | Wenn `true` wird der zu verschlüsselende Wert vor der Verschlüsselung Base64-kordiert. Default ist `false`.                                                                                                                                                                                     |
+| outputFile     | Nein        | Datei in die der verschlüsselte Parameter geschrieben werden soll. Existiert die Datei nicht, wird sie erzeugt. Existiert die Datei, muss es eine reguläre Datei sein und der verschlüsselte Parameter wird an das Ende der Datei angehangen. Ein relativer Pfad ist relativ zum Projektordner. |
 
 ## (weitere) Schnittstellen des OZG-Hubs
 
