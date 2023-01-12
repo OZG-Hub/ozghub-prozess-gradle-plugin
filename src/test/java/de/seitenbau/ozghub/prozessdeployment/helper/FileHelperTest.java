@@ -185,7 +185,7 @@ public class FileHelperTest
   }
 
   @Test
-  public void readFile() throws IOException
+  public void readFile()
   {
     // arrange
     Path provided = getPathToFile();
