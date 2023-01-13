@@ -6,11 +6,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -124,58 +122,6 @@ public final class FileHelper
     catch (Exception e)
     {
       throw new RuntimeException("Das Charset " + charset + " wird nicht unterstützt.", e);
-    }
-  }
-
-  public static String readFile(Path path, Charset charset)
-  {
-    File file = path.toFile();
-
-    if (!file.exists())
-    {
-      throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht gefunden werden.");
-    }
-    if (!file.isFile())
-    {
-      throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht gelesen werden,"
-          + " da es keine normale Datei ist.");
-    }
-
-    try
-    {
-      return Files.readString(path, charset);
-    }
-    catch (MalformedInputException e)
-    {
-      throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht gelesen werden."
-          + " Die Datei kann nicht " + charset + " kodiert gelesen werden.", e);
-    }
-    catch (Exception e)
-    {
-      throw new RuntimeException("Die Datei (" + path.toAbsolutePath() + ") konnte nicht gelesen werden: "
-          + e.getMessage(), e);
-    }
-  }
-
-  public static void writeFile(Path path, String content) throws IOException
-  {
-    File file = path.toFile();
-    file.createNewFile();
-
-    if (!file.isFile())
-    {
-      throw new RuntimeException("In die Datei (" + path.toAbsolutePath() + ") konnte nicht geschrieben"
-          + " werden, da es keine normale Datei ist.");
-    }
-
-    try
-    {
-      Files.writeString(path, content, StandardOpenOption.APPEND);
-    }
-    catch (Exception e)
-    {
-      throw new RuntimeException("In die Datei (" + path.toAbsolutePath() + ") konnte nicht geschrieben"
-          + " werden: " + e.getMessage(), e);
     }
   }
 }

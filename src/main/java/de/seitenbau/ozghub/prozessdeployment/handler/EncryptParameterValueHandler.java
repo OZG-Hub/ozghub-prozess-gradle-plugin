@@ -9,6 +9,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.GradleException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,7 +47,7 @@ public class EncryptParameterValueHandler extends DefaultHandler
 
   private final boolean base64;
 
-  private final String outpuFilePath;
+  private final String outputFilePath;
 
   // CHECKSTYLE:OFFF ParameterNumber
   public EncryptParameterValueHandler(
@@ -57,7 +58,7 @@ public class EncryptParameterValueHandler extends DefaultHandler
       String inputFilePath,
       String charsetName,
       boolean base64,
-      String outpuFilePath)
+      String outputFilePath)
   {
     super(environment);
     this.projectDir = projectDir;
@@ -66,7 +67,7 @@ public class EncryptParameterValueHandler extends DefaultHandler
     this.inputFilePath = inputFilePath;
     this.charsetName = charsetName;
     this.base64 = base64;
-    this.outpuFilePath = outpuFilePath;
+    this.outputFilePath = outputFilePath;
   }
   // CHECKSTYLE:ON ParameterNumber
 
@@ -88,7 +89,7 @@ public class EncryptParameterValueHandler extends DefaultHandler
     log.info("Ende des Tasks: encryptParameterValue");
   }
 
-  private String getParameterValue()
+  private String getParameterValue() throws IOException
   {
     // Als String
     if (parameterValue != null)
@@ -99,23 +100,29 @@ public class EncryptParameterValueHandler extends DefaultHandler
             + " Datei angegeben werden. Beides ist nicht erlaubt.");
       }
 
-      return encode(parameterValue, StandardCharsets.UTF_8);
+      return encodeBase64(parameterValue, StandardCharsets.UTF_8);
     }
 
     // Als Datei
     if (inputFilePath != null)
     {
-      Charset charset = FileHelper.getCharset(charsetName, StandardCharsets.UTF_8);
       Path path = FileHelper.getCustomFolderOrDefault(projectDir, inputFilePath, null);
-      String content = FileHelper.readFile(path, charset);
-      return encode(content, charset);
+
+      if (base64)
+      {
+        byte[] content = FileUtils.readFileToByteArray(path.toFile());
+        return Base64.getEncoder().encodeToString(content);
+      }
+
+      Charset charset = FileHelper.getCharset(charsetName, StandardCharsets.UTF_8);
+      return FileUtils.readFileToString(path.toFile(), charset);
     }
 
     throw new IllegalArgumentException("Der zu verschluesselnde Parameter muss entweder als Text oder als"
         + " Datei angegeben werden.");
   }
 
-  private String encode(String str, Charset charset)
+  private String encodeBase64(String str, Charset charset)
   {
     return base64 ? Base64.getEncoder().encodeToString(str.getBytes(charset)) : str;
   }
@@ -137,15 +144,20 @@ public class EncryptParameterValueHandler extends DefaultHandler
     log.info("Die Verschlüsselung des Parameterwertes wurde erfolgreich abgeschlossen.");
 
     // Loggen
-    if (outpuFilePath == null)
+    if (outputFilePath == null)
     {
       log.info("Der verschlüsselte Parameterwert ist: {}", response.getEncryptedParameterValue());
       return;
     }
 
     // In Datei schreiben
-    Path path = FileHelper.getCustomFolderOrDefault(projectDir, outpuFilePath, null).toAbsolutePath();
-    FileHelper.writeFile(path, response.getEncryptedParameterValue());
+    Path path = FileHelper.getCustomFolderOrDefault(projectDir, outputFilePath, null).toAbsolutePath();
+    FileUtils.writeStringToFile(
+        path.toFile(),
+        response.getEncryptedParameterValue(),
+        StandardCharsets.UTF_8,
+        true);
+
     log.info("Der verschlüsselte Parameterwert wurde in die folgende Datei geschrieben: {}", path);
   }
 
