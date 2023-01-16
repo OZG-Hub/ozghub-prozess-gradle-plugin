@@ -156,7 +156,7 @@ public class EncryptParameterValueHandler extends DefaultHandler
 
     if (file.exists())
     {
-      throw new RuntimeException("Die Ausgabe-Datei (" + path + ") existiert bereits. Der verschlüsselte"
+      throw new RuntimeException("Die Ausgabe-Datei (" + path + ") existiert bereits. Der verschluesselte"
           + " Parameterwert kann nur in eine neue, noch nicht existierende Datei geschrieben werden.");
     }
 

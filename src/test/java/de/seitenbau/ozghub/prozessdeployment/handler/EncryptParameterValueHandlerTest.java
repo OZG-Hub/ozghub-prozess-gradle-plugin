@@ -303,7 +303,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     assertThatExceptionOfType(GradleException.class)
         .isThrownBy(sut::encryptParameterValue)
         .withMessage("Fehler: Die Ausgabe-Datei (" + outputFile.getAbsolutePath() + ") existiert bereits."
-            + " Der verschlüsselte Parameterwert kann nur in eine neue, noch nicht existierende Datei"
+            + " Der verschluesselte Parameterwert kann nur in eine neue, noch nicht existierende Datei"
             + " geschrieben werden.");
 
     // assert
