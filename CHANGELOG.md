@@ -1,5 +1,9 @@
 # Aktualisierungen
 
+## 2023.01.16-0
+- Feature: Der Task `encryptParameterValue` wurde um Attribute zum Lesen von Parametern aus Dateien
+  und zum Schreiben verschlüsselter Parameter in Dateien ergänzt
+
 ## 2022.11.07-0
 - Bugfix: Relative Dateipfade bei `deployProcess` und `deployForms` immmer relativ zum Projektordner
 - Bugfix: Tilde in Dateipfaden korrekt auflösen

@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -109,6 +110,18 @@ public final class FileHelper
     catch (IOException e)
     {
       throw new RuntimeException("Fehler beim Lesen der Datei " + path, e);
+    }
+  }
+
+  public static Charset getCharset(String charset, Charset nullDefault)
+  {
+    try
+    {
+      return charset == null ? nullDefault : Charset.forName(charset);
+    }
+    catch (Exception e)
+    {
+      throw new RuntimeException("Das Charset " + charset + " wird nicht unterstützt.", e);
     }
   }
 }
