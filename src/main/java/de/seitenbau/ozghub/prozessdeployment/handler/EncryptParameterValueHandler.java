@@ -152,12 +152,15 @@ public class EncryptParameterValueHandler extends DefaultHandler
 
     // In Datei schreiben
     Path path = FileHelper.getCustomFolderOrDefault(projectDir, outputFilePath, null).toAbsolutePath();
-    FileUtils.writeStringToFile(
-        path.toFile(),
-        response.getEncryptedParameterValue(),
-        StandardCharsets.UTF_8,
-        true);
+    File file = path.toFile();
 
+    if (file.exists())
+    {
+      throw new RuntimeException("Die Ausgabe-Datei (" + path + ") existiert bereits. Der verschlüsselte"
+          + " Parameterwert kann nur in eine neue, noch nicht existierende Datei geschrieben werden.");
+    }
+
+    FileUtils.writeStringToFile(file, response.getEncryptedParameterValue(), StandardCharsets.UTF_8);
     log.info("Der verschlüsselte Parameterwert wurde in die folgende Datei geschrieben: {}", path);
   }
 

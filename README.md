@@ -144,7 +144,7 @@ Zusätzliche Parameter:
 | inputFile      | Nein        | Datei deren Inhalt der zu verschlüsselnden Prozessparameterwert ist. Entweder dieser Parameter oder `parameterValue` muss gesetzt sein. Datei muss existieren und eine normale Datei sein. Ein relativer Pfad ist relativ zum Projektordner.                                                    |
 | charset        | Nein        | Zeichenkodierung des Dateiinhalts, wenn `inputFile` gesetzt und `base64` gleich `false` ist. Default ist `UTF-8`. Unterstützt werden zum Beispiel `ASCII`, `UTF-8` und `ISO-8859-1`.                                                                                                            |
 | base64         | Nein        | Wenn `true` wird der zu verschlüsselende Wert vor der Verschlüsselung Base64-kordiert. Ist der Parameter `inputFile` gesetzt, wird die Datei binör eingelesen und Base64-kodiert. Default ist `false`.                                                                                          |
-| outputFile     | Nein        | Datei, in die der verschlüsselte Parameter geschrieben werden soll. Existiert die Datei nicht, wird sie erzeugt. Existiert die Datei, muss es eine normale Datei sein und der verschlüsselte Parameter wird an das Ende der Datei angehangen. Ein relativer Pfad ist relativ zum Projektordner. |
+| outputFile     | Nein        | Datei, in die der verschlüsselte Parameter geschrieben werden soll. Die Datei darf nicht bereits existieren. Ein relativer Pfad ist relativ zum Projektordner.                                                                                                                                  |
 
 ## (weitere) Schnittstellen des OZG-Hubs
 

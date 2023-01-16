@@ -158,7 +158,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
   {
     // arrange
     String parameterValue = "test\n123\näöüßÄÖÜẞ";
-    File inputFile = new File(directory, "test.txt");
+    File inputFile = new File(directory, "test1.txt");
     inputFile.createNewFile();
     Files.writeString(inputFile.toPath(), parameterValue);
 
@@ -189,7 +189,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
   {
     // arrange
     String parameterValue = "test\n123";
-    File inputFile = new File(directory, "test.txt");
+    File inputFile = new File(directory, "test2.txt");
     inputFile.createNewFile();
     Files.writeString(inputFile.toPath(), parameterValue);
 
@@ -220,7 +220,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
   {
     // arrange
     String parameterValue = "test\n123\näöüßÄÖÜẞ";
-    File inputFile = new File(directory, "test.txt");
+    File inputFile = new File(directory, "test3.txt");
     inputFile.createNewFile();
     Files.writeString(inputFile.toPath(), parameterValue);
 
@@ -281,6 +281,47 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     // assert
     List<String> actualLogMessages = listAppender.getEventList();
     assertThat(actualLogMessages).containsExactly("INFO Start des Tasks: " + TASK_NAME);
+  }
+
+  @Test
+  public void encryptParameterValue_exception_outputFileExists() throws IOException
+  {
+    // arrange
+    String parameterValue = "abcdef";
+    File outputFile = new File(directory, "test4.txt");
+    outputFile.createNewFile();
+
+    EncryptParameterValueResponse encryptParameterValueResponse = createReponse();
+
+    HttpHandler httpHandler = createAndStartHttpServer(encryptParameterValueResponse);
+    Environment env = createEnvironment();
+
+    EncryptParameterValueHandler sut =
+        createSut(env, parameterValue, null, null, false, outputFile.getAbsolutePath());
+
+    // act
+    assertThatExceptionOfType(GradleException.class)
+        .isThrownBy(sut::encryptParameterValue)
+        .withMessage("Fehler: Die Ausgabe-Datei (" + outputFile.getAbsolutePath() + ") existiert bereits."
+            + " Der verschlüsselte Parameterwert kann nur in eine neue, noch nicht existierende Datei"
+            + " geschrieben werden.");
+
+    // assert
+    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getResponseCode()).isEqualTo(200);
+
+    HttpHandler.Request actualRequest = httpHandler.getRequest();
+    assertRequest(actualRequest, parameterValue);
+    assertRequestHeaders(actualRequest, env);
+
+    List<String> logs = listAppender.getEventList();
+    assertThat(logs).containsExactly(
+        "INFO Start des Tasks: " + TASK_NAME,
+        "INFO Sende POST-Request an " + getUrl() + "/prozessparameter/parameter/encryptParameterValue",
+        "INFO Die Verschlüsselung des Parameterwertes wurde erfolgreich abgeschlossen.");
+
+    String fileContent = Files.readString(outputFile.toPath());
+    assertThat(fileContent).isEmpty();
   }
 
   private void prepareLogging()
