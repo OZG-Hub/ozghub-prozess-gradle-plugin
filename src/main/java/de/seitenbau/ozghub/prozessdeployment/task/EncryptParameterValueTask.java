@@ -34,7 +34,7 @@ public class EncryptParameterValueTask extends DefaultPluginTask
 
   /**
    * Der Character-Set in dem der Dateiinhalt gelesen werden soll. Default ist UTF-8.
-   * Nur relevant, wenn der zu geschlüsselnde Wert aus einer Datei gelesen wird.
+   * Nur relevant, wenn der zu verschlüsselnde Wert aus einer Datei gelesen wird.
    */
   @Input
   @Optional
@@ -42,7 +42,7 @@ public class EncryptParameterValueTask extends DefaultPluginTask
 
   /**
    * {@code true}, wenn der Dateiinhalt vor dem Verschlüsseln Base64-kordiert werden soll.
-   * Default ist {@code false}. Nur relevant, wenn der zu geschlüsselnde Wert aus einer Datei gelesen wird.
+   * Default ist {@code false}.
    */
   @Input
   @Optional

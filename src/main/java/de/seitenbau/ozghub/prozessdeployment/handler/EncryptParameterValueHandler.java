@@ -100,7 +100,7 @@ public class EncryptParameterValueHandler extends DefaultHandler
             + " Datei angegeben werden. Beides ist nicht erlaubt.");
       }
 
-      return encodeBase64(parameterValue, StandardCharsets.UTF_8);
+      return encodeBase64(parameterValue);
     }
 
     // Als Datei
@@ -122,9 +122,9 @@ public class EncryptParameterValueHandler extends DefaultHandler
         + " Datei angegeben werden.");
   }
 
-  private String encodeBase64(String str, Charset charset)
+  private String encodeBase64(String str)
   {
-    return base64 ? Base64.getEncoder().encodeToString(str.getBytes(charset)) : str;
+    return base64 ? Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8)) : str;
   }
 
   private EncryptParameterValueResponse encrypt(String plaintext) throws IOException
