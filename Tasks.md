@@ -162,7 +162,6 @@ die Deployment-ID, die Sprache des Formulars (de, en, fr) und die ID des Formula
 
 Der Task `encryptParameterValue` verschlüsselt einen Prozessparameterwert und gibt den
 verschlüsselten Wert auf der Konsole aus.<br />
-
 Der so verschlüsselte Wert kann bei Jesaja eingespielt werden und wird
 vom OZG-Hub für Prozesse mit dem angegebenen Prozesskey automatisch entschlüsselt.
 Die Verschlüsselung muss auf der Umgebung (Prod, Dev, Test, ...) stattfinden,
