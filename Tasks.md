@@ -78,7 +78,7 @@ Der Inhalt der Metadaten-Datei ist ein JSON-Objekt mit der folgenden Struktur:
 #### Allgemein
 
 Der Task `deployForms` ermöglicht dasduplicate Deployen von Formularen.<br />
-Ist für ein Formular-JSON bereits eines mit der gleichen Id deployt, so wird das vorhandene
+Ist für ein Formular-JSON bereits eines mit der gleichen ID deployt, so wird das vorhandene
 ersetzt.
 Für jedes enthaltene Formular wird ein eigenes Deployment erzeugt, d.h. die Formulare können einzeln
 undeployt werden.
@@ -139,10 +139,10 @@ Formulare, die Teil des Deployments sind, werden undeployt.
 
 Der Task `listProcesses` liefert die Liste aller auf der Umgebung vorhandenen Prozess-Deployments.<br />
 Ausgegeben wird eine Liste aller vorhandenen Prozessdeployments. Für jedes Prozessdeployment wird in
-einer Zeile der Deployment-Zeitpunkt, der Name des Deployments und die Deployment-Id ausgegeben.
-Direkt unter der Deployment-Zeile folgen in weiteren Zeilen, die jeweils mit einem Spiegelstrich
-beginnen, die Keys und die Namen der enthaltenen Prozessmodelle. Die nächste Zeile ohne
-Spiegelstrich enthält dann das nächste Deployment.
+einer Zeile der Deployment-Zeitpunkt, der Name des Deployments, die Version und die Deployment-ID
+ausgegeben. Direkt unter der Deployment-Zeile folgen in weiteren Zeilen, die jeweils mit einem
+Spiegelstrich beginnen, die Keys und die Namen der enthaltenen Prozessmodelle. Die nächste Zeile
+ohne Spiegelstrich enthält dann das nächste Deployment.
 
 ---------------------------------------------------------------------------------------------------
 
@@ -151,8 +151,8 @@ Spiegelstrich enthält dann das nächste Deployment.
 #### Allgemein
 
 Der Task `listForms` liefert die Liste aller auf der Umgebung vorhandenen Formular-Deployments.<br />
-In jeder Zeile wird ein deploytes Formular ausgegeben, und zwar hintereinander der Key des
-Formulars, die Sprache des Formulars (de,en,fr), die Deployment-Id und das Deployment-Datum.
+In jeder Zeile wird ein deploytes Formular ausgegeben, und zwar hintereinander das Deployment-Datum,
+die Deployment-ID, die Sprache des Formulars (de, en, fr) und die ID des Formulars.
 
 ---------------------------------------------------------------------------------------------------
 
