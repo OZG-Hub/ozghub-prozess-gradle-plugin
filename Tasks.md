@@ -77,7 +77,7 @@ Der Inhalt der Metadaten-Datei ist ein JSON-Objekt mit der folgenden Struktur:
 
 #### Allgemein
 
-Der Task `deployForms` ermöglicht dasduplicate Deployen von Formularen.<br />
+Der Task `deployForms` ermöglicht das Deployen von Formularen.<br />
 Ist für ein Formular-JSON bereits eines mit der gleichen ID deployt, so wird das vorhandene
 ersetzt.
 Für jedes enthaltene Formular wird ein eigenes Deployment erzeugt, d.h. die Formulare können einzeln
@@ -170,14 +170,14 @@ unterschiedlich ist.
 
 #### Parameter
 
-| **Name**       | **Pflicht** | **Default-Wert** | **Beschreibung**                                                                                                                                                                                                                              | 
-| -------------- | ----------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| processKey     | Ja          |                  | Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll. Achtung, nur für den Prozess mit diesem Prozess-Key kann der verschlüsselte Wert entschlüsselt werden!                                              |
-| parameterValue | Nein        | `null`           | Der zu verschlüsselnde Prozessparameterwert. Entweder dieser Parameter oder `inputFile` muss gesetzt sein.                                                                                                                                    |
-| inputFile      | Nein        | `null`           | Datei deren Inhalt der zu verschlüsselnden Prozessparameterwert ist. Entweder dieser Parameter oder `parameterValue` muss gesetzt sein. Datei muss existieren und eine normale Datei sein. Ein relativer Pfad ist relativ zum Projektordner.  |
-| charset        | Nein        | `UTF-8`          | Zeichenkodierung des Dateiinhalts, wenn `inputFile` gesetzt und `base64` gleich `false` ist. Unterstützt werden zum Beispiel `ASCII`, `UTF-8` und `ISO-8859-1`.                                                                               |
-| base64         | Nein        | `false`          | Wenn `true` wird der zu verschlüsselende Wert vor der Verschlüsselung Base64-kordiert. Ist der Parameter `inputFile` gesetzt, wird die Datei binör eingelesen und Base64-kodiert.                                                             |
-| outputFile     | Nein        | `null`           | Datei, in die der verschlüsselte Parameter geschrieben werden soll. Die Datei darf nicht bereits existieren. Ein relativer Pfad ist relativ zum Projektordner.                                                                                |
+| **Name**       | **Pflicht** | **Default-Wert** | **Beschreibung**                                                                                                                                                                                                                                  | 
+| -------------- | ----------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| processKey     | Ja          |                  | Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll. Achtung, nur für den Prozess mit diesem Prozess-Key kann der verschlüsselte Wert entschlüsselt werden!                                                  |
+| parameterValue | Nein *      | `null`           | Der zu verschlüsselnde Prozessparameterwert.<br>* Entweder dieser Parameter oder `inputFile` muss gesetzt sein.                                                                                                                                   |
+| inputFile      | Nein *      | `null`           | Datei deren Inhalt der zu verschlüsselnden Prozessparameterwert ist. Datei muss existieren und eine normale Datei sein. Ein relativer Pfad ist relativ zum Projektordner.<br>* Entweder dieser Parameter oder `parameterValue` muss gesetzt sein. |
+| charset        | Nein        | `UTF-8`          | Zeichenkodierung des Dateiinhalts, wenn `inputFile` gesetzt und `base64` gleich `false` ist. Unterstützt werden zum Beispiel `ASCII`, `UTF-8` und `ISO-8859-1`.                                                                                   |
+| base64         | Nein        | `false`          | Wenn `true` wird der zu verschlüsselende Wert vor der Verschlüsselung Base64-kordiert. Ist der Parameter `inputFile` gesetzt, wird die Datei binär eingelesen und Base64-kodiert.                                                                 |
+| outputFile     | Nein        | `null`           | Datei, in die der verschlüsselte Parameter geschrieben werden soll. Die Datei darf nicht bereits existieren. Ein relativer Pfad ist relativ zum Projektordner.                                                                                    |
 
 ---------------------------------------------------------------------------------------------------
 
