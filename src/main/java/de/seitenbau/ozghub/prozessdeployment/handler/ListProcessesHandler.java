@@ -11,6 +11,8 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
 {
   public static final String API_PATH = "/prozess/ozghub/list";
 
+  private static final String DEPLOYMENT_ID_TITLE = "Deployment-Id";
+
   public ListProcessesHandler(Environment environment)
   {
     super(environment, ProcessDeploymentList.class, API_PATH);
@@ -22,17 +24,23 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
     {
       log.warn("Es konnten nicht alle Deployments von allen Prozessengines abgerufen werden.");
     }
+
+    int deploymentIdLength = getMaxDeploymentIdLength(deploymentList);
     StringBuilder sb = new StringBuilder();
     sb.append("Vorhandene Deployments:\n")
-        .append("Deployment-Datum    | Deployment-Id | Version-Name | Deployment-Name\n")
+        .append("Deployment-Datum    | ")
+        .append(StringUtils.leftPad(DEPLOYMENT_ID_TITLE, deploymentIdLength))
+        .append(" | Version-Name | Deployment-Name\n")
         .append(" - Prozesskey Prozessname\n")
-        .append("--------------------+---------------+--------------+----------------\n");
+        .append("--------------------+-")
+        .append("-".repeat(deploymentIdLength))
+        .append("-+--------------+----------------\n");
     deploymentList.getValue().forEach(
         deployment -> {
           String versionName = deployment.getVersionName() == null ? "" : deployment.getVersionName();
           sb.append(formatDate(deployment.getDeploymentDate()))
               .append(" | ")
-              .append(StringUtils.leftPad(deployment.getDeploymentId(), "Deployment-Id".length()))
+              .append(StringUtils.leftPad(deployment.getDeploymentId(), deploymentIdLength))
               .append(" | ")
               .append(StringUtils.rightPad(versionName, "Version-Name".length()))
               .append(" | ")
@@ -48,5 +56,14 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
                   .append("\n"));
         });
     log.info(sb.toString());
+  }
+
+  private int getMaxDeploymentIdLength(ProcessDeploymentList deploymentList)
+  {
+    return deploymentList.getValue()
+        .stream()
+        .mapToInt(deployment -> deployment.getDeploymentId().length())
+        .max()
+        .orElse(DEPLOYMENT_ID_TITLE.length());
   }
 }

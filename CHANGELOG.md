@@ -1,5 +1,8 @@
 # Aktualisierungen
 
+## 2023.02-06-0
+- Optimierung: Ausgabe der deployten Prozesse für lange Deployment-IDs verbessert
+
 ## 2023.01.16-0
 - Feature: Der Task `encryptParameterValue` wurde um Attribute zum Lesen von Parametern aus Dateien
   und zum Schreiben verschlüsselter Parameter in Dateien ergänzt
