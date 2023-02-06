@@ -7,17 +7,17 @@ plugins {
     id 'com.github.spotbugs' version '5.0.13'
 
     // https://plugins.gradle.org/plugin/com.jfrog.artifactory
-    id "com.jfrog.artifactory" version "4.29.2"
+    id "com.jfrog.artifactory" version "4.31.0"
 
     // https://plugins.gradle.org/plugin/com.gradle.plugin-publish
     // com.gradle.plugin-publish auto-applies `java-gradle-plugin` and `maven-publish` plugins
-    id 'com.gradle.plugin-publish' version '1.0.0'
+    id 'com.gradle.plugin-publish' version '1.1.0'
 
     // https://plugins.gradle.org/plugin/org.owasp.dependencycheck
-    id "org.owasp.dependencycheck" version "7.3.0"
+    id "org.owasp.dependencycheck" version "8.0.2"
 
     // https://plugins.gradle.org/plugin/com.github.ben-manes.versions
-    id "com.github.ben-manes.versions" version "0.43.0"
+    id "com.github.ben-manes.versions" version "0.45.0"
 }
 
 group 'de.seitenbau.ozghub.prozessdeployment'
@@ -46,17 +46,17 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.19.0'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
 
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
     compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.7.3'
 
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
-    testImplementation 'org.assertj:assertj-core:3.23.1'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
 
     // https://mvnrepository.com/artifact/com.h3xstream.findsecbugs/findsecbugs-plugin
     // https://github.com/spotbugs/spotbugs-gradle-plugin#spotbugs-version-mapping
@@ -64,10 +64,10 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     // https://projectlombok.org/setup/gradle
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
-    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
-    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.26'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.26'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.26'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.26'
 }
 
 java {
@@ -103,7 +103,7 @@ spotbugsTest.enabled = false
 // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html
 checkstyle {
     // https://checkstyle.sourceforge.io/releasenotes.html
-    toolVersion = '10.4'
+    toolVersion = '10.7.0'
     checkstyleTest.enabled = false
 }
 

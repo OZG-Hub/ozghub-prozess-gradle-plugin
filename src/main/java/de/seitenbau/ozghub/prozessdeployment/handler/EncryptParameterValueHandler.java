@@ -49,7 +49,7 @@ public class EncryptParameterValueHandler extends DefaultHandler
 
   private final String outputFilePath;
 
-  // CHECKSTYLE:OFFF ParameterNumber
+  // CHECKSTYLE:OFF ParameterNumber
   public EncryptParameterValueHandler(
       Environment environment,
       File projectDir,

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
@@ -81,7 +80,7 @@ public class ListProcessesHandlerTest
 
     List<String> actualLogMessages = listAppender.getEventList();
     assertThat(actualLogMessages).contains("INFO Start des Tasks: " + TASK_NAME);
-    assertDeploymentLogMessage(actualLogMessages, deploymentDate, deploymentList.getValue().get(0));
+    assertDeploymentLogMessage(actualLogMessages, deploymentDate);
     assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
   }
 
@@ -117,27 +116,35 @@ public class ListProcessesHandlerTest
 
     List<String> actualLogMessages = listAppender.getEventList();
     assertThat(actualLogMessages).contains("INFO Start des Tasks: " + TASK_NAME);
-    assertDeploymentLogMessage(actualLogMessages, deploymentDate, deploymentList.getValue().get(0));
+    assertDeploymentLogMessage(actualLogMessages, deploymentDate);
     assertThat(actualLogMessages).contains(
         "WARN Es konnten nicht alle Deployments von allen Prozessengines abgerufen werden.");
     assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
-
   }
 
   private ProcessDeploymentList prepareDeployment(Date deploymentDate)
   {
-    TreeMap<String, String> keysAndNames = new TreeMap<>();
-    keysAndNames.put("processKey1", "processName1");
-    keysAndNames.put("processKey2", "processName2");
+    TreeMap<String, String> keysAndNames1 = new TreeMap<>();
+    keysAndNames1.put("processKey1", "processName1");
+    keysAndNames1.put("processKey2", "processName2");
+    TreeMap<String, String> keysAndNames3 = new TreeMap<>();
+    keysAndNames3.put("processKey3", "processName3");
 
-    ProcessDeployment deployment = ProcessDeployment.builder()
+    ProcessDeployment deployment1 = ProcessDeployment.builder()
         .deploymentDate(deploymentDate)
         .deploymentId("deploymentId1")
         .deploymentName("deploymentName1")
-        .processDefinitionKeysAndNames(keysAndNames)
+        .processDefinitionKeysAndNames(keysAndNames1)
+        .build();
+    ProcessDeployment deployment2 = ProcessDeployment.builder()
+        .deploymentDate(deploymentDate)
+        .deploymentId("engine2:veryLongRandomDeploymentId")
+        .deploymentName("deploymentName2")
+        .processDefinitionKeysAndNames(keysAndNames3)
+        .versionName("v1.0")
         .build();
 
-    return ProcessDeploymentList.builder().complete(true).value(List.of(deployment)).build();
+    return ProcessDeploymentList.builder().complete(true).value(List.of(deployment1, deployment2)).build();
   }
 
   private void prepareLogging()
@@ -147,40 +154,27 @@ public class ListProcessesHandlerTest
     listAppender = (ListAppender) config.getAppenders().get("ListAppender");
   }
 
-  private void assertDeploymentLogMessage(List<String> actualLogMessages, Date deploymentDate,
-      ProcessDeployment deployment)
+  private void assertDeploymentLogMessage(List<String> actualLogMessages, Date deploymentDate)
   {
-    String expectedLogMessage = createExpectedLogMessage(deploymentDate, deployment);
+    String expectedLogMessage = createExpectedLogMessage(deploymentDate);
     assertThat(actualLogMessages).contains(expectedLogMessage);
   }
 
-  private String createExpectedLogMessage(Date deploymentDate, ProcessDeployment deployment)
+  private String createExpectedLogMessage(Date deploymentDate)
   {
     SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
     String expectedDeploymentDateString = format.format(deploymentDate);
-    String expectedVersionName = deployment.getVersionName() == null ? "" : deployment.getVersionName();
     return "INFO Vorhandene Deployments:\n"
-        + "Deployment-Datum    | Deployment-Id | Version-Name | Deployment-Name\n"
+        + "Deployment-Datum    | Deployment-Id                      | Version-Name | Deployment-Name\n"
         + " - Prozesskey Prozessname\n"
-        + "--------------------+---------------+--------------+----------------\n"
+        + "--------------------+------------------------------------+--------------+----------------\n"
         + expectedDeploymentDateString
-        + " | "
-        + StringUtils.leftPad(deployment.getDeploymentId(), "Deployment-Id".length())
-        + " | "
-        + StringUtils.rightPad(expectedVersionName, "Version-Name".length())
-        + " | "
-        + deployment.getDeploymentName()
-        + "\n"
-        + " - "
-        + "processKey1"
-        + " "
-        + "processName1"
-        + "\n"
-        + " - "
-        + "processKey2"
-        + " "
-        + "processName2"
-        + "\n";
+        + " |                      deploymentId1 |              | deploymentName1\n"
+        + " - processKey1 processName1\n"
+        + " - processKey2 processName2\n"
+        + expectedDeploymentDateString
+        + " | engine2:veryLongRandomDeploymentId | v1.0         | deploymentName2\n"
+        + " - processKey3 processName3\n";
   }
 
   private void assertRequest(HttpHandler.Request request)
