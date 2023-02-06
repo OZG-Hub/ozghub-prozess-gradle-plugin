@@ -29,7 +29,7 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
     StringBuilder sb = new StringBuilder();
     sb.append("Vorhandene Deployments:\n")
         .append("Deployment-Datum    | ")
-        .append(StringUtils.leftPad(DEPLOYMENT_ID_TITLE, deploymentIdLength))
+        .append(StringUtils.rightPad(DEPLOYMENT_ID_TITLE, deploymentIdLength))
         .append(" | Version-Name | Deployment-Name\n")
         .append(" - Prozesskey Prozessname\n")
         .append("--------------------+-")
