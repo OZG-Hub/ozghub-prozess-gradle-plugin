@@ -7,7 +7,7 @@ werden.
 
 ## System-Anforderungen
 
-- Das Plugin ist mit Gradle 7.5.1 getestet. Eventuell sind die Funktionen auch mit niedrigeren
+- Das Plugin ist mit Gradle 7.6 getestet. Eventuell sind die Funktionen auch mit niedrigeren
   Gradle-Versionen verfügbar.
 - Das verwendete Gradle muss minimal unter Java 11 laufen.
 
