@@ -10,12 +10,13 @@ Die Reihenfolge der Parameter spielt dabei keine Rolle.
 Die folgenden Parameter werden von allen Tasks verpflichtend benötigt.
 
 | **Name** | **Beschreibung**                   | **Beispiel**                           |
-| -------- | ---------------------------------- | -------------------------------------- |
+|----------|------------------------------------|----------------------------------------|
 | url      | URL zu einer OZG-Hub-Umgebung      | https://sgw.behoerden-serviceportal.de |
 | user     | Benutzername zur Authentifizierung |                                        |
 | password | Password zur Authentifizierung     |                                        |
 
-Die Tasks funktionieren nur, wenn der Mandant des Prozessmodells / Formulars dem angegebenen Benutzer entspricht.
+Die Tasks funktionieren nur, wenn der Mandant des Prozessmodells / Formulars dem angegebenen
+Benutzer entspricht.
 
 ## Task-Dokumentation
 
@@ -34,7 +35,7 @@ Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt.
 #### Parameter
 
 | **Name**                  | **Pflicht** | **Default-Wert** | **Beschreibung**                                                                                                                           |
-| ------------------------- | ----------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+|---------------------------|-------------|------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 | deploymentName            | Ja          |                  | Name des Deployments, in dem die Prozessmodelle deployt werden.                                                                            |
 | versionName               | Ja          |                  | Name der Version, die mit diesem Deployment verknüpft werden soll.                                                                         |
 | files                     | Nein        | /build/models    | Ordner aus dem Prozessmodelle gelesen werden. Es werden auch Unterordner berücksichtigt. Ein relativer Pfad ist relativ zum Projektordner. |
@@ -86,7 +87,7 @@ undeployt werden.
 #### Parameter
 
 | **Name** | **Pflicht** | **Default-Wert** | **Beschreibung**                                                                                                                      |
-| -------- | ----------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+|----------|-------------|------------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | files    | Nein        | /forms           | Ordner aus dem Formulare gelesen werden. Es werden auch Unterordner berücksichtigt. Ein relativer Pfad ist relativ zum Projektordner. |
 
 ---------------------------------------------------------------------------------------------------
@@ -105,7 +106,7 @@ ausgeführt, wird der Task mit einer Fehlermeldung abgebrochen.
 #### Parameter
 
 | **Name**               | **Pflicht** | **Default-Wert** | **Beschreibung**                                 |
-| ---------------------- | ----------- | ---------------- | ------------------------------------------------ |
+|------------------------|-------------|------------------|--------------------------------------------------|
 | deploymentId           | Ja          |                  | ID eines Prozess-Deployments                     |
 | deleteProcessInstances | Nein        | `false`          | Ob aktive Prozessinstanzen beendet werden sollen |
 
@@ -128,7 +129,7 @@ Formulare, die Teil des Deployments sind, werden undeployt.
 #### Parameter
 
 | **Name**     | **Pflicht** | **Beschreibung**              |
-| ------------ | ----------- | ----------------------------- |
+|--------------|-------------|-------------------------------|
 | deploymentId | Ja          | ID eines Formular-Deployments |
 
 ---------------------------------------------------------------------------------------------------
@@ -137,7 +138,8 @@ Formulare, die Teil des Deployments sind, werden undeployt.
 
 #### Allgemein
 
-Der Task `listProcesses` liefert die Liste aller auf der Umgebung vorhandenen Prozess-Deployments.<br />
+Der Task `listProcesses` liefert die Liste aller auf der Umgebung vorhandenen
+Prozess-Deployments.<br />
 Ausgegeben wird eine Liste aller vorhandenen Prozessdeployments. Für jedes Prozessdeployment wird in
 einer Zeile der Deployment-Zeitpunkt, der Name des Deployments, die Version und die Deployment-ID
 ausgegeben. Direkt unter der Deployment-Zeile folgen in weiteren Zeilen, die jeweils mit einem
@@ -150,7 +152,8 @@ ohne Spiegelstrich enthält dann das nächste Deployment.
 
 #### Allgemein
 
-Der Task `listForms` liefert die Liste aller auf der Umgebung vorhandenen Formular-Deployments.<br />
+Der Task `listForms` liefert die Liste aller auf der Umgebung vorhandenen
+Formular-Deployments.<br />
 In jeder Zeile wird ein deploytes Formular ausgegeben, und zwar hintereinander das Deployment-Datum,
 die Deployment-ID, die Sprache des Formulars (de, en, fr) und die ID des Formulars.
 
@@ -170,14 +173,14 @@ unterschiedlich ist.
 
 #### Parameter
 
-| **Name**       | **Pflicht** | **Default-Wert** | **Beschreibung**                                                                                                                                                                                                                                          | 
-| -------------- | ----------- | ---------------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| processKey     | Ja          |                  | Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll. Achtung, nur für den Prozess mit diesem Prozess-Key kann der verschlüsselte Wert entschlüsselt werden!                                                          |
-| parameterValue | Nein *      | `null`           | Der zu verschlüsselnde Prozessparameterwert.<br>* Entweder dieser Parameter oder `inputFile` muss gesetzt sein.                                                                                                                                           |
-| inputFile      | Nein *      | `null`           | Datei deren Inhalt der zu verschlüsselnden Prozessparameterwert ist. Datei muss existieren und eine normale Datei sein. Ein relativer Pfad ist relativ zum Projektordner.<br>* Entweder dieser Parameter oder `parameterValue` muss gesetzt sein.         |
-| charset        | Nein        | `UTF-8`          | Zeichenkodierung des Dateiinhalts, wenn `inputFile` gesetzt und `base64` gleich `false` ist. Unterstützt werden zum Beispiel `ASCII`, `UTF-8` und `ISO-8859-1`.                                                                                           |
-| base64         | Nein        | `false`          | Ist der Wert `true` und der Parameter `parameterValue` gesetzt, wird der zu verschlüsselende Wert vor der Verschlüsselung Base64-kordiert. Ist der Wert `true` und der Parameter `inputFile` gesetzt, wird die Datei binär eingelesen und Base64-kodiert. |
-| outputFile     | Nein        | `null`           | Datei, in die der verschlüsselte Parameter geschrieben werden soll. Die Datei darf nicht bereits existieren. Ein relativer Pfad ist relativ zum Projektordner.                                                                                            |
+| **Name**       | **Pflicht** | **Default-Wert** | **Beschreibung**                                                                                                                                                                                                                                                                  | 
+|----------------|-------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| processKey     | Ja          |                  | Prozess-Schlüssel des Prozesses, für den der Prozessparameterwert eingesetzt werden soll. Achtung, nur für den Prozess mit diesem Prozess-Key kann der verschlüsselte Wert entschlüsselt werden!                                                                                  |
+| parameterValue | Nein *      | `null`           | Der zu verschlüsselnde Prozessparameterwert.<br>* Entweder dieser Parameter oder `inputFile` muss gesetzt sein.                                                                                                                                                                   |
+| inputFile      | Nein *      | `null`           | Datei deren Inhalt der zu verschlüsselnden Prozessparameterwert ist. Datei muss existieren und eine normale Datei sein. Ein relativer Pfad ist relativ zum Projektordner.<br>* Entweder dieser Parameter oder `parameterValue` muss gesetzt sein.                                 |
+| charset        | Nein        | `UTF-8`          | Zeichenkodierung des Dateiinhalts, wenn `inputFile` gesetzt und `base64` gleich `false` ist. Unterstützt werden zum Beispiel `ASCII`, `UTF-8` und `ISO-8859-1`.                                                                                                                   |
+| base64         | Nein        | `false`          | Ist der Wert `true` und der Parameter `parameterValue` gesetzt, wird der zu verschlüsselende Wert vor der Verschlüsselung Base64-kordiert. Ist der Wert `true` und der Parameter `inputFile` gesetzt, wird die Datei binär eingelesen und vor der Verschlüsselung Base64-kodiert. |
+| outputFile     | Nein        | `null`           | Datei, in die der verschlüsselte Parameter geschrieben werden soll. Die Datei darf nicht bereits existieren. Ein relativer Pfad ist relativ zum Projektordner.                                                                                                                    |
 
 ---------------------------------------------------------------------------------------------------
 
