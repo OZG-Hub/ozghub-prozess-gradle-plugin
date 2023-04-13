@@ -1,8 +1,5 @@
 # Aktualisierungen
 
-## 2023.04-13-0
-- Optimierung: Dokumentation verbessert
-
 ## 2023.02-06-0
 - Optimierung: Ausgabe der deployten Prozesse für lange Deployment-IDs verbessert
 - Feature: Dependencies aktualisiert
