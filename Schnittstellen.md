@@ -5,6 +5,26 @@ Schnittstellen durch das Gradle-Plugin genutzt.
 
 ## Schnittstellendokumentation
 
+### Authentifizierung
+
+Um die Schnittstellen nutzen zu können, erfolgt die Authentifizierung als Header-Parameter.
+
+#### Basic Auth
+
+Zur Authentifizierung via Basic Auth ist der folgende Header-Parameter anzugeben.
+
+| **Name**       | **Pflicht** | **Typ** | **Beschreibung**                           |
+|----------------|-------------|---------|--------------------------------------------|
+| Authentication | Ja          | String  | Basic <username:password (Base64-codiert)> |
+
+#### OAuth2
+
+Falls die entsprechende OZG-Hub Umgebung Keycloak anbindet kann alternativ auch der folgende Header-Parameter angegeben werden.
+
+| **Name**       | **Pflicht** | **Typ** | **Beschreibung**      |
+|----------------|-------------|---------|-----------------------|
+| Authentication | Ja          | String  | Bearer <Bearer Token> |
+
 ### Schnittstelle zum Deployen eines Prozessmodells
 
 #### Allgemein

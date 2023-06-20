@@ -1,5 +1,11 @@
 # Aktualisierungen
 
+## 2023.06-20-0
+- Feature: Dependencies aktualisiert
+- Feature: Gradle Version aktualisiert auf 7.6.1
+- Feature: Build mit Java 17
+- Feature: Die Schnittstellendokumentation wurde mit Authentifizierungsinformationen ergänzt
+
 ## 2023.02-06-0
 - Optimierung: Ausgabe der deployten Prozesse für lange Deployment-IDs verbessert
 - Feature: Dependencies aktualisiert
