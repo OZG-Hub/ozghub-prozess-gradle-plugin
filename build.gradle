@@ -4,20 +4,20 @@ plugins {
     id 'checkstyle'
 
     // https://plugins.gradle.org/plugin/com.github.spotbugs
-    id 'com.github.spotbugs' version '5.0.13'
+    id 'com.github.spotbugs' version '5.0.14'
 
     // https://plugins.gradle.org/plugin/com.jfrog.artifactory
-    id "com.jfrog.artifactory" version "4.31.0"
+    id "com.jfrog.artifactory" version "4.32.0"
 
     // https://plugins.gradle.org/plugin/com.gradle.plugin-publish
     // com.gradle.plugin-publish auto-applies `java-gradle-plugin` and `maven-publish` plugins
-    id 'com.gradle.plugin-publish' version '1.1.0'
+    id 'com.gradle.plugin-publish' version '1.2.0'
 
     // https://plugins.gradle.org/plugin/org.owasp.dependencycheck
-    id "org.owasp.dependencycheck" version "8.0.2"
+    id "org.owasp.dependencycheck" version "8.2.1"
 
     // https://plugins.gradle.org/plugin/com.github.ben-manes.versions
-    id "com.github.ben-manes.versions" version "0.45.0"
+    id "com.github.ben-manes.versions" version "0.47.0"
 }
 
 group 'de.seitenbau.ozghub.prozessdeployment'
@@ -38,15 +38,15 @@ repositories {
 dependencies {
     implementation gradleApi()
     // https://mvnrepository.com/artifact/commons-io/commons-io
-    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.13.0'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.19.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.20.0'
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.19.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.20.0'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'
 
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
     compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.7.3'
@@ -54,9 +54,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
     testImplementation 'org.assertj:assertj-core:3.24.2'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
 
     // https://mvnrepository.com/artifact/com.h3xstream.findsecbugs/findsecbugs-plugin
     // https://github.com/spotbugs/spotbugs-gradle-plugin#spotbugs-version-mapping
@@ -64,15 +64,15 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     // https://projectlombok.org/setup/gradle
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.26'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.26'
-    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.26'
-    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.26'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.28'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.28'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.28'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.28'
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
@@ -127,7 +127,7 @@ else {
 
     publishing {
         publications {
-            mavenJava(MavenPublication) {
+            maven(MavenPublication) {
                 from components.java
             }
         }

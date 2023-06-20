@@ -1,5 +1,10 @@
 # Aktualisierungen
 
+## 2023.06-20-0
+- Feature: Dependencies aktualisiert
+- Feature: Build mit Java 17
+- Feature: Die Schnittstellendokumentation wurde mit Authentifizierungsinformationen aktualisiert
+
 ## 2023.02-06-0
 - Optimierung: Ausgabe der deployten Prozesse für lange Deployment-IDs verbessert
 - Feature: Dependencies aktualisiert
