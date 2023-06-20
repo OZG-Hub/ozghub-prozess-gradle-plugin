@@ -112,6 +112,12 @@ checkstyle {
 dependencyCheck {
     suppressionFile = file('config/dependency-suppression.xml')
     formats = ['HTML', 'JSON']
+    analyzers {
+        // Disable use of the https://ossindex.sonatype.org/ as they use rate limiting which causes errors
+        ossIndex {
+            enabled = false
+        }
+    }
 }
 
 // ##########  Lokaler Build  ##########
