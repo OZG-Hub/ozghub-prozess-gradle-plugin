@@ -3,6 +3,7 @@ pipeline {
         string defaultValue: '', description: 'Versionsnummer im Format YYYY.MM.DD-Nr', name: 'PLUGIN_VERSION'
         booleanParam defaultValue: true, description: 'Lädt in das Seitenbau-Maven-Repository hoch', name: 'UPLOAD_TO_SB_MAVEN_REPO'
         booleanParam defaultValue: false, description: 'Lädt offizielle Version in das öffentliche Gradle-Repository hoch, sofern eine PLUGIN_VERSION gesetzt ist', name: 'UPLOAD_TO_GRADLE_REPO'
+        booleanParam defaultValue: true, description: 'Dependency Check ausführen', name: 'DEPENDENCY_CHECK'
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '30'))
@@ -55,6 +56,9 @@ pipeline {
             }
         }
         stage('Dependency Check') {
+            when {
+                expression { params.DEPENDENCY_CHECK }
+            }
             steps {
                 container('gradle') {
                     catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
