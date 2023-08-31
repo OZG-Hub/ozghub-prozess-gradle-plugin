@@ -1,6 +1,7 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatRuntimeException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.ByteArrayInputStream;
@@ -174,6 +175,54 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     assertRequest(actualRequest);
     assertRequestBody(actualRequest.getRequestBody(), true);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
+  }
+
+  @Test
+  public void deploy_invalidMetadata_MissingAuthTypes()
+  {
+    // arrange
+    Environment env = new Environment("http://wontBeCalled", "foo3", "bar3");
+
+    sut = new DeployProcessHandler(env,
+        getProjectDir(),
+        "build/models/example.bpmn20.xml",
+        "deployment1",
+        "v1.0",
+        DuplicateProcessKeyAction.UNDEPLOY,
+        null,
+        "metadataMissingAuthTypes");
+
+    // act
+    assertThatRuntimeException()
+        .isThrownBy(() -> sut.deploy())
+        .withMessageContaining("""
+            Fehler: Die Metadaten example.json müssen mindestens eine Autorisierungsmittel im \
+            authenticationTypes definieren. Zur Auswahl stehen: BUND_ID, MUK""");
+  }
+
+  @Test
+  public void deploy_invalidMetadata_UnknownAuthType()
+  {
+    // arrange
+    Environment env = new Environment("http://wontBeCalled", "foo3", "bar3");
+
+    sut = new DeployProcessHandler(env,
+        getProjectDir(),
+        "build/models/example.bpmn20.xml",
+        "deployment1",
+        "v1.0",
+        DuplicateProcessKeyAction.UNDEPLOY,
+        null,
+        "metadataUnknownAuthType");
+
+    // act
+    assertThatRuntimeException()
+        .isThrownBy(() -> sut.deploy())
+        .withMessageContaining("Fehler: Fehler beim Einlesen der Metadata-Datei")
+        .withMessageContaining("""
+            Cannot deserialize value of type \
+            `de.seitenbau.ozghub.prozessdeployment.model.request.ProcessAuthenticationType` \
+            from String "SERVICEKONTO": not one of the values accepted for Enum class: [BUND_ID, MUK]""");
   }
 
   @Test

@@ -15,7 +15,7 @@ import de.seitenbau.ozghub.prozessdeployment.task.UndeployProcessTask;
 
 public class ProzessDeploymentGradlePlugin implements Plugin<Project>
 {
-  private final static String TASK_GROUP_NAME = "OZG-Hub";
+  private static final String TASK_GROUP_NAME = "OZG-Hub";
 
   private TaskContainer taskContainer;
 
