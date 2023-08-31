@@ -56,19 +56,24 @@ ausgeführt werden. Optional können zu den Prozessmodelldateien Metadaten über
   "barArchiveBase64": "barArchiveAlsBase64EncodedString",
   "metadata": {
     "prozessmodellDateiNameOhneErweiterungen": {
-      "servicekontolos": true
+      "servicekontolos": true,
+      "authenticationTypes": [
+        "BUND_ID",
+        "MUK"
+      ]
     } 
   }  
 }
 ```
 
-| **Name**         | **Pflicht** | **Typ** | **Beschreibung**                                                                                                                                                                                                                                                              |
-|------------------|-------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| deploymentName   | Ja          | String  | Name des Deployments                                                                                                                                                                                                                                                          |
-| versionName      | Ja          | String  | Name der Version                                                                                                                                                                                                                                                              |
-| barArchiveBase64 | Ja          | String  | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String                                                                                                                                                                                              |
-| metadata         | Nein        | Map     | Keys ist der Name der Prozessmodell-Datei (ohne Erweiterungen), zu der die Metadaten gehören; Value ist ein Objekt, dessen Attribute die zu übergebenden Metadaten enthalten. Aktuell wird ausschließlich das Attribut _servicekontolos_ (Werte true oder false) unterstützt. |
-
+| **Name**            | **Pflicht** | **Typ**      | **Beschreibung**                                                                                                                                                                             |
+|---------------------|-------------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| deploymentName      | Ja          | String       | Name des Deployments                                                                                                                                                                         |
+| versionName         | Ja          | String       | Name der Version                                                                                                                                                                             |
+| barArchiveBase64    | Ja          | String       | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String                                                                                                             |
+| metadata            | Nein        | Map          | Key ist der Name der Prozessmodell-Datei (ohne Erweiterungen), zu der die Metadaten gehören; Value ist ein ProcessMetadata Objekt, dessen Attribute die zu übergebenden Metadaten enthalten. |
+| servicekontolos     | Nein        | Boolean      | Werte true oder false                                                                                                                                                                        |
+| authenticationTypes | Nein        | String Array | Zugelassene Authentisierungsmittel                                                                                                                                                           |
 
 #### Rückgabewerte
 
