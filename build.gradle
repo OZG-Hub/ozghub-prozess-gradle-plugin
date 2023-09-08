@@ -4,10 +4,10 @@ plugins {
     id 'checkstyle'
 
     // https://plugins.gradle.org/plugin/com.github.spotbugs
-    id 'com.github.spotbugs' version '5.0.14'
+    id 'com.github.spotbugs' version '5.1.3'
 
     // https://plugins.gradle.org/plugin/com.jfrog.artifactory
-    id "com.jfrog.artifactory" version "4.32.0"
+    id "com.jfrog.artifactory" version "5.1.6"
 
     // https://plugins.gradle.org/plugin/com.gradle.plugin-publish
     // com.gradle.plugin-publish auto-applies `java-gradle-plugin` and `maven-publish` plugins
@@ -17,7 +17,7 @@ plugins {
     id "org.owasp.dependencycheck" version "8.4.0"
 
     // https://plugins.gradle.org/plugin/com.github.ben-manes.versions
-    id "com.github.ben-manes.versions" version "0.47.0"
+    id "com.github.ben-manes.versions" version "0.48.0"
 }
 
 group 'de.seitenbau.ozghub.prozessdeployment'
