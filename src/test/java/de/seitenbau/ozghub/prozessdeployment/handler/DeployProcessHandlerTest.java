@@ -195,9 +195,9 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     // act
     assertThatRuntimeException()
         .isThrownBy(() -> sut.deploy())
-        .withMessageContaining("""
-            Fehler: Die Metadaten example.json müssen mindestens eine Autorisierungsmittel im \
-            authenticationTypes definieren. Zur Auswahl stehen: BUND_ID, MUK""");
+        .withMessageContaining(
+            "Fehler: Die Metadaten example.json müssen mindestens eine Autorisierungsmittel im "
+                + "authenticationTypes definieren. Zur Auswahl stehen: BUND_ID, MUK");
   }
 
   @Test
@@ -219,10 +219,9 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     assertThatRuntimeException()
         .isThrownBy(() -> sut.deploy())
         .withMessageContaining("Fehler: Fehler beim Einlesen der Metadata-Datei")
-        .withMessageContaining("""
-            Cannot deserialize value of type \
-            `de.seitenbau.ozghub.prozessdeployment.model.request.ProcessAuthenticationType` \
-            from String "SERVICEKONTO": not one of the values accepted for Enum class: [BUND_ID, MUK]""");
+        .withMessageContaining("Cannot deserialize value of type "
+            + "`de.seitenbau.ozghub.prozessdeployment.model.request.ProcessAuthenticationType` "
+            + "from String \"SERVICEKONTO\": not one of the values accepted for Enum class: [BUND_ID, MUK]");
   }
 
   @Test

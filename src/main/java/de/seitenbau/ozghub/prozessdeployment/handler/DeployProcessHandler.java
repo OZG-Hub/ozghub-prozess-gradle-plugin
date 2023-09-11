@@ -139,9 +139,9 @@ public class DeployProcessHandler extends DefaultHandler
       String authenticationTypes = Arrays.stream(ProcessAuthenticationType.values())
           .map(Enum::toString)
           .collect(Collectors.joining(", "));
-      throw new RuntimeException("""
-          Die Metadaten %s müssen mindestens eine Autorisierungsmittel im authenticationTypes definieren. \
-          Zur Auswahl stehen: %s""".formatted(filename.toString(), authenticationTypes));
+      throw new RuntimeException(String.format(
+          "Die Metadaten %s müssen mindestens eine Autorisierungsmittel im authenticationTypes definieren. "
+          + "Zur Auswahl stehen: %s", filename.toString(), authenticationTypes));
     }
   }
 
