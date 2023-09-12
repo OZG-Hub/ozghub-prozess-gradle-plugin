@@ -2,6 +2,7 @@
   "servicekontolos": true,
   "authenticationTypes": [
     "BUND_ID",
-    "MUK"
+    "MUK",
+    "SERVICEKONTO"
   ]
 }
