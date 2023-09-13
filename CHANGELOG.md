@@ -1,5 +1,10 @@
 # Aktualisierungen
 
+## 2023.09-13-0
+- Feature: Metadata um authenticationTypes erweitert
+- Feature: Dependencies aktualisiert
+- Feature: Gradle Version aktualisiert auf 7.6.2
+
 ## 2023.06-20-0
 - Feature: Dependencies aktualisiert
 - Feature: Gradle Version aktualisiert auf 7.6.1
