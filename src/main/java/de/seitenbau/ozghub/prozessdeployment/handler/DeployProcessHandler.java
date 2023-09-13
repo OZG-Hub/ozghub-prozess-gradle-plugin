@@ -4,14 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.gradle.api.GradleException;
@@ -24,7 +22,6 @@ import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.helper.FileHelper;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
-import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessAuthenticationType;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
@@ -125,24 +122,9 @@ public class DeployProcessHandler extends DefaultHandler
     metadataFiles.forEach(file -> {
       String fileName = FilenameUtils.removeExtension(file.getFileName().toString());
       ProcessMetadata processMetadata = readProcessMetadataFromFile(file);
-      validateProcessMetadata(file.getFileName(), processMetadata);
       metadata.put(fileName, processMetadata);
     });
     return metadata;
-  }
-
-  private void validateProcessMetadata(Path filename, ProcessMetadata processMetadata)
-  {
-    if (processMetadata.getAuthenticationTypes() == null
-        || processMetadata.getAuthenticationTypes().isEmpty())
-    {
-      String authenticationTypes = Arrays.stream(ProcessAuthenticationType.values())
-          .map(Enum::toString)
-          .collect(Collectors.joining(", "));
-      throw new RuntimeException(String.format(
-          "Die Metadaten %s müssen mindestens eine Authentisierungsmittel im authenticationTypes definieren. "
-          + "Zur Auswahl stehen: %s", filename.toString(), authenticationTypes));
-    }
   }
 
   private List<Path> getMetadataFilePathList()

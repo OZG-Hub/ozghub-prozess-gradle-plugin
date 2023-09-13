@@ -178,29 +178,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   }
 
   @Test
-  public void deploy_invalidMetadata_MissingAuthTypes()
-  {
-    // arrange
-    Environment env = new Environment("http://wontBeCalled", "foo3", "bar3");
-
-    sut = new DeployProcessHandler(env,
-        getProjectDir(),
-        "build/models/example.bpmn20.xml",
-        "deployment1",
-        "v1.0",
-        DuplicateProcessKeyAction.UNDEPLOY,
-        null,
-        "metadataMissingAuthTypes");
-
-    // act
-    assertThatRuntimeException()
-        .isThrownBy(() -> sut.deploy())
-        .withMessageContaining(
-            "Fehler: Die Metadaten example.json müssen mindestens eine Authentisierungsmittel im "
-                + "authenticationTypes definieren. Zur Auswahl stehen: BUND_ID, MUK");
-  }
-
-  @Test
   public void deploy_invalidMetadata_UnknownAuthType()
   {
     // arrange
