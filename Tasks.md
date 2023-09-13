@@ -57,9 +57,8 @@ Die Metadaten-Dateien sind optional und werden im JSON-Format erwartet.
 Der Name der Metadaten-Datei zu einer Prozessmodelldatei muss dabei
 (nach Entfernen der jeweiligen Erweiterungen) mit dem Namen der Prozessmodelldatei übereinstimmen.
 Zum Prozessmodell _test.bpmn20.xml_ gehört folglich die Metadaten-Datei _test.json_.
-Aktuell wird als Metadaten-Attributen die Attributen _servicekontolos_ (true oder false) 
+Als Metadatenattribute werden derzeit die Attribute _servicekontolos_ (true oder false) 
 und _authenticationTypes_ (String Array: BUND_ID und MUK) unterstützt.
-
 Das Deployment kann auch durchgeführt werden, wenn keine Metadaten-Dateien vorhanden sind. In diesem
 Fall wird das Deployment ohne Metadaten durchgeführt und das Attribut _servicekontolos_ erhält den
 Wert false und _authenticationTypes_ den Wert BUND_ID.
