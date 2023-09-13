@@ -148,7 +148,9 @@ else {
                 repoKey = repositoryKey
                 username = 'jenkins'
                 password = artifactoryJenkinsPassword
-                maven = true
+                ivy {
+                    mavenCompatible = true
+                }
             }
             defaults {
                 publications('mavenJava')
