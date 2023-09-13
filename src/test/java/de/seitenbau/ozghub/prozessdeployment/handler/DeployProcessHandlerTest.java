@@ -196,7 +196,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     assertThatRuntimeException()
         .isThrownBy(() -> sut.deploy())
         .withMessageContaining(
-            "Fehler: Die Metadaten example.json müssen mindestens eine Autorisierungsmittel im "
+            "Fehler: Die Metadaten example.json müssen mindestens eine Authentisierungsmittel im "
                 + "authenticationTypes definieren. Zur Auswahl stehen: BUND_ID, MUK");
   }
 
