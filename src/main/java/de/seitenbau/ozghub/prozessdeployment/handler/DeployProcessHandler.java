@@ -16,6 +16,7 @@ import org.gradle.api.GradleException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
@@ -150,10 +151,10 @@ public class DeployProcessHandler extends DefaultHandler
     {
       return OBJECT_MAPPER.readValue(file.toFile(), ProcessMetadata.class);
     }
-    catch (InvalidFormatException e)
+    catch (InvalidFormatException | UnrecognizedPropertyException e)
     {
       throw new RuntimeException(
-          "Fehler beim Einlesen der Metadata-Datei " + file + " (" + e.getMessage() + ")", e);
+          "Fehler beim Einlesen der Metadata-Datei " + file + " (" + e.getMessage() + ")");
     }
     catch (IOException e)
     {
