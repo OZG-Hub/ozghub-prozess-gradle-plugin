@@ -1,5 +1,8 @@
 # Aktualisierungen
 
+## 2023.12-01-0
+- Feature: Dependencies aktualisiert
+
 ## 2023.09-13-0
 - Feature: Metadata um authenticationTypes erweitert
 - Feature: Dependencies aktualisiert
