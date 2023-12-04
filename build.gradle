@@ -14,7 +14,7 @@ plugins {
     id 'com.gradle.plugin-publish' version '1.2.1'
 
     // https://plugins.gradle.org/plugin/org.owasp.dependencycheck
-    id "org.owasp.dependencycheck" version "9.0.1"
+    id "org.owasp.dependencycheck" version "9.0.2"
 
     // https://plugins.gradle.org/plugin/com.github.ben-manes.versions
     id "com.github.ben-manes.versions" version "0.50.0"
@@ -198,6 +198,7 @@ pluginBundle {
 
 dependencyCheck {
     nvd {
+        // You must put the API-key in your ~/.gradle/gradle.properties file
         apiKey=project.properties['dependencyCheckNvdApiKey']
     }
 }
