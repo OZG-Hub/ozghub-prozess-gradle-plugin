@@ -294,66 +294,7 @@ Ein Objekt (`application/json`), das eine Liste mit den vorhandenen Deployments 
 
 ### Schnittstelle zum Lesen der Logs
 
-#### Allgemein
-
-Die Schnittstelle liefert eine paginierte Liste der Log-Einträge der Umgebung im JSON Format.
-Diverse Filter können eingesetzt werden, um die passenden Logeinträge zu finden
-
-Der Aufruf muss als GET ausgeführt werden.
-
-#### Pfad
-
-`{URL der Umgebung}/logview/ozghub/entries`
-
-#### Query-Parameter
-
-| **Name**       | **Pflicht** | **Typ** | **Beschreibung**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-|----------------|-------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| sortProperty   | Nein        | String  | Eigenschaft, welche zur Sortierung herangezogen werden soll. Mögliche Werte: id, createDate, applicationName, level (Sortierung nach Alphabet, nicht semantisch!), logger, message, exception, logEntryType, mandant. Default: createDate                                                                                                                                                                                                                                                                                               |
-| sortDirection  | Nein        | String  | Ob aufsteigend (ASC) oder absteigend (DESC) sortiert werden soll. Default: DESC                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| from           | Nein        | Long    | Untere Grenze für das Datum der angezeigten Logeinträge, als Unix Timestamp. Default : keine untere Grenze                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| to             | Nein        | Long    | Obere Grenze für das Datum der angezeigten Logeinträge, als Unix Timestamp. Default : keine obere Grenze                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| mandant        | Nein        | String  | Id des Mandanten, dessen Logeinträge angezeigt werden sollen. Default : es werden Logeinträge aller Mandanten angezeigt.  Gilt nur für Supermandanten                                                                                                                                                                                                                                                                                                                                                                                   |
-| attributeMatch | Nein        | String  | Filtert nach weiteren Attributen eines Logeintrags. Das Format ist attributeName=value1,value2,value3... Die Values werden verodert. Der Query-Parameter kann mehrfach verwendet werden, in diesem Fall werden die mehreren Verwendungen verundet. Erlaubte Attributnamen sind id, createDate, applicationName, level, logger, message, exception und logEntryType. Die Suche nach message findet auch Einträge, die den gesuchten String in der Message enthalten; für alle anderen Attribute wird nach einem exakten Treffer gesucht. |
-| contextMatch   | Nein        | String  | Filter nach Einträgen in der Context-Map eines Logeintrags. Das Format ist contextKey=value1,value2,value3... Die Values werden verodert. Der Query-Parameter kann mehrfach verwendet werden, in diesem Fall werden die mehreren Verwendungen verundet.                                                                                                                                                                                                                                                                                 |
-| page           | Nein        | int     | Die Nummer der Seite für die Paginierung. Default ist 0.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| pageSize       | Nein        | int     | Wie groß eine Seite der Paginierung sein soll. Muss einen Wert zwischen 1 und 1000 enthalten. Default ist 1000.                                                                                                                                                                                                                                                                                                                                                                                                                         |
-
-#### Rückgabewerte
-
-Ein Objekt (`application/json`), das die gefundenen Logeinträge und die Paging-Informationen
-enthält.<br />
-
-```json
-{
-  "items": [
-    {
-      "id": 56,
-      "createDate": 1642412152000,
-      "applicationName": "prozess-service",
-      "level": "INFO",
-      "logger": "de.seitenbau.serviceportal.prozess.service.DeploymentService",
-      "message": "Prozessmodell m1.testInternal zum ersten Mal deployed.",
-      "exception": "someExceptionStacktrace",
-      "logEntryType": "PROZESS",
-      "mandant": "1",
-      "context": [
-        {
-          "name": "PROCESS_DEFINITION_ID",
-          "value": "m1.testInternal:1:28"
-        },
-        {
-          "name": "PROCESS_DEFINITION_KEY",
-          "value": "m1.testInternal"
-        }
-      ]
-    }
-  ],
-  "offset": 0,
-  "limit": 1000,
-  "total": 1
-}
-```
+Informationen zum Ansprechen der Schnittstellen können [hier](https://doku.pmp.seitenbau.com/display/DFO/Prozesslogs) gefunden werden.
 
 ---------------------------------------------------------------------------------------------------
 
