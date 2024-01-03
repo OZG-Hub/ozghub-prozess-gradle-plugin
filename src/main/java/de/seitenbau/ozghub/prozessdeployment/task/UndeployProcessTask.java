@@ -5,6 +5,7 @@ import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
 
 import de.seitenbau.ozghub.prozessdeployment.handler.UndeployProcessHandler;
+import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,14 +25,36 @@ public class UndeployProcessTask extends DefaultPluginTask
   @Optional
   private String deleteProcessInstances;
 
+  /**
+   * Betreff der Nachricht die versendet wird beim Undeployment eines Prozesses.
+   * Siehe SBW-28606
+   */
+  @Input
+  @Optional
+  private String undeploymentMessageSubject;
+
+  /**
+   * Inhalt der Nachricht die versendet wird beim Undeployment des Prozesses.
+   * Siehe SBW-28606
+   */
+  @Input
+  @Optional
+  private String undeploymentMessageBody;
+
   @TaskAction
   public void run()
   {
     UndeployProcessHandler handler = new UndeployProcessHandler(
         getEnvironment(),
         deploymentId,
-        Boolean.parseBoolean(deleteProcessInstances));
+        Boolean.parseBoolean(deleteProcessInstances),
+        createUndeploymentMessage());
 
     handler.undeploy();
+  }
+
+  private Message createUndeploymentMessage()
+  {
+    return new Message(undeploymentMessageSubject, undeploymentMessageBody);
   }
 }

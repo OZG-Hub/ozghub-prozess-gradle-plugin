@@ -1,5 +1,10 @@
 # Aktualisierungen
 
+## 2024.01-03-0
+- Feature: Für die Tasks `deployProcess` und `undeployProcess` wurden neue Parameter hinzugefügt
+  - `undeployMessageSubject`: Betreff der Nachricht die beim Undeployment des Prozesses verschickt wird.
+  - `undeployMessageText`: Inhalt der Nachricht die beim Undeployment des Prozesses verschickt wird.
+
 ## 2023.12-01-0
 - Feature: Dependencies aktualisiert
 

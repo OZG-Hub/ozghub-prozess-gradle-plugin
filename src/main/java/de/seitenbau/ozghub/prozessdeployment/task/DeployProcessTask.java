@@ -6,6 +6,7 @@ import org.gradle.api.tasks.TaskAction;
 
 import de.seitenbau.ozghub.prozessdeployment.handler.DeployProcessHandler;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
+import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -50,9 +51,26 @@ public class DeployProcessTask extends DefaultPluginTask
   @Optional
   private String metadataFiles;
 
+  /**
+   * Betreff der Nachricht die versendet wird beim Undeployment eines Prozesses.
+   * Siehe SBW-28606
+   */
+  @Input
+  @Optional
+  private String undeploymentMessageSubject;
+
+  /**
+   * Inhalt der Nachricht die versendet wird beim Undeployment des Prozesses.
+   * Siehe SBW-28606
+   */
+  @Input
+  @Optional
+  private String undeploymentMessageBody;
+
   @TaskAction
   public void run()
   {
+    Message undeploymentMessage = createMessage(undeploymentMessageSubject, undeploymentMessageBody);
     DeployProcessHandler handler = new DeployProcessHandler(
         getEnvironment(),
         getProjectDir(),
@@ -61,8 +79,14 @@ public class DeployProcessTask extends DefaultPluginTask
         versionName,
         duplicateProcesskeyAction,
         engine,
-        metadataFiles);
+        metadataFiles,
+        undeploymentMessage);
 
     handler.deploy();
+  }
+
+  private Message createMessage(String subject, String body)
+  {
+    return new Message(subject, body);
   }
 }

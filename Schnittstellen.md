@@ -61,8 +61,12 @@ ausgeführt werden. Optional können zu den Prozessmodelldateien Metadaten über
         "BUND_ID",
         "MUK"
       ]
-    } 
-  }  
+    }
+  },
+  "undeploymentMessage": {
+      "subject": "Betreff der Nachricht",
+      "body": "Text der Nachricht"
+  }
 }
 ```
 
@@ -150,6 +154,19 @@ ausgeführt, wird der Aufruf mit einer Fehlermeldung abgebrochen.
 |-----------------------------------------|-------------|---------|-----------------------------------------------------------------------------------------------------------|
 | X-OZG-Deployment-ID                     | Ja          | String  | ID des Deployments                                                                                        |
 | X-OZG-Deployment-DeleteProcessInstances | Ja          | boolean | Wenn `true` werden aktive Prozessinstanzen beendet, wenn `false` dürfen keine Prozessinstanzen existieren |
+
+#### Request-Body
+
+- Der Schnittstelle kann einen optionalen BODY im JSON-Format. Der Request BODY muss folgende Struktur aufweisen:
+
+```json
+{
+  "undeploymentMessage": {
+      "subject": "Betreff der Nachricht",
+      "body": "Text der Nachricht"
+  }
+}
+```
 
 #### Rückgabewerte
 

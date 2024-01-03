@@ -1,13 +1,19 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.gradle.api.GradleException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
+import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessUndeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessUndeploymentResponse;
 import lombok.extern.log4j.Log4j2;
 
@@ -16,6 +22,8 @@ public class UndeployProcessHandler extends DefaultHandler
 {
   public static final String API_PATH = "/prozess/ozghub/undeploy";
 
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
   private static final ServerConnectionHelper<ProcessUndeploymentResponse> CONNECTION_HELPER =
       new ServerConnectionHelper<>(ProcessUndeploymentResponse.class);
 
@@ -23,11 +31,18 @@ public class UndeployProcessHandler extends DefaultHandler
 
   private final boolean deleteProcessInstances;
 
-  public UndeployProcessHandler(Environment environment, String deploymentId, boolean deleteProcessInstances)
+  private final Message undeploymentMessage;
+
+  public UndeployProcessHandler(
+      Environment environment,
+      String deploymentId,
+      boolean deleteProcessInstances,
+      Message undeploymentMessage)
   {
     super(environment);
     this.deploymentId = deploymentId;
     this.deleteProcessInstances = deleteProcessInstances;
+    this.undeploymentMessage = undeploymentMessage;
   }
 
   public void undeploy()
@@ -37,7 +52,8 @@ public class UndeployProcessHandler extends DefaultHandler
     try
     {
       Map<String, String> headers = getHeaderParameters();
-      ProcessUndeploymentResponse response = CONNECTION_HELPER.delete(environment, API_PATH, headers);
+      byte[] body = getRequestBody();
+      ProcessUndeploymentResponse response = deleteRequest(headers, body);
       logEndOfTask(response);
     }
     catch (Exception e)
@@ -51,7 +67,22 @@ public class UndeployProcessHandler extends DefaultHandler
     Map<String, String> headers = new HashMap<>();
     headers.put(HTTPHeaderKeys.DEPLOYMENT_ID, deploymentId);
     headers.put(HTTPHeaderKeys.DELETE_PROCESS_INSTANCES, Boolean.toString(deleteProcessInstances));
+    headers.put(HTTPHeaderKeys.CONTENT_TYPE, "application/json");
     return headers;
+  }
+
+  private byte[] getRequestBody() throws IOException
+  {
+    ProcessUndeploymentRequest undeploymentRequest =
+        new ProcessUndeploymentRequest(undeploymentMessage);
+    String undeploymentRequestString = OBJECT_MAPPER.writeValueAsString(undeploymentRequest);
+    return undeploymentRequestString.getBytes(StandardCharsets.UTF_8);
+  }
+
+  private ProcessUndeploymentResponse deleteRequest(Map<String, String> headers, byte[] body)
+      throws IOException
+  {
+    return CONNECTION_HELPER.delete(environment, API_PATH, headers, body);
   }
 
   private void logEndOfTask(ProcessUndeploymentResponse response)

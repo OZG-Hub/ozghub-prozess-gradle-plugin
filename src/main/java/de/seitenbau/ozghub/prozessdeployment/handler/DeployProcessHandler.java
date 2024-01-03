@@ -23,6 +23,7 @@ import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.helper.FileHelper;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
+import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
@@ -56,6 +57,8 @@ public class DeployProcessHandler extends DefaultHandler
 
   private final String metadataFolder;
 
+  private final Message undeploymentMessage;
+
   // CHECKSTYLE:OFF ParameterNumberCheck
   public DeployProcessHandler(Environment environment,
       File projectDir,
@@ -64,7 +67,8 @@ public class DeployProcessHandler extends DefaultHandler
       String versionName,
       DuplicateProcessKeyAction duplicateKeyAction,
       String engineId,
-      String metadataFolder)
+      String metadataFolder,
+      Message undeploymentMessage)
   {
     super(environment);
     this.projectDir = projectDir;
@@ -75,6 +79,7 @@ public class DeployProcessHandler extends DefaultHandler
         Objects.requireNonNullElse(duplicateKeyAction, DuplicateProcessKeyAction.ERROR);
     this.engineId = engineId;
     this.metadataFolder = metadataFolder;
+    this.undeploymentMessage = undeploymentMessage;
   }
   // CHECKSTYLE:ON ParameterNumberCheck
 
@@ -85,11 +90,8 @@ public class DeployProcessHandler extends DefaultHandler
     try
     {
       Map<String, String> headers = getHeaderParameters();
-
-      ProcessDeploymentRequest deployProcessRequest = createProcessDeploymentRequest();
-      byte[] data = getRequestBody(deployProcessRequest);
-
-      ProcessDeploymentResponse response = CONNECTION_HELPER.post(environment, API_PATH, headers, data);
+      byte[] data = getRequestBody();
+      ProcessDeploymentResponse response = postRequest(headers, data);
       logEndOfTask(response);
     }
     catch (Exception e)
@@ -98,8 +100,23 @@ public class DeployProcessHandler extends DefaultHandler
     }
   }
 
-  private byte[] getRequestBody(ProcessDeploymentRequest deployProcessRequest) throws IOException
+  private Map<String, String> getHeaderParameters()
   {
+    Map<String, String> headers = new HashMap<>();
+    headers.put(HTTPHeaderKeys.PROCESS_DUPLICATION, duplicateProcesskeyAction.toString());
+    headers.put(HTTPHeaderKeys.CONTENT_TYPE, "application/json");
+
+    if (engineId != null)
+    {
+      headers.put(HTTPHeaderKeys.PROCESS_ENGINE, engineId);
+    }
+
+    return headers;
+  }
+
+  private byte[] getRequestBody() throws IOException
+  {
+    ProcessDeploymentRequest deployProcessRequest = createProcessDeploymentRequest();
     String deployProcessRequestAsString = OBJECT_MAPPER.writeValueAsString(deployProcessRequest);
     return deployProcessRequestAsString.getBytes(StandardCharsets.UTF_8);
   }
@@ -109,9 +126,17 @@ public class DeployProcessHandler extends DefaultHandler
     byte[] data = createDeploymentArchive();
     Map<String, ProcessMetadata> metadata = createMetadataMap();
 
-    return
-        new ProcessDeploymentRequest(Base64.getEncoder().encodeToString(data), deploymentName, versionName,
-            metadata);
+    return new ProcessDeploymentRequest(
+        Base64.getEncoder().encodeToString(data),
+        deploymentName,
+        versionName,
+        metadata,
+        undeploymentMessage);
+  }
+
+  private ProcessDeploymentResponse postRequest(Map<String, String> headers, byte[] data) throws IOException
+  {
+    return CONNECTION_HELPER.post(environment, API_PATH, headers, data);
   }
 
   private Map<String, ProcessMetadata> createMetadataMap()
@@ -167,20 +192,6 @@ public class DeployProcessHandler extends DefaultHandler
     Path folder = FileHelper.getCustomFolderOrDefault(projectDir, filePath, MODEL_DIR);
 
     return FileHelper.createArchiveForFilesInFolder(folder);
-  }
-
-  private Map<String, String> getHeaderParameters()
-  {
-    Map<String, String> headers = new HashMap<>();
-    headers.put(HTTPHeaderKeys.PROCESS_DUPLICATION, duplicateProcesskeyAction.toString());
-    headers.put(HTTPHeaderKeys.CONTENT_TYPE, "application/json");
-
-    if (engineId != null)
-    {
-      headers.put(HTTPHeaderKeys.PROCESS_ENGINE, engineId);
-    }
-
-    return headers;
   }
 
   private void logEndOfTask(ProcessDeploymentResponse response)
