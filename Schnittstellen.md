@@ -70,14 +70,15 @@ ausgeführt werden. Optional können zu den Prozessmodelldateien Metadaten über
 }
 ```
 
-| **Name**            | **Pflicht** | **Typ**      | **Beschreibung**                                                                                                                                                                             |
-|---------------------|-------------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| deploymentName      | Ja          | String       | Name des Deployments                                                                                                                                                                         |
-| versionName         | Ja          | String       | Name der Version                                                                                                                                                                             |
-| barArchiveBase64    | Ja          | String       | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String                                                                                                             |
-| metadata            | Nein        | Map          | Key ist der Name der Prozessmodell-Datei (ohne Erweiterungen), zu der die Metadaten gehören; Value ist ein ProcessMetadata Objekt, dessen Attribute die zu übergebenden Metadaten enthalten. |
-| servicekontolos     | Nein        | Boolean      | Werte true oder false                                                                                                                                                                        |
-| authenticationTypes | Nein        | String Array | Zugelassene Authentisierungsmittel                                                                                                                                                           |
+| **Name**            | **Pflicht** | **Typ**      | **Beschreibung**                                                                                                                                                                                                                                                                                                      |
+|---------------------|-------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| deploymentName      | Ja          | String       | Name des Deployments                                                                                                                                                                                                                                                                                                  |
+| versionName         | Ja          | String       | Name der Version                                                                                                                                                                                                                                                                                                      |
+| barArchiveBase64    | Ja          | String       | BAR-Archiv, welches die Prozessmodell-Dateien enthält, als Base64-encoded String                                                                                                                                                                                                                                      |
+| metadata            | Nein        | Map          | Key ist der Name der Prozessmodell-Datei (ohne Erweiterungen), zu der die Metadaten gehören; Value ist ein ProcessMetadata Objekt, dessen Attribute die zu übergebenden Metadaten enthalten.                                                                                                                          |
+| servicekontolos     | Nein        | Boolean      | Werte true oder false                                                                                                                                                                                                                                                                                                 |
+| authenticationTypes | Nein        | String Array | Zugelassene Authentisierungsmittel                                                                                                                                                                                                                                                                                    |
+| undeploymentMessage | Nein        | Map          | Eine Nachricht die beim undeployment von Prozessen versendet wird. Enthält folgende Attribute: <ul><li>"subject": "Der Betreff der Nachricht"</li><li>"body": "Den Inhalt der Nachricht"</li></ul> Das Attribut `body` kann folgende Platzhalter verwenden. <ul><li>**{{name}}** : Der Name des Empfängers</li></ul>  |
 
 #### Rückgabewerte
 
@@ -167,6 +168,10 @@ ausgeführt, wird der Aufruf mit einer Fehlermeldung abgebrochen.
   }
 }
 ```
+
+| **Name**            | **Pflicht** | **Typ**      | **Beschreibung**                                                                                                                                                                                                                                                                                                     |
+|---------------------|-------------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| undeploymentMessage | Nein        | Map          | Eine Nachricht die beim undeployment von Prozessen versendet wird. Enthält folgende Attribute: <ul><li>"subject": "Der Betreff der Nachricht"</li><li>"body": "Den Inhalt der Nachricht"</li></ul> Das Attribut `body` kann folgende Platzhalter verwenden. <ul><li>**{{name}}** : Der Name des Empfängers</li></ul> |
 
 #### Rückgabewerte
 

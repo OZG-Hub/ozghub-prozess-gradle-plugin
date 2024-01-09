@@ -20,7 +20,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class UndeployProcessHandler extends DefaultHandler
 {
-  public static final String API_PATH = "/prozess/ozghub/undeploy";
+  public static final String API_PATH = "/prozess/ozghub/undeployV2";
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -65,8 +65,6 @@ public class UndeployProcessHandler extends DefaultHandler
   private Map<String, String> getHeaderParameters()
   {
     Map<String, String> headers = new HashMap<>();
-    headers.put(HTTPHeaderKeys.DEPLOYMENT_ID, deploymentId);
-    headers.put(HTTPHeaderKeys.DELETE_PROCESS_INSTANCES, Boolean.toString(deleteProcessInstances));
     headers.put(HTTPHeaderKeys.CONTENT_TYPE, "application/json");
     return headers;
   }
@@ -74,7 +72,7 @@ public class UndeployProcessHandler extends DefaultHandler
   private byte[] getRequestBody() throws IOException
   {
     ProcessUndeploymentRequest undeploymentRequest =
-        new ProcessUndeploymentRequest(undeploymentMessage);
+        new ProcessUndeploymentRequest(deploymentId, deleteProcessInstances, undeploymentMessage);
     String undeploymentRequestString = OBJECT_MAPPER.writeValueAsString(undeploymentRequest);
     return undeploymentRequestString.getBytes(StandardCharsets.UTF_8);
   }

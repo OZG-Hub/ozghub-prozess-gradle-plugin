@@ -11,5 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProcessUndeploymentRequest
 {
+  private String deploymentId;
+  private boolean deleteProcessInstances;
   private Message undeploymentMessage;
 }

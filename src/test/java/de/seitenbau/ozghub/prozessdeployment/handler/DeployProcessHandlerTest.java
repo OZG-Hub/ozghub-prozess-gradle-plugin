@@ -39,6 +39,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   private static final File TEST_FOLDER =
       new File("src/test/resources/handler/deployProcessHandler/");
 
+  public static final Message EMPTY_MESSAGE = new Message(null, null);
+
   private HttpServer httpServer = null;
 
   private DeployProcessHandler sut;
@@ -67,7 +69,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo1", "bar1");
 
-    Message undeploymentMessage = new Message(null, null);
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         null,
@@ -76,7 +77,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         DuplicateProcessKeyAction.ERROR,
         "engine1",
         null,
-        undeploymentMessage);
+        EMPTY_MESSAGE);
 
     // act
     sut.deploy();
@@ -130,7 +131,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo2", "bar2");
 
-    Message undeploymentMessage = new Message(null, null);
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         "build",
@@ -139,7 +139,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         DuplicateProcessKeyAction.IGNORE,
         null,
         "path/to/non-existing/metadata",
-        undeploymentMessage);
+        EMPTY_MESSAGE);
 
     // act
     assertThatThrownBy(() -> sut.deploy())
@@ -163,7 +163,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo2", "bar2");
 
-    Message undeploymentMessage = new Message(null, null);
     sut = new DeployProcessHandler(env,
         new File(getProjectDir(), "projectWithoutMetadata"),
         "build",
@@ -172,7 +171,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         DuplicateProcessKeyAction.IGNORE,
         null,
         null,
-        undeploymentMessage);
+        EMPTY_MESSAGE);
 
     // act
     sut.deploy();
@@ -195,7 +194,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo3", "bar3");
 
-    Message undeploymentMessage = new Message(null, null);
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         "build/models/example.bpmn20.xml",
@@ -204,7 +202,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         "metadata",
-        undeploymentMessage);
+        EMPTY_MESSAGE);
 
     // act
     sut.deploy();
@@ -224,7 +222,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     // arrange
     Environment env = new Environment("http://wontBeCalled", "foo3", "bar3");
 
-    Message undeploymentMessage = new Message(null, null);
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         "build/models/example.bpmn20.xml",
@@ -233,7 +230,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         "metadataUnknownAuthType",
-        undeploymentMessage);
+        EMPTY_MESSAGE);
 
     // act
     assertThatRuntimeException()
@@ -250,7 +247,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     // arrange
     Environment env = new Environment("http://wontBeCalled", "foo3", "bar3");
 
-    Message undeploymentMessage = new Message(null, null);
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         "build/models/example.bpmn20.xml",
@@ -259,7 +255,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         "metadataUnrecognizedProperty",
-        undeploymentMessage);
+        EMPTY_MESSAGE);
 
     // act
     assertThatRuntimeException()
@@ -274,7 +270,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     // arrange
     Environment env = new Environment("http://wontBeCalled", "foo3", "bar3");
 
-    Message undeploymentMessage = new Message(null, null);
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         "build/models/example.bpmn20.xml",
@@ -283,7 +278,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         "metadataInvalidFormat",
-        undeploymentMessage);
+        EMPTY_MESSAGE);
 
     // act
     assertThatRuntimeException()
@@ -300,7 +295,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo3", "bar3");
 
-    Message undeploymentMessage = new Message(null, null);
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         "build/models/example.bpmn20.xml",
@@ -309,7 +303,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         "metadata/example.json",
-        undeploymentMessage);
+        EMPTY_MESSAGE);
 
     // act
     sut.deploy();
@@ -334,7 +328,6 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo3", "bar3");
 
-    Message undeploymentMessage = new Message(null, null);
     sut = new DeployProcessHandler(env,
         getProjectDir(),
         null,
@@ -343,7 +336,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
         null,
-        undeploymentMessage);
+        EMPTY_MESSAGE);
 
     // act
     assertThatThrownBy(() -> sut.deploy())
