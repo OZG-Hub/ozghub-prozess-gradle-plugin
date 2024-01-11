@@ -60,7 +60,8 @@ public class ProzessDeploymentGradlePlugin implements Plugin<Project>
 
   private <K extends DefaultPluginTask> void createTask(String name, Class<K> aClass, String description)
   {
-    K createdTask = taskContainer.create(name, aClass, (task) -> {});
+    K createdTask = taskContainer.create(name, aClass, (task) -> {
+    });
     createdTask.setDescription(description);
     createdTask.setGroup(TASK_GROUP_NAME);
   }
