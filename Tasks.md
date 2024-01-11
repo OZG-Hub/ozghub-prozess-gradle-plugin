@@ -34,14 +34,16 @@ Ist keine Engine angegeben, wird auf die Standard-Prozess-Engine deployt.
 
 #### Parameter
 
-| **Name**                  | **Pflicht** | **Default-Wert** | **Beschreibung**                                                                                                                           |
-|---------------------------|-------------|------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| deploymentName            | Ja          |                  | Name des Deployments, in dem die Prozessmodelle deployt werden.                                                                            |
-| versionName               | Ja          |                  | Name der Version, die mit diesem Deployment verknüpft werden soll.                                                                         |
-| files                     | Nein        | /build/models    | Ordner aus dem Prozessmodelle gelesen werden. Es werden auch Unterordner berücksichtigt. Ein relativer Pfad ist relativ zum Projektordner. |
-| metadataFiles             | Nein        | /metadata        | Ordner aus dem Metadaten-Dateien gelesen werden. Es werden auch Unterordner berücksichtigt.                                                |
-| duplicateProcesskeyAction | Nein        | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll.                                                              |
-| engine                    | Nein        | `null`           | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet.                         |
+| **Name**                   | **Pflicht** | **Default-Wert** | **Beschreibung**                                                                                                                                                                                  |
+|----------------------------|-------------|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| deploymentName             | Ja          |                  | Name des Deployments, in dem die Prozessmodelle deployt werden.                                                                                                                                   |
+| versionName                | Ja          |                  | Name der Version, die mit diesem Deployment verknüpft werden soll.                                                                                                                                |
+| files                      | Nein        | /build/models    | Ordner aus dem Prozessmodelle gelesen werden. Es werden auch Unterordner berücksichtigt. Ein relativer Pfad ist relativ zum Projektordner.                                                        |
+| metadataFiles              | Nein        | /metadata        | Ordner aus dem Metadaten-Dateien gelesen werden. Es werden auch Unterordner berücksichtigt.                                                                                                       |
+| duplicateProcesskeyAction  | Nein        | `ERROR`          | Spezifikation, wie mit bereits deployten Prozess-Keys umgegangen werden soll.                                                                                                                     |
+| engine                     | Nein        | `null`           | ID der Prozess-Engine, auf welche deployt werden soll. Bei `null` wird die Standard-Engine der Umgebung verwendet.                                                                                |
+| undeploymentMessageSubject | Nein        | `null`           | Betreff der Nachricht die beim Undeployment des Prozesses verschickt wird.                                                                                                                        |
+| undeploymentMessageBody    | Nein        | `null`           | Inhalt der Nachricht die beim Undeployment des Prozesses verschickt wird. <br/><br/> Hier können folgende Platzhalter verwendet werden: <ul><li>**{{name}}** : Der Name des Empfängers</li></ul>  |
 
 Der Parameter `duplicateProcesskeyAction` definiert, was geschehen soll, wenn vor dem Deployment der
 gegebenen Prozessmodell-Dateien festgestellt wird, dass mindestens ein Prozess-Key bereits Teil
@@ -108,10 +110,12 @@ ausgeführt, wird der Task mit einer Fehlermeldung abgebrochen.
 
 #### Parameter
 
-| **Name**               | **Pflicht** | **Default-Wert** | **Beschreibung**                                 |
-|------------------------|-------------|------------------|--------------------------------------------------|
-| deploymentId           | Ja          |                  | ID eines Prozess-Deployments                     |
-| deleteProcessInstances | Nein        | `false`          | Ob aktive Prozessinstanzen beendet werden sollen |
+| **Name**                   | **Pflicht** | **Default-Wert** | **Beschreibung**                                                                                                                                                                                 |
+|----------------------------|-------------|------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| deploymentId               | Ja          |                  | ID eines Prozess-Deployments                                                                                                                                                                     |
+| deleteProcessInstances     | Nein        | `false`          | Ob aktive Prozessinstanzen beendet werden sollen                                                                                                                                                 |
+| undeploymentMessageSubject | Nein        | `null`           | Betreff der Nachricht die beim Undeployment des Prozesses verschickt wird.                                                                                                                       |
+| undeploymentMessageBody    | Nein        | `null`           | Inhalt der Nachricht die beim Undeployment des Prozesses verschickt wird. <br/><br/> Hier können folgende Platzhalter verwendet werden: <ul><li>**{{name}}** : Der Name des Empfängers</li></ul> |
 
 Der Parameter `deleteProcessInstances` definiert, was geschehen soll, wenn vor dem Undeployment
 festgestellt wird, dass noch mindestens eine aktive Prozessinstanz einer Prozessdefinition, die Teil

@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +28,7 @@ import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
+import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
@@ -36,6 +38,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 {
   private static final File TEST_FOLDER =
       new File("src/test/resources/handler/deployProcessHandler/");
+
+  public static final Message EMPTY_MESSAGE = new Message(null, null);
 
   private HttpServer httpServer = null;
 
@@ -72,7 +76,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "v1.0",
         DuplicateProcessKeyAction.ERROR,
         "engine1",
-        null);
+        null,
+        EMPTY_MESSAGE);
 
     // act
     sut.deploy();
@@ -82,8 +87,39 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody(), true);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.ERROR, "engine1");
+    assertRequestBody(actualRequest.getRequestBody());
+  }
+
+  @Test
+  public void deploy_with_UndeploymentMessage()
+  {
+    // arrange
+    HttpHandler httpHandler = createAndStartHttpServer();
+
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo3", "bar3");
+    Message undeploymentMessage = new Message("subject", "body");
+    sut = new DeployProcessHandler(env,
+        getProjectDir(),
+        "build/models/example.bpmn20.xml",
+        "deployment1",
+        "v1.0",
+        DuplicateProcessKeyAction.UNDEPLOY,
+        null,
+        "metadata",
+        undeploymentMessage);
+
+    // act
+    sut.deploy();
+
+    // assert
+    assertResponse(httpHandler);
+
+    HttpHandler.Request actualRequest = httpHandler.getRequest();
+    assertRequest(actualRequest);
+    assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
+    assertRequestBody(actualRequest.getRequestBody(), true, true);
   }
 
   @Test
@@ -102,7 +138,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "v1.0",
         DuplicateProcessKeyAction.IGNORE,
         null,
-        "path/to/non-existing/metadata");
+        "path/to/non-existing/metadata",
+        EMPTY_MESSAGE);
 
     // act
     assertThatThrownBy(() -> sut.deploy())
@@ -133,7 +170,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "v1.0",
         DuplicateProcessKeyAction.IGNORE,
         null,
-        null);
+        null,
+        EMPTY_MESSAGE);
 
     // act
     sut.deploy();
@@ -143,8 +181,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody(), false);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.IGNORE, null);
+    assertRequestBody(actualRequest.getRequestBody(), false, false);
   }
 
   @Test
@@ -163,7 +201,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
-        "metadata");
+        "metadata",
+        EMPTY_MESSAGE);
 
     // act
     sut.deploy();
@@ -173,8 +212,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody(), true);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
+    assertRequestBody(actualRequest.getRequestBody());
   }
 
   @Test
@@ -190,7 +229,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
-        "metadataUnknownAuthType");
+        "metadataUnknownAuthType",
+        EMPTY_MESSAGE);
 
     // act
     assertThatRuntimeException()
@@ -214,7 +254,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
-        "metadataUnrecognizedProperty");
+        "metadataUnrecognizedProperty",
+        EMPTY_MESSAGE);
 
     // act
     assertThatRuntimeException()
@@ -236,7 +277,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
-        "metadataInvalidFormat");
+        "metadataInvalidFormat",
+        EMPTY_MESSAGE);
 
     // act
     assertThatRuntimeException()
@@ -260,7 +302,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
-        "metadata/example.json");
+        "metadata/example.json",
+        EMPTY_MESSAGE);
 
     // act
     sut.deploy();
@@ -270,8 +313,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody(), true);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
+    assertRequestBody(actualRequest.getRequestBody());
   }
 
   @Test
@@ -292,7 +335,8 @@ public class DeployProcessHandlerTest extends HandlerTestBase
         "v1.0",
         DuplicateProcessKeyAction.UNDEPLOY,
         null,
-        null);
+        null,
+        EMPTY_MESSAGE);
 
     // act
     assertThatThrownBy(() -> sut.deploy())
@@ -306,16 +350,30 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestBody(actualRequest.getRequestBody(), true);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
+    assertRequestBody(actualRequest.getRequestBody());
+  }
+
+  private void assertRequestBody(byte[] data)
+  {
+    assertRequestBody(data, true, false);
   }
 
   @SneakyThrows
-  private void assertRequestBody(byte[] data, boolean withMetadata)
+  private void assertRequestBody(byte[] data, boolean withMetadata, boolean withMessage)
   {
     ProcessDeploymentRequest
         actualDeployProcessRequest = OBJECT_MAPPER.readValue(data, ProcessDeploymentRequest.class);
 
+    assertBpmnArchive(actualDeployProcessRequest);
+    assertDeploymentName(actualDeployProcessRequest);
+    assertVersionName(actualDeployProcessRequest);
+    assertProcessMetadataInRequest(actualDeployProcessRequest, withMetadata);
+    assertMessageSetInRequest(actualDeployProcessRequest, withMessage);
+  }
+
+  private void assertBpmnArchive(ProcessDeploymentRequest actualDeployProcessRequest) throws IOException
+  {
     byte[] actualDeploymentArchive =
         Base64.getDecoder().decode(actualDeployProcessRequest.getBarArchiveBase64());
 
@@ -330,23 +388,47 @@ public class DeployProcessHandlerTest extends HandlerTestBase
       assertThat(actualContent).isEqualTo(expectedContent);
       assertThat(zis.getNextEntry()).isNull();
     }
+  }
 
+  private static void assertDeploymentName(ProcessDeploymentRequest actualDeployProcessRequest)
+  {
     assertThat(actualDeployProcessRequest.getDeploymentName()).isEqualTo("deployment1");
-    assertThat(actualDeployProcessRequest.getVersionName()).isEqualTo("v1.0");
+  }
 
-    Map<String, ProcessMetadata> actualMetadata = actualDeployProcessRequest.getMetadata();
-    if (withMetadata)
+  private static void assertVersionName(ProcessDeploymentRequest actualDeployProcessRequest)
+  {
+    assertThat(actualDeployProcessRequest.getVersionName()).isEqualTo("v1.0");
+  }
+
+  private void assertProcessMetadataInRequest(ProcessDeploymentRequest request, boolean requestHasMetadata)
+      throws IOException
+  {
+    Map<String, ProcessMetadata> actualMetadata = request.getMetadata();
+    if (requestHasMetadata)
     {
       assertThat(actualMetadata.entrySet()).hasSize(1);
 
       ProcessMetadata expectedProcessMetadata =
           OBJECT_MAPPER.readValue(getFileInProjectDir("/metadata/example.json"), ProcessMetadata.class);
       assertThat(actualMetadata.get("example")).usingRecursiveComparison().isEqualTo(expectedProcessMetadata);
+      return;
     }
-    else
+
+    assertThat(actualMetadata).isEmpty();
+  }
+
+  private static void assertMessageSetInRequest(ProcessDeploymentRequest request, boolean requestHasMessage)
+  {
+    Message message = request.getUndeploymentMessage();
+    if (requestHasMessage)
     {
-      assertThat(actualMetadata).isEmpty();
+      assertThat(message.getSubject()).isNotEmpty();
+      assertThat(message.getBody()).isNotEmpty();
+      return;
     }
+
+    assertThat(message.getSubject()).isNull();
+    assertThat(message.getBody()).isNull();
   }
 
   private void assertResponse(HttpHandler handler)

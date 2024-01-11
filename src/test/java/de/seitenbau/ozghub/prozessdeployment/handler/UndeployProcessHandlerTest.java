@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
@@ -20,6 +21,8 @@ import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
+import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessUndeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessUndeploymentResponse;
 import lombok.SneakyThrows;
 
@@ -52,8 +55,8 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo1", "bar1");
-
-    sut = new UndeployProcessHandler(env, "deploymentId1", false);
+    Message undeploymentMessage = new Message(null, null);
+    sut = new UndeployProcessHandler(env, "deploymentId1", false, undeploymentMessage);
 
     // act
     sut.undeploy();
@@ -63,7 +66,31 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestHeaders(actualRequest, env, "deploymentId1", false);
+    assertRequestHeaders(actualRequest, env);
+    assertRequestBody(actualRequest.getRequestBody(), "deploymentId1", false);
+  }
+
+  @Test
+  public void undeploy_with_undeploymentMessage()
+  {
+    // arrange
+    HttpHandler httpHandler = createAndStartHttpServer();
+
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo1", "bar1");
+    Message undeploymentMessage = new Message("subject", "body");
+    sut = new UndeployProcessHandler(env, "deploymentId1", false, undeploymentMessage);
+
+    // act
+    sut.undeploy();
+
+    // assert
+    assertResponse(httpHandler);
+
+    HttpHandler.Request actualRequest = httpHandler.getRequest();
+    assertRequest(actualRequest);
+    assertRequestHeaders(actualRequest, env);
+    assertRequestBody(actualRequest.getRequestBody(), "deploymentId1", false, true);
   }
 
   @Test
@@ -76,8 +103,8 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo3", "bar3");
-
-    sut = new UndeployProcessHandler(env, "deploymentId2", true);
+    Message undeploymentMessage = new Message(null, null);
+    sut = new UndeployProcessHandler(env, "deploymentId2", true, undeploymentMessage);
 
     // act
     assertThatThrownBy(() -> sut.undeploy())
@@ -91,7 +118,8 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
     assertRequest(actualRequest);
-    assertRequestHeaders(actualRequest, env, "deploymentId2", true);
+    assertRequestHeaders(actualRequest, env);
+    assertRequestBody(actualRequest.getRequestBody(), "deploymentId2", true);
   }
 
   private void assertResponse(HttpHandler handler)
@@ -108,16 +136,33 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
     assertThat(request.getQuery()).isNull();
   }
 
-  private void assertRequestHeaders(HttpHandler.Request request,
-      Environment env,
-      String deploymentId,
-      boolean deleteProcessInstances)
+  private void assertRequestBody(byte[] data, String deploymentId, boolean deleteProcessInstances)
+  {
+    assertRequestBody(data, deploymentId, deleteProcessInstances, false);
+  }
+
+  @SneakyThrows
+  private void assertRequestBody(byte[] data, String deploymentId, boolean deleteProcessInstances, boolean requestHasMessage)
+  {
+    ProcessUndeploymentRequest request = OBJECT_MAPPER.readValue(data, ProcessUndeploymentRequest.class);
+
+    assertThat(request.getDeploymentId()).isEqualTo(deploymentId);
+    assertThat(request.isDeleteProcessInstances()).isEqualTo(deleteProcessInstances);
+    Message undeploymentMessage = request.getUndeploymentMessage();
+    if (requestHasMessage)
+    {
+      assertThat(undeploymentMessage.getSubject()).isNotNull();
+      assertThat(undeploymentMessage.getBody()).isNotNull();
+      return;
+    }
+
+    assertThat(undeploymentMessage.getSubject()).isNull();
+    assertThat(undeploymentMessage.getBody()).isNull();
+  }
+
+  private void assertRequestHeaders(HttpHandler.Request request, Environment env)
   {
     Map<String, List<String>> headers = request.getHeaders();
-    assertThat(headers).containsEntry(HTTPHeaderKeys.DEPLOYMENT_ID, List.of(deploymentId));
-    assertThat(headers).containsEntry(HTTPHeaderKeys.DELETE_PROCESS_INSTANCES,
-        List.of(Boolean.toString(deleteProcessInstances)));
-
     String tmp = env.getUser() + ':' + env.getPassword();
     String auth = "Basic " + Base64.getEncoder().encodeToString(tmp.getBytes(StandardCharsets.UTF_8));
     assertThat(headers).containsEntry(HTTPHeaderKeys.AUTHORIZATION, List.of(auth));

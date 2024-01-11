@@ -82,6 +82,28 @@ public class ServerConnectionHelper<T>
    * @param env Informationen über den Server der Schnittstelle
    * @param path Pfad der API
    * @param headers HTTP-Header
+   * @param data Daten im Body des Request
+   *
+   * @return Rückgabewert des Servers
+   * @throws IOException Wenn beim Aufrufen der Schnittstelle oder beim Bearbeiten der Anfrage beim Server ein
+   * Fehler aufgetreten ist
+   */
+  public T delete(
+      Environment env, String path, Map<String, String> headers, byte[] data) throws IOException
+  {
+    try (InputStream stream = deleteInternal(env, path, headers, data))
+    {
+      return MAPPER.readValue(stream, responseType);
+    }
+  }
+
+  /**
+   * DELETE-Request an eine Schnittstelle senden. Die URL der Schnittstelle setzt sich aus der URL des
+   * Environments und dem Pfad der API zusammen. Es sind nur HTTP oder HTTPS-URLs möglich.
+   *
+   * @param env Informationen über den Server der Schnittstelle
+   * @param path Pfad der API
+   * @param headers HTTP-Header
    *
    * @return Rückgabewert des Servers
    * @throws IOException Wenn beim Aufrufen der Schnittstelle oder beim Bearbeiten der Anfrage beim Server ein
@@ -155,9 +177,19 @@ public class ServerConnectionHelper<T>
   private InputStream deleteInternal(Environment env, String path, Map<String, String> headers)
       throws IOException
   {
+    return deleteInternal(env, path, headers, new byte[0]);
+  }
+
+  private InputStream deleteInternal(Environment env, String path, Map<String, String> headers, byte[] data)
+      throws IOException
+  {
     try
     {
-      HttpURLConnection http = createHttpURLConnectionForDeleteRequest(env, path, headers);
+      HttpURLConnection http = createHttpURLConnectionForDeleteRequest(env, path, headers, data);
+      if (data.length > 0)
+      {
+        sendData(data, http);
+      }
 
       if (http.getResponseCode() != 200)
       {
@@ -222,7 +254,7 @@ public class ServerConnectionHelper<T>
 
   @SuppressFBWarnings("URLCONNECTION_SSRF_FD")
   private HttpURLConnection createHttpURLConnectionForDeleteRequest(Environment env, String path,
-      Map<String, String> headers) throws IOException
+      Map<String, String> headers, byte[] data) throws IOException
   {
     String serverUrl = env.getUrl() + path;
 
@@ -235,7 +267,7 @@ public class ServerConnectionHelper<T>
     }
 
     HttpURLConnection http = (HttpURLConnection) url.openConnection();
-    setConnectionParametersForDeleteRequest(env, headers, http);
+    setConnectionParametersForDeleteRequest(env, data.length, headers, http);
 
     return http;
   }
@@ -267,10 +299,10 @@ public class ServerConnectionHelper<T>
     Optional.ofNullable(headers).ifPresent(h -> h.forEach(http::setRequestProperty));
   }
 
-  private void setConnectionParametersForDeleteRequest(Environment env, Map<String, String> headers,
+  private void setConnectionParametersForDeleteRequest(Environment env, int bodyLength, Map<String, String> headers,
       HttpURLConnection http) throws ProtocolException
   {
-    http.setDoOutput(false);
+    allowTransferRequestBodyWhenNonEmptyBody(http, bodyLength);
     http.setRequestMethod("DELETE");
 
     // Authorisierungsdaten
@@ -278,6 +310,19 @@ public class ServerConnectionHelper<T>
 
     // Weitere Header
     Optional.ofNullable(headers).ifPresent(h -> h.forEach(http::setRequestProperty));
+  }
+
+  private static void allowTransferRequestBodyWhenNonEmptyBody(HttpURLConnection http, int bodyLength)
+  {
+    if (bodyLength > 0)
+    {
+      http.setFixedLengthStreamingMode(bodyLength);
+      http.setDoOutput(true);
+    }
+    else
+    {
+      http.setDoOutput(false);
+    }
   }
 
   private String getBasicAuthToken(Environment env)

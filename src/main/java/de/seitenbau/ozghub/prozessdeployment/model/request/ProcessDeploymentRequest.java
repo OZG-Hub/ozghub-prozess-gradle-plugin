@@ -18,4 +18,6 @@ public class ProcessDeploymentRequest
   private String versionName;
 
   private Map<String, ProcessMetadata> metadata;
+
+  private Message undeploymentMessage;
 }
