@@ -422,13 +422,13 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     Message message = request.getUndeploymentMessage();
     if (requestHasMessage)
     {
-      assertThat(message.getSubject()).isNotEmpty();
-      assertThat(message.getBody()).isNotEmpty();
+      assertThat(message.subject()).isNotEmpty();
+      assertThat(message.body()).isNotEmpty();
       return;
     }
 
-    assertThat(message.getSubject()).isNull();
-    assertThat(message.getBody()).isNull();
+    assertThat(message.subject()).isNull();
+    assertThat(message.body()).isNull();
   }
 
   private void assertResponse(HttpHandler handler)

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
@@ -142,7 +141,8 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
   }
 
   @SneakyThrows
-  private void assertRequestBody(byte[] data, String deploymentId, boolean deleteProcessInstances, boolean requestHasMessage)
+  private void assertRequestBody(byte[] data, String deploymentId, boolean deleteProcessInstances,
+      boolean requestHasMessage)
   {
     ProcessUndeploymentRequest request = OBJECT_MAPPER.readValue(data, ProcessUndeploymentRequest.class);
 
@@ -151,13 +151,13 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
     Message undeploymentMessage = request.getUndeploymentMessage();
     if (requestHasMessage)
     {
-      assertThat(undeploymentMessage.getSubject()).isNotNull();
-      assertThat(undeploymentMessage.getBody()).isNotNull();
+      assertThat(undeploymentMessage.subject()).isNotNull();
+      assertThat(undeploymentMessage.body()).isNotNull();
       return;
     }
 
-    assertThat(undeploymentMessage.getSubject()).isNull();
-    assertThat(undeploymentMessage.getBody()).isNull();
+    assertThat(undeploymentMessage.subject()).isNull();
+    assertThat(undeploymentMessage.body()).isNull();
   }
 
   private void assertRequestHeaders(HttpHandler.Request request, Environment env)

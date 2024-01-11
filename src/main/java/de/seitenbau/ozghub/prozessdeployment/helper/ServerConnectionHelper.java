@@ -299,7 +299,10 @@ public class ServerConnectionHelper<T>
     Optional.ofNullable(headers).ifPresent(h -> h.forEach(http::setRequestProperty));
   }
 
-  private void setConnectionParametersForDeleteRequest(Environment env, int bodyLength, Map<String, String> headers,
+  private void setConnectionParametersForDeleteRequest(
+      Environment env,
+      int bodyLength,
+      Map<String, String> headers,
       HttpURLConnection http) throws ProtocolException
   {
     allowTransferRequestBodyWhenNonEmptyBody(http, bodyLength);

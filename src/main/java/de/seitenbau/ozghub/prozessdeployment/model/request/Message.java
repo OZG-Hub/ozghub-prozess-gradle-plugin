@@ -1,16 +1,5 @@
 package de.seitenbau.ozghub.prozessdeployment.model.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Message
+public record Message(String subject, String body)
 {
-  private String subject;
-  private String body;
 }

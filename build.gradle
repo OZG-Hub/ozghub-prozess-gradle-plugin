@@ -1,10 +1,12 @@
+import com.github.spotbugs.snom.Effort
+
 plugins {
     id 'java'
     id 'jacoco'
     id 'checkstyle'
 
     // https://plugins.gradle.org/plugin/com.github.spotbugs
-    id 'com.github.spotbugs' version '5.2.5'
+    id 'com.github.spotbugs' version '6.0.6'
 
     // https://plugins.gradle.org/plugin/com.jfrog.artifactory
     id "com.jfrog.artifactory" version "5.1.11"
@@ -14,7 +16,7 @@ plugins {
     id 'com.gradle.plugin-publish' version '1.2.1'
 
     // https://plugins.gradle.org/plugin/org.owasp.dependencycheck
-    id "org.owasp.dependencycheck" version "9.0.2"
+    id "org.owasp.dependencycheck" version "9.0.8"
 
     // https://plugins.gradle.org/plugin/com.github.ben-manes.versions
     id "com.github.ben-manes.versions" version "0.50.0"
@@ -42,14 +44,14 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.22.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.22.1'
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.22.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.22.1'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.1'
 
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
-    compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.8.2'
+    compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.8.3'
 
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
     testImplementation 'org.assertj:assertj-core:3.24.2'
@@ -71,8 +73,8 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
@@ -95,7 +97,7 @@ jacocoTestReport {
 // https://github.com/spotbugs/spotbugs-gradle-plugin#configure-the-spotbugstask
 spotbugsMain {
     ignoreFailures = true
-    effort = 'max'
+    effort = Effort.MAX
     excludeFilter.set(file('src/main/resources/spotbugs-exclude.xml'))
 }
 
