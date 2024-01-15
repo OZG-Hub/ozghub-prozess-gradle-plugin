@@ -45,7 +45,7 @@ public abstract class AbstractListHandler<T> extends DefaultHandler
     return headers;
   }
 
-  public void list(String taskName)
+  public T list(String taskName)
   {
     log.info("Start des Tasks: " + taskName);
 
@@ -53,12 +53,14 @@ public abstract class AbstractListHandler<T> extends DefaultHandler
     {
       T list = getList();
       writeLogEntries(list);
+
+      log.info("Ende des Tasks: " + taskName);
+      return list;
     }
     catch (Exception e)
     {
       throw new GradleException("Fehler: " + e.getMessage(), e);
     }
-    log.info("Ende des Tasks: " + taskName);
   }
 
   protected abstract void writeLogEntries(T list) throws IOException;

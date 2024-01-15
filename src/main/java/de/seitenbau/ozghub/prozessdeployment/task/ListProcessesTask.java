@@ -10,12 +10,11 @@ import lombok.Setter;
 @Setter
 public class ListProcessesTask extends DefaultPluginTask
 {
-
   @TaskAction
   public void run()
   {
     ListProcessesHandler handler = new ListProcessesHandler(getEnvironment());
 
-    handler.list(this.getName());
+    handler.list(getName());
   }
 }

@@ -24,7 +24,7 @@ import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.helper.FileHelper;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
-import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;

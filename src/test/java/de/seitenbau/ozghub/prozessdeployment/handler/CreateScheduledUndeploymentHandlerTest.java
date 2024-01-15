@@ -14,15 +14,15 @@ import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler.Request;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
-import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
-import de.seitenbau.ozghub.prozessdeployment.model.request.ScheduledUndeployment;
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
 import lombok.SneakyThrows;
 
 public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
 {
   private HttpServer httpServer = null;
 
-  private static final ScheduledUndeployment SCHEDULED_UNDEPLOYMENT_1 = constructScheduledUndeployment("1");
+  private static final ScheduledUndeployment SCHEDULED_UNDEPLOYMENT_1 = constructScheduledUndeployment();
 
   @Override
   protected File getTestFolder()
@@ -57,13 +57,13 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
     assertRequest(request);
   }
 
-  private static ScheduledUndeployment constructScheduledUndeployment(String suffix)
+  private static ScheduledUndeployment constructScheduledUndeployment()
   {
     return new ScheduledUndeployment(
-        "deploymentId" + suffix,
+        "deploymentId",
         new Date(),
-        new Message("preUndeploymentSubject" + suffix, "preUndeploymentBody" + suffix),
-        new Message("undeploymentSubject" + suffix, "undeploymentBody" + suffix));
+        new Message("preUndeploymentSubject", "preUndeploymentBody"),
+        new Message("undeploymentSubject", "undeploymentBody"));
   }
 
   private HttpHandler createAndStartHttpServer()

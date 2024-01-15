@@ -28,7 +28,7 @@ import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
-import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;

@@ -20,7 +20,7 @@ import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
-import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessUndeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessUndeploymentResponse;
 import lombok.SneakyThrows;

@@ -7,8 +7,8 @@ import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.options.Option;
 
 import de.seitenbau.ozghub.prozessdeployment.handler.CreateScheduledUndeploymentHandler;
-import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
-import de.seitenbau.ozghub.prozessdeployment.model.request.ScheduledUndeployment;
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,10 +24,10 @@ public class CreateScheduledUndeploymentTask extends DefaultPluginTask
   protected String deploymentId = null;
 
   /**
-   * Das Datum, an dem der Online-Dienst Undeployt geplant werden soll.
+   * Das Datum, an dem der Online-Dienst undeployt werden soll.
    */
   @Input
-  @Option(option = "undeploymentDate", description = "Das Datum, an dem der Online-Dienst Undeployt geplant werden soll")
+  @Option(option = "undeploymentDate", description = "Das Datum, an dem der Online-Dienst undeployt werden soll")
   protected Date undeploymentDate = null;
 
   @Input

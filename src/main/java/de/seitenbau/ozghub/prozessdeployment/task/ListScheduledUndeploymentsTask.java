@@ -15,6 +15,6 @@ public class ListScheduledUndeploymentsTask extends DefaultPluginTask
   {
     ListScheduledUndeploymentsHandler handler = new ListScheduledUndeploymentsHandler(getEnvironment());
 
-    handler.listScheduledUndeployments();
+    handler.list(getName());
   }
 }

@@ -1,5 +1,6 @@
 package de.seitenbau.ozghub.prozessdeployment.model.request;
 
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

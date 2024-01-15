@@ -1,64 +1,67 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
-import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
-import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
-import de.seitenbau.ozghub.prozessdeployment.model.request.ScheduledUndeployment;
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
 import de.seitenbau.ozghub.prozessdeployment.model.response.Aggregated;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class ListScheduledUndeploymentsHandler extends DefaultHandler
+public class ListScheduledUndeploymentsHandler
+    extends AbstractListHandler<Aggregated<List<ScheduledUndeployment>>>
 {
   public static final String API_PATH = "/prozess/scheduled/undeployment/list";
 
-  private final ServerConnectionHelper<Aggregated<List<ScheduledUndeployment>>> serverConnectionHelper =
-      new ServerConnectionHelper<>(new TypeReference<>()
-      {
-      });
-
   public ListScheduledUndeploymentsHandler(Environment environment)
   {
-    super(environment);
+    super(environment,
+        new TypeReference<>()
+        {
+        },
+        API_PATH
+    );
   }
 
-  public Aggregated<List<ScheduledUndeployment>> listScheduledUndeployments()
+  @Override
+  protected void writeLogEntries(Aggregated<List<ScheduledUndeployment>> aggregatedScheduledUndeployments)
   {
-    log.info("Starte Auflistung der zeitgesteuerten Undeployments von Online-Diensten");
-    Aggregated<List<ScheduledUndeployment>> aggregatedScheduledUndeployments = getScheduledUndeployments();
-    logScheduledUndeployments(aggregatedScheduledUndeployments);
-    log.info("Task erfolgreich beendet.");
-
-    return aggregatedScheduledUndeployments;
-  }
-
-  private Aggregated<List<ScheduledUndeployment>> getScheduledUndeployments()
-  {
-    try
+    if (!aggregatedScheduledUndeployments.isComplete())
     {
-      return serverConnectionHelper.get(environment, API_PATH, getHeaders());
+      log.warn("Es konnten nicht alle geplanten Undeployments von allen Prozessengines abgerufen werden.");
     }
-    catch (IOException e)
-    {
-      throw new RuntimeException(
-          "Fehler bei der Auflistung von zeitgesteuerten Undeployments von Online-Diensten: " +
-              e.getMessage(), e);
-    }
+
+    log.info("Es sind " + aggregatedScheduledUndeployments.getValue().size() + " geplanten Undeployments:"
+        + getLogText(aggregatedScheduledUndeployments.getValue()));
   }
 
-  private Map<String, String> getHeaders()
+  private static String getLogText(List<ScheduledUndeployment> scheduledUndeployments)
   {
-    return Map.of();
+    return scheduledUndeployments.stream()
+        .map(ListScheduledUndeploymentsHandler::getLogText)
+        .collect(Collectors.joining());
   }
 
-  private void logScheduledUndeployments(
-      Aggregated<List<ScheduledUndeployment>> aggregatedScheduledUndeployments)
+  private static String getLogText(ScheduledUndeployment scheduledUndeployment)
   {
-    log.info("Zeitgesteuerten Undeployments:\n " + aggregatedScheduledUndeployments); // TODO
+    SimpleDateFormat formatter = new SimpleDateFormat("MM.dd.yyyy");
+
+    return "\nDeploymentId: " + scheduledUndeployment.deploymentId() + "\n"
+        + "Undeployment Datum: " + formatter.format(scheduledUndeployment.undeploymentDate()) + "\n"
+        + "Ankündigungsnachricht:\n"
+        + getLogText(scheduledUndeployment.undeploymentAnnouncementMessage())
+        + "Nachricht:\n"
+        + getLogText(scheduledUndeployment.undeploymentMessage());
+  }
+
+  private static String getLogText(Message message)
+  {
+    return " - Betreff: " + message.subject() + "\n"
+        + " - Text: " + message.body() + "\n";
   }
 }

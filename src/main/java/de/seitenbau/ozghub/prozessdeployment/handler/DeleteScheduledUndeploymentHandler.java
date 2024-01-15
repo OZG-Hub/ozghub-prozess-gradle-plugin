@@ -22,10 +22,13 @@ public class DeleteScheduledUndeploymentHandler extends DefaultHandler
 
   public void deleteScheduledUndeployment(String deploymentId)
   {
+    log.info("Start des Tasks: deleteScheduledUndeployment");
     try
     {
       String deploymentIdEncoded = serverConnectionHelper.encodeUrl(deploymentId);
       serverConnectionHelper.delete(environment, API_PATH + "/" + deploymentIdEncoded, getHeaders(), null);
+      log.info("Das geplante Undeployment wurde erfolgreich gelöscht");
+      log.info("Ende des Tasks: deleteScheduledUndeployment");
     }
     catch (IOException e)
     {

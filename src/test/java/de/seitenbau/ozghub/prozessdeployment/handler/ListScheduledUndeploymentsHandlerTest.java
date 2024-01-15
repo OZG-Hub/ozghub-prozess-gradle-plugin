@@ -3,9 +3,13 @@ package de.seitenbau.ozghub.prozessdeployment.handler;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +19,8 @@ import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler.Request;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
-import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
-import de.seitenbau.ozghub.prozessdeployment.model.request.ScheduledUndeployment;
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
 import de.seitenbau.ozghub.prozessdeployment.model.response.Aggregated;
 import lombok.SneakyThrows;
 
@@ -24,7 +28,11 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
 {
   private static final Aggregated<List<ScheduledUndeployment>> RESPONSE = constructResponse();
 
+  public static final String TASK_NAME = "listScheduledUndeployments";
+
   private HttpServer httpServer = null;
+
+  private ListAppender listAppender;
 
   @Override
   protected File getTestFolder()
@@ -45,12 +53,13 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
   public void listScheduledUndeployments_success()
   {
     //arrange
+    prepareLogging();
     HttpHandler httpHandler = createAndStartHttpServer();
 
     ListScheduledUndeploymentsHandler sut = new ListScheduledUndeploymentsHandler(createEnvironment());
 
     //act
-    Aggregated<List<ScheduledUndeployment>> actual = sut.listScheduledUndeployments();
+    Aggregated<List<ScheduledUndeployment>> actual = sut.list(TASK_NAME);
 
     //assert
     assertThat(httpHandler.getRequestCount()).isOne();
@@ -58,21 +67,49 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
 
     Request request = httpHandler.getRequest();
     assertRequest(request);
+
+    List<String> actualLogMessages = listAppender.getEventList();
+    assertThat(actualLogMessages).contains("INFO Start des Tasks: " + TASK_NAME);
+    String expectedLog = """
+        INFO Es sind 2 geplanten Undeployments:
+        DeploymentId: deploymentId1
+        Undeployment Datum: 10.02.2999
+        Ankündigungsnachricht:
+         - Betreff: preUndeploymentSubject1
+         - Text: preUndeploymentBody1
+        Nachricht:
+         - Betreff: undeploymentSubject1
+         - Text: undeploymentBody1
+
+        DeploymentId: deploymentId2
+        Undeployment Datum: 11.02.2999
+        Ankündigungsnachricht:
+         - Betreff: preUndeploymentSubject2
+         - Text: preUndeploymentBody2
+        Nachricht:
+         - Betreff: undeploymentSubject2
+         - Text: undeploymentBody2
+        """;
+    assertThat(actualLogMessages).contains(expectedLog);
+    assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
   }
 
   private static Aggregated<List<ScheduledUndeployment>> constructResponse()
   {
     return Aggregated.complete(List.of(
-        constructScheduledUndeployment("1"),
-        constructScheduledUndeployment("2")
+        constructScheduledUndeployment("1", "10.02.2999"),
+        constructScheduledUndeployment("2", "11.02.2999")
     ));
   }
 
-  private static ScheduledUndeployment constructScheduledUndeployment(String suffix)
+  @SneakyThrows
+  private static ScheduledUndeployment constructScheduledUndeployment(String suffix, String dateString)
   {
+    SimpleDateFormat formatter = new SimpleDateFormat("MM.dd.yyyy");
+    Date date = formatter.parse(dateString);
     return new ScheduledUndeployment(
         "deploymentId" + suffix,
-        new Date(),
+        date,
         new Message("preUndeploymentSubject" + suffix, "preUndeploymentBody" + suffix),
         new Message("undeploymentSubject" + suffix, "undeploymentBody" + suffix));
   }
@@ -109,5 +146,12 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
     assertThat(request.getRequestMethod()).isEqualTo("GET");
     assertThat(request.getPath()).isEqualTo(ListScheduledUndeploymentsHandler.API_PATH);
     assertThat(request.getQuery()).isNull();
+  }
+
+  private void prepareLogging()
+  {
+    final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+    final Configuration config = ctx.getConfiguration();
+    listAppender = (ListAppender) config.getAppenders().get("ListAppender");
   }
 }

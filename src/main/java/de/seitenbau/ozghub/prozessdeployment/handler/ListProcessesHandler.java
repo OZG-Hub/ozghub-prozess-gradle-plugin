@@ -26,7 +26,7 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
 
   protected void writeLogEntries(ProcessDeploymentList deploymentList)
   {
-    if (!Boolean.TRUE.equals(deploymentList.isComplete()))
+    if (!deploymentList.isComplete())
     {
       log.warn("Es konnten nicht alle Deployments von allen Prozessengines abgerufen werden.");
     }
