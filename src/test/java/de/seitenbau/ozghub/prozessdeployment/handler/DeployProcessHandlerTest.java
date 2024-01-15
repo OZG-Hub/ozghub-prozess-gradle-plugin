@@ -34,7 +34,7 @@ import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
 import lombok.SneakyThrows;
 
-public class DeployProcessHandlerTest extends HandlerTestBase
+public class DeployProcessHandlerTest extends BaseTestHandler
 {
   private static final File TEST_FOLDER =
       new File("src/test/resources/handler/deployProcessHandler/");
@@ -151,7 +151,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
                 + ") konnte nicht gefunden werden");
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(0);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(0);
   }
 
   @Test
@@ -345,7 +345,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
             + "schiefgelaufen | URL: " + url + DeployProcessHandler.API_PATH);
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(500);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -433,7 +433,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
 
   private void assertResponse(HttpHandler handler)
   {
-    assertThat(handler.countRequests()).isEqualTo(1);
+    assertThat(handler.getRequestCount()).isEqualTo(1);
     assertThat(handler.getResponseCode()).isEqualTo(200);
     assertThat(handler.getResponseBody()).isEqualTo(createDeploymentResponse());
   }

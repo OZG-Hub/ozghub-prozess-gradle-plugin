@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.gradle.api.GradleException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
@@ -18,11 +20,11 @@ public abstract class AbstractListHandler<T> extends DefaultHandler
 {
   private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-  private final Class<T> responseType;
+  private final TypeReference<T> responseType;
 
   private final String apiPath;
 
-  public AbstractListHandler(Environment environment, Class<T> responseType, String apiPath)
+  public AbstractListHandler(Environment environment, TypeReference<T> responseType, String apiPath)
   {
     super(environment);
     this.responseType = responseType;

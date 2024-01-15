@@ -42,7 +42,7 @@ public class UndeployProcessTask extends DefaultPluginTask
   private String undeploymentMessageBody;
 
   @TaskAction
-  public void run()
+  public void undeployProcess()
   {
     UndeployProcessHandler handler = new UndeployProcessHandler(
         getEnvironment(),

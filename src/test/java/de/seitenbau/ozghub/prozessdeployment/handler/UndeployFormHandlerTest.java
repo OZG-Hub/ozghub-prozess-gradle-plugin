@@ -22,7 +22,7 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.response.FormUndeploymentResponse;
 import lombok.SneakyThrows;
 
-public class UndeployFormHandlerTest extends HandlerTestBase
+public class UndeployFormHandlerTest extends BaseTestHandler
 {
   private HttpServer httpServer = null;
 
@@ -85,7 +85,7 @@ public class UndeployFormHandlerTest extends HandlerTestBase
             + "schiefgelaufen | URL: " + url + UndeployFormHandler.API_PATH);
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(500);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -95,7 +95,7 @@ public class UndeployFormHandlerTest extends HandlerTestBase
 
   private void assertResponse(HttpHandler handler)
   {
-    assertThat(handler.countRequests()).isEqualTo(1);
+    assertThat(handler.getRequestCount()).isEqualTo(1);
     assertThat(handler.getResponseCode()).isEqualTo(200);
     assertThat(handler.getResponseBody()).isEqualTo(createUndeploymentResponse());
   }

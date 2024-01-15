@@ -4,6 +4,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskContainer;
 
+import de.seitenbau.ozghub.prozessdeployment.task.CreateScheduledUndeploymentTask;
 import de.seitenbau.ozghub.prozessdeployment.task.DefaultPluginTask;
 import de.seitenbau.ozghub.prozessdeployment.task.DeployFormsTask;
 import de.seitenbau.ozghub.prozessdeployment.task.DeployProcessTask;
@@ -56,6 +57,23 @@ public class ProzessDeploymentGradlePlugin implements Plugin<Project>
         "encryptParameterValue",
         EncryptParameterValueTask.class,
         "Verschlüsselt einen Prozessparameterwert");
+
+    createTask(
+        "createScheduledUndeployment",
+        CreateScheduledUndeploymentTask.class,
+        "Erstellt ein zeitgesteuertes Undeployment eines Online-Dienstes.");
+/*
+    createTask(
+        "deleteScheduledUndeployment",
+        DeleteScheduledUndeploymentTask.class,
+        "Löscht ein zeitgesteuertes Undeployment eines Online-Dienstes.");
+
+    createTask(
+        "listScheduledUndeployments",
+        ListScheduledUndeploymentsTask.class,
+        "Listet alle zeitgesteuerten Undeployments von Online-Diensten auf.");
+
+ */
   }
 
   private <K extends DefaultPluginTask> void createTask(String name, Class<K> aClass, String description)

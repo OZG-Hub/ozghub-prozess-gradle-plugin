@@ -31,7 +31,7 @@ import de.seitenbau.ozghub.prozessdeployment.model.request.EncryptParameterValue
 import de.seitenbau.ozghub.prozessdeployment.model.response.EncryptParameterValueResponse;
 import lombok.SneakyThrows;
 
-public class EncryptParameterValueHandlerTest extends HandlerTestBase
+public class EncryptParameterValueHandlerTest extends BaseTestHandler
 {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -72,7 +72,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
   {
     // arrange
     String parameterValue = "test value";
-    EncryptParameterValueResponse encryptParameterValueResponse = createReponse();
+    EncryptParameterValueResponse encryptParameterValueResponse = createResponse();
 
     HttpHandler httpHandler = createAndStartHttpServer(encryptParameterValueResponse);
     Environment env = createEnvironment();
@@ -83,7 +83,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     sut.encryptParameterValue();
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(200);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -98,7 +98,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
   {
     // arrange
     String parameterValue = "abcdef";
-    EncryptParameterValueResponse encryptParameterValueResponse = createReponse();
+    EncryptParameterValueResponse encryptParameterValueResponse = createResponse();
 
     HttpHandler httpHandler = createAndStartHttpServer(encryptParameterValueResponse);
     Environment env = createEnvironment();
@@ -109,7 +109,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     sut.encryptParameterValue();
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(200);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -127,7 +127,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     String encryptedParameterValue = "ozghub:cu:TEST_test_Test";
     File outputFile = new File(directory, "test.txt");
 
-    EncryptParameterValueResponse encryptParameterValueResponse = createReponse();
+    EncryptParameterValueResponse encryptParameterValueResponse = createResponse();
 
     HttpHandler httpHandler = createAndStartHttpServer(encryptParameterValueResponse);
     Environment env = createEnvironment();
@@ -139,7 +139,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     sut.encryptParameterValue();
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(200);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -159,10 +159,10 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     // arrange
     String parameterValue = "test\n123\näöüßÄÖÜẞ";
     File inputFile = new File(directory, "test1.txt");
-    inputFile.createNewFile();
+    assertThat(inputFile.createNewFile()).isTrue();
     Files.writeString(inputFile.toPath(), parameterValue);
 
-    EncryptParameterValueResponse encryptParameterValueResponse = createReponse();
+    EncryptParameterValueResponse encryptParameterValueResponse = createResponse();
 
     HttpHandler httpHandler = createAndStartHttpServer(encryptParameterValueResponse);
     Environment env = createEnvironment();
@@ -173,7 +173,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     sut.encryptParameterValue();
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(200);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -190,10 +190,10 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     // arrange
     String parameterValue = "test\n123";
     File inputFile = new File(directory, "test2.txt");
-    inputFile.createNewFile();
+    assertThat(inputFile.createNewFile()).isTrue();
     Files.writeString(inputFile.toPath(), parameterValue);
 
-    EncryptParameterValueResponse encryptParameterValueResponse = createReponse();
+    EncryptParameterValueResponse encryptParameterValueResponse = createResponse();
 
     HttpHandler httpHandler = createAndStartHttpServer(encryptParameterValueResponse);
     Environment env = createEnvironment();
@@ -204,7 +204,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     sut.encryptParameterValue();
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(200);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -221,10 +221,10 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     // arrange
     String parameterValue = "test\n123\näöüßÄÖÜẞ";
     File inputFile = new File(directory, "test3.txt");
-    inputFile.createNewFile();
+    assertThat(inputFile.createNewFile()).isTrue();
     Files.writeString(inputFile.toPath(), parameterValue);
 
-    EncryptParameterValueResponse encryptParameterValueResponse = createReponse();
+    EncryptParameterValueResponse encryptParameterValueResponse = createResponse();
 
     HttpHandler httpHandler = createAndStartHttpServer(encryptParameterValueResponse);
     Environment env = createEnvironment();
@@ -235,7 +235,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     sut.encryptParameterValue();
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(200);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -289,9 +289,9 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     // arrange
     String parameterValue = "abcdef";
     File outputFile = new File(directory, "test4.txt");
-    outputFile.createNewFile();
+    assertThat(outputFile.createNewFile()).isTrue();
 
-    EncryptParameterValueResponse encryptParameterValueResponse = createReponse();
+    EncryptParameterValueResponse encryptParameterValueResponse = createResponse();
 
     HttpHandler httpHandler = createAndStartHttpServer(encryptParameterValueResponse);
     Environment env = createEnvironment();
@@ -307,7 +307,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
             + " geschrieben werden.");
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(200);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -342,7 +342,7 @@ public class EncryptParameterValueHandlerTest extends HandlerTestBase
     return new Environment(getUrl(), "foo1", "bar1");
   }
 
-  private EncryptParameterValueResponse createReponse()
+  private EncryptParameterValueResponse createResponse()
   {
     return EncryptParameterValueResponse.builder()
         .encryptedParameterValue("ozghub:cu:TEST_test_Test")

@@ -15,6 +15,7 @@ import java.util.Optional;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
@@ -27,9 +28,9 @@ public class ServerConnectionHelper<T>
 {
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
-  private final Class<T> responseType;
+  private final TypeReference<T> responseType;
 
-  public ServerConnectionHelper(Class<T> responseType)
+  public ServerConnectionHelper(TypeReference<T> responseType)
   {
     this.responseType = responseType;
   }
@@ -69,9 +70,13 @@ public class ServerConnectionHelper<T>
    */
   public T post(Environment env, String path, Map<String, String> headers, byte[] data) throws IOException
   {
-    try (InputStream stream = postInternal(env, path, headers, data))
+    try (InputStream responseStream = postInternal(env, path, headers, data))
     {
-      return MAPPER.readValue(stream, responseType);
+      if (responseType == null)
+      {
+        return null;
+      }
+      return MAPPER.readValue(responseStream, responseType);
     }
   }
 
@@ -92,26 +97,6 @@ public class ServerConnectionHelper<T>
       Environment env, String path, Map<String, String> headers, byte[] data) throws IOException
   {
     try (InputStream stream = deleteInternal(env, path, headers, data))
-    {
-      return MAPPER.readValue(stream, responseType);
-    }
-  }
-
-  /**
-   * DELETE-Request an eine Schnittstelle senden. Die URL der Schnittstelle setzt sich aus der URL des
-   * Environments und dem Pfad der API zusammen. Es sind nur HTTP oder HTTPS-URLs möglich.
-   *
-   * @param env Informationen über den Server der Schnittstelle
-   * @param path Pfad der API
-   * @param headers HTTP-Header
-   *
-   * @return Rückgabewert des Servers
-   * @throws IOException Wenn beim Aufrufen der Schnittstelle oder beim Bearbeiten der Anfrage beim Server ein
-   * Fehler aufgetreten ist
-   */
-  public T delete(Environment env, String path, Map<String, String> headers) throws IOException
-  {
-    try (InputStream stream = deleteInternal(env, path, headers))
     {
       return MAPPER.readValue(stream, responseType);
     }
@@ -151,9 +136,9 @@ public class ServerConnectionHelper<T>
     try
     {
       HttpURLConnection http = createHttpURLConnectionForPostRequest(env, path, headers, data);
-      sendData(data, http);
+      sendRequest(data, http);
 
-      if (http.getResponseCode() != 200)
+      if (http.getResponseCode() / 100 != 2) // 2xx
       {
         try (InputStream inputStream = http.getErrorStream())
         {
@@ -174,22 +159,13 @@ public class ServerConnectionHelper<T>
     }
   }
 
-  private InputStream deleteInternal(Environment env, String path, Map<String, String> headers)
-      throws IOException
-  {
-    return deleteInternal(env, path, headers, new byte[0]);
-  }
-
   private InputStream deleteInternal(Environment env, String path, Map<String, String> headers, byte[] data)
       throws IOException
   {
     try
     {
       HttpURLConnection http = createHttpURLConnectionForDeleteRequest(env, path, headers, data);
-      if (data.length > 0)
-      {
-        sendData(data, http);
-      }
+      sendRequest(data, http);
 
       if (http.getResponseCode() != 200)
       {
@@ -267,7 +243,7 @@ public class ServerConnectionHelper<T>
     }
 
     HttpURLConnection http = (HttpURLConnection) url.openConnection();
-    setConnectionParametersForDeleteRequest(env, data.length, headers, http);
+    setConnectionParametersForDeleteRequest(env, data, headers, http);
 
     return http;
   }
@@ -278,7 +254,7 @@ public class ServerConnectionHelper<T>
     http.setDoOutput(false);
     http.setRequestMethod("GET");
 
-    // Authorisierungsdaten
+    // Authorization
     http.setRequestProperty(HTTPHeaderKeys.AUTHORIZATION, getBasicAuthToken(env));
 
     // Weitere Header
@@ -292,7 +268,7 @@ public class ServerConnectionHelper<T>
     http.setDoOutput(true);
     http.setRequestMethod("POST");
 
-    // Authorisierungsdaten
+    // Authorization
     http.setRequestProperty(HTTPHeaderKeys.AUTHORIZATION, getBasicAuthToken(env));
 
     // Weitere Header
@@ -301,25 +277,25 @@ public class ServerConnectionHelper<T>
 
   private void setConnectionParametersForDeleteRequest(
       Environment env,
-      int bodyLength,
+      byte[] data,
       Map<String, String> headers,
       HttpURLConnection http) throws ProtocolException
   {
-    allowTransferRequestBodyWhenNonEmptyBody(http, bodyLength);
+    allowTransferRequestBodyWhenNonEmptyBody(http, data);
     http.setRequestMethod("DELETE");
 
-    // Authorisierungsdaten
+    // Authorization
     http.setRequestProperty(HTTPHeaderKeys.AUTHORIZATION, getBasicAuthToken(env));
 
     // Weitere Header
     Optional.ofNullable(headers).ifPresent(h -> h.forEach(http::setRequestProperty));
   }
 
-  private static void allowTransferRequestBodyWhenNonEmptyBody(HttpURLConnection http, int bodyLength)
+  private static void allowTransferRequestBodyWhenNonEmptyBody(HttpURLConnection http, byte[] data)
   {
-    if (bodyLength > 0)
+    if (data != null && data.length > 0)
     {
-      http.setFixedLengthStreamingMode(bodyLength);
+      http.setFixedLengthStreamingMode(data.length);
       http.setDoOutput(true);
     }
     else
@@ -335,18 +311,30 @@ public class ServerConnectionHelper<T>
     return "Basic " + encoding;
   }
 
-  private void sendData(byte[] data, HttpURLConnection http)
+  private void sendRequest(byte[] data, HttpURLConnection http)
   {
-    try (OutputStream os = http.getOutputStream())
+    try
     {
       http.connect();
-      os.write(data);
-      os.flush();
     }
-    catch (Exception e)
+    catch (IOException e)
     {
-      http.disconnect();
       throw createRuntimeException(http, e);
+    }
+
+    if (data != null)
+    {
+      try (OutputStream os = http.getOutputStream())
+      {
+        os.write(data);
+        os.flush();
+        log.debug("Response Code: " + http.getResponseCode());
+      }
+      catch (Exception e)
+      {
+        http.disconnect();
+        throw createRuntimeException(http, e);
+      }
     }
   }
 

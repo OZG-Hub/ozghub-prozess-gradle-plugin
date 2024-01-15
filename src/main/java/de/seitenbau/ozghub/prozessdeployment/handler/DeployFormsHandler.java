@@ -11,6 +11,7 @@ import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.gradle.api.GradleException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -29,7 +30,9 @@ public class DeployFormsHandler extends DefaultHandler
   private static final String DEFAULT_FORMS_DIR = "/forms";
 
   private static final ServerConnectionHelper<FormDeploymentResponse> CONNECTION_HELPER =
-      new ServerConnectionHelper<>(FormDeploymentResponse.class);
+      new ServerConnectionHelper<>(new TypeReference<>()
+      {
+      });
 
   private static final String FILE_EXTENSION_JSON = "json";
 

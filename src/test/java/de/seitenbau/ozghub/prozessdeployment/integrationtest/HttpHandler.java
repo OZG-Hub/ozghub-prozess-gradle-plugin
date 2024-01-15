@@ -27,42 +27,37 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler
     this.responseBody = responseBody;
   }
 
-  public int countRequests()
+  public int getRequestCount()
   {
     return requests.size();
   }
 
   public Request getRequest()
   {
-    return getRequest(0);
-  }
-
-  public Request getRequest(int i)
-  {
-    return getRequests().get(i);
+    return requests.get(0);
   }
 
   @Override
-  public void handle(HttpExchange exchange) throws IOException
+  public void handle(HttpExchange httpExchange) throws IOException
   {
-    try (InputStream is = exchange.getRequestBody())
+    try (InputStream is = httpExchange.getRequestBody())
     {
       requests.add(new Request(
-          exchange.getRequestMethod(),
+          httpExchange.getRequestMethod(),
           is.readAllBytes(),
-          exchange.getRequestHeaders(),
-          exchange.getRequestURI().getPath(),
-          exchange.getRequestURI().getQuery()));
+          httpExchange.getRequestHeaders(),
+          httpExchange.getRequestURI().getPath(),
+          httpExchange.getRequestURI().getQuery()));
     }
 
-    exchange.getResponseHeaders().add("Content-Type", "application/json; charset=utf-8");
-    exchange.sendResponseHeaders(responseCode, 0);
+    httpExchange.getResponseHeaders().add("Content-Type", "application/json; charset=utf-8");
+    httpExchange.sendResponseHeaders(responseCode, 0);
 
-    try (OutputStream os = exchange.getResponseBody())
+    try (OutputStream os = httpExchange.getResponseBody())
     {
       os.write(responseBody);
     }
-    exchange.close();
+    httpExchange.close();
   }
 
   @Getter

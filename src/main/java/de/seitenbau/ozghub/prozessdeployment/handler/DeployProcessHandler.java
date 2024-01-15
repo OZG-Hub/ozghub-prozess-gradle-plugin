@@ -14,6 +14,7 @@ import java.util.Objects;
 import org.apache.commons.io.FilenameUtils;
 import org.gradle.api.GradleException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
@@ -39,7 +40,9 @@ public class DeployProcessHandler extends DefaultHandler
   public static final String PROCESS_METADATA_FOLDER_NAME = "/metadata";
 
   private static final ServerConnectionHelper<ProcessDeploymentResponse> CONNECTION_HELPER =
-      new ServerConnectionHelper<>(ProcessDeploymentResponse.class);
+      new ServerConnectionHelper<>(new TypeReference<>()
+      {
+      });
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

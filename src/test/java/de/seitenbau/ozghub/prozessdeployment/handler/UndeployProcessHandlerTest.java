@@ -25,7 +25,7 @@ import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessUndeploymentRe
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessUndeploymentResponse;
 import lombok.SneakyThrows;
 
-public class UndeployProcessHandlerTest extends HandlerTestBase
+public class UndeployProcessHandlerTest extends BaseTestHandler
 {
   private HttpServer httpServer = null;
 
@@ -112,7 +112,7 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
             + "schiefgelaufen | URL: " + url + UndeployProcessHandler.API_PATH);
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(500);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -123,7 +123,7 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
 
   private void assertResponse(HttpHandler handler)
   {
-    assertThat(handler.countRequests()).isEqualTo(1);
+    assertThat(handler.getRequestCount()).isEqualTo(1);
     assertThat(handler.getResponseCode()).isEqualTo(200);
     assertThat(handler.getResponseBody()).isEqualTo(createUndeploymentResponse());
   }

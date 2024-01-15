@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.gradle.api.GradleException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
@@ -17,7 +19,9 @@ public class UndeployFormHandler extends DefaultHandler
   public static final String API_PATH = "/formulare/ozghub/undeploy";
 
   private static final ServerConnectionHelper<FormUndeploymentResponse> CONNECTION_HELPER =
-      new ServerConnectionHelper<>(FormUndeploymentResponse.class);
+      new ServerConnectionHelper<>(new TypeReference<>()
+      {
+      });
 
   private final String deploymentId;
 
@@ -34,7 +38,7 @@ public class UndeployFormHandler extends DefaultHandler
     try
     {
       Map<String, String> headers = getHeaderParameters();
-      FormUndeploymentResponse response = CONNECTION_HELPER.delete(environment, API_PATH, headers);
+      FormUndeploymentResponse response = CONNECTION_HELPER.delete(environment, API_PATH, headers, null);
       logEndOfTask(response);
     }
     catch (Exception e)

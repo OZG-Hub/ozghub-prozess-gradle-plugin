@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class HandlerTestBase
+public abstract class BaseTestHandler
 {
   protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

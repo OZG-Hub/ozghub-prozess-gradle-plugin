@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.gradle.api.GradleException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
@@ -25,7 +26,9 @@ public class UndeployProcessHandler extends DefaultHandler
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   private static final ServerConnectionHelper<ProcessUndeploymentResponse> CONNECTION_HELPER =
-      new ServerConnectionHelper<>(ProcessUndeploymentResponse.class);
+      new ServerConnectionHelper<>(new TypeReference<>()
+      {
+      });
 
   private final String deploymentId;
 

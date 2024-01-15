@@ -28,7 +28,7 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.response.FormDeploymentResponse;
 import lombok.SneakyThrows;
 
-public class DeployFormsHandlerTest extends HandlerTestBase
+public class DeployFormsHandlerTest extends BaseTestHandler
 {
   private static final File TEST_FOLDER =
       new File("src/test/resources/handler/deployFormsHandler/");
@@ -141,7 +141,7 @@ public class DeployFormsHandlerTest extends HandlerTestBase
             + Path.of("src/test/resources/handler/deployFormsHandler/forms/form2.json"));
 
     // assert
-    assertThat(httpHandler.countRequests()).isZero();
+    assertThat(httpHandler.getRequestCount()).isZero();
   }
 
   @Test
@@ -159,7 +159,7 @@ public class DeployFormsHandlerTest extends HandlerTestBase
     sut.deploy();
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(2);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(2);
 
     List<HttpHandler.Request> actualRequests = httpHandler.getRequests();
     actualRequests.forEach(r -> assertRequestHeaders(r, env));
@@ -204,7 +204,7 @@ public class DeployFormsHandlerTest extends HandlerTestBase
             + "schiefgelaufen | URL: " + url + DeployFormsHandler.API_PATH);
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(500);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -226,7 +226,7 @@ public class DeployFormsHandlerTest extends HandlerTestBase
 
   private void assertResponse(HttpHandler handler)
   {
-    assertThat(handler.countRequests()).isEqualTo(1);
+    assertThat(handler.getRequestCount()).isEqualTo(1);
     assertThat(handler.getResponseCode()).isEqualTo(200);
     assertThat(handler.getResponseBody()).isEqualTo(createDeploymentResponse());
   }
