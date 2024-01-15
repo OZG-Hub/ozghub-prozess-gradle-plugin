@@ -1,8 +1,11 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
+import static de.seitenbau.ozghub.prozessdeployment.handler.ListScheduledUndeploymentsHandler.API_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +13,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
+import org.gradle.api.GradleException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -94,6 +98,32 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
     assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
   }
 
+  @Test
+  public void listScheduledUndeployments_error()
+  {
+    //arrange
+    HttpHandler httpHandler =
+        new HttpHandler(500, "Etwas ist schiefgelaufen".getBytes(StandardCharsets.UTF_8));
+    httpServer =
+        HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+
+    ListScheduledUndeploymentsHandler sut = new ListScheduledUndeploymentsHandler(createEnvironment());
+
+    //act
+    assertThatThrownBy(() -> sut.list(TASK_NAME))
+        .isExactlyInstanceOf(GradleException.class)
+        .hasMessage("Fehler: "
+            + "HTTP-Response-Code: 500 Internal Server Error | Meldung des Servers: "
+            + "Etwas ist schiefgelaufen | URL: " + url + API_PATH);
+
+    //assert
+    assertThat(httpHandler.getRequestCount()).isOne();
+
+    Request request = httpHandler.getRequest();
+    assertRequest(request);
+  }
+
   private static Aggregated<List<ScheduledUndeployment>> constructResponse()
   {
     return Aggregated.complete(List.of(
@@ -118,7 +148,7 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
   {
     HttpHandler httpHandler = createHttpHandler();
     httpServer =
-        HttpServerFactory.createAndStartHttpServer(ListScheduledUndeploymentsHandler.API_PATH, httpHandler);
+        HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
 
     return httpHandler;
   }
@@ -144,7 +174,7 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
   private void assertRequest(Request request)
   {
     assertThat(request.getRequestMethod()).isEqualTo("GET");
-    assertThat(request.getPath()).isEqualTo(ListScheduledUndeploymentsHandler.API_PATH);
+    assertThat(request.getPath()).isEqualTo(API_PATH);
     assertThat(request.getQuery()).isNull();
   }
 

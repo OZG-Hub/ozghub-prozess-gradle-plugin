@@ -1,6 +1,5 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
-import java.io.IOException;
 import java.util.Map;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
@@ -30,7 +29,7 @@ public class DeleteScheduledUndeploymentHandler extends DefaultHandler
       log.info("Das geplante Undeployment wurde erfolgreich gelöscht");
       log.info("Ende des Tasks: deleteScheduledUndeployment");
     }
-    catch (IOException e)
+    catch (Exception e)
     {
       throw new RuntimeException(
           "Fehler beim Löschen eines zeitgesteuerten Undeployments eines Online-Dienstes: " + e.getMessage(),

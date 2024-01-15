@@ -1,5 +1,6 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
+import static de.seitenbau.ozghub.prozessdeployment.handler.DeployProcessHandler.API_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatRuntimeException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -323,7 +324,7 @@ public class DeployProcessHandlerTest extends BaseTestHandler
     // arrange
     byte[] response = "Etwas ist schiefgelaufen".getBytes(StandardCharsets.UTF_8);
     HttpHandler httpHandler = new HttpHandler(500, response);
-    httpServer = HttpServerFactory.createAndStartHttpServer(DeployProcessHandler.API_PATH, httpHandler);
+    httpServer = HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo3", "bar3");
@@ -341,8 +342,8 @@ public class DeployProcessHandlerTest extends BaseTestHandler
     // act
     assertThatThrownBy(() -> sut.deploy())
         .isExactlyInstanceOf(GradleException.class)
-        .hasMessage("Fehler: HTTP-Response-Code: 500 Internal Server Error | Meldung des Servers: Etwas ist "
-            + "schiefgelaufen | URL: " + url + DeployProcessHandler.API_PATH);
+        .hasMessage("Fehler: HTTP-Response-Code: 500 Internal Server Error | Meldung des Servers: "
+            + "Etwas ist schiefgelaufen | URL: " + url + API_PATH);
 
     // assert
     assertThat(httpHandler.getRequestCount()).isEqualTo(1);
@@ -441,7 +442,7 @@ public class DeployProcessHandlerTest extends BaseTestHandler
   private void assertRequest(HttpHandler.Request request)
   {
     assertThat(request.getRequestMethod()).isEqualTo("POST");
-    assertThat(request.getPath()).isEqualTo(DeployProcessHandler.API_PATH);
+    assertThat(request.getPath()).isEqualTo(API_PATH);
     assertThat(request.getQuery()).isNull();
   }
 
@@ -468,7 +469,7 @@ public class DeployProcessHandlerTest extends BaseTestHandler
   {
     byte[] response = createDeploymentResponse();
     HttpHandler httpHandler = new HttpHandler(200, response);
-    httpServer = HttpServerFactory.createAndStartHttpServer(DeployProcessHandler.API_PATH, httpHandler);
+    httpServer = HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
     return httpHandler;
   }
 

@@ -3,7 +3,6 @@ package de.seitenbau.ozghub.prozessdeployment.helper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -109,16 +108,11 @@ public class ServerConnectionHelper<T>
     }
   }
 
-  public String encodeUrl(String value) {
-    try
-    {
-      return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-    }
-    catch (UnsupportedEncodingException e)
-    {
-      throw new RuntimeException(e);
-    }
+  public String encodeUrl(String value)
+  {
+    return URLEncoder.encode(value, StandardCharsets.UTF_8);
   }
+
   private InputStream getInternal(Environment env, String path, Map<String, String> headers)
       throws IOException
   {
@@ -130,7 +124,7 @@ public class ServerConnectionHelper<T>
       {
         try (InputStream inputStream = http.getErrorStream())
         {
-          String response = convertToStringUsingServerResponseType(inputStream);
+          String response = convertToString(inputStream);
           throw new RuntimeException(createErrorMessage(http, response));
         }
       }
@@ -159,7 +153,7 @@ public class ServerConnectionHelper<T>
       {
         try (InputStream inputStream = http.getErrorStream())
         {
-          String response = convertToStringUsingServerResponseType(inputStream);
+          String response = convertToString(inputStream);
           throw new RuntimeException(createErrorMessage(http, response));
         }
       }
@@ -188,7 +182,7 @@ public class ServerConnectionHelper<T>
       {
         try (InputStream inputStream = http.getErrorStream())
         {
-          String response = convertToStringUsingServerResponseType(inputStream);
+          String response = convertToString(inputStream);
           throw new RuntimeException(createErrorMessage(http, response));
         }
       }
@@ -355,23 +349,14 @@ public class ServerConnectionHelper<T>
     }
   }
 
-  private String convertToStringUsingServerResponseType(InputStream inputStream) throws IOException
+  private String convertToString(InputStream inputStream) throws IOException
   {
     if (inputStream == null)
     {
       return "";
     }
 
-    String responseAsString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-    try
-    {
-      T value = MAPPER.readValue(responseAsString, responseType);
-      return value.toString();
-    }
-    catch (IOException e)
-    {
-      return responseAsString;
-    }
+    return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
   }
 
   private RuntimeException createRuntimeException(HttpURLConnection http, Exception e)

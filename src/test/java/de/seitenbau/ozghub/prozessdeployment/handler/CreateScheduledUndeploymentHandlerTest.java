@@ -1,8 +1,11 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
+import static de.seitenbau.ozghub.prozessdeployment.handler.CreateScheduledUndeploymentHandler.API_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
@@ -22,7 +25,7 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
 {
   private HttpServer httpServer = null;
 
-  private static final ScheduledUndeployment SCHEDULED_UNDEPLOYMENT_1 = constructScheduledUndeployment();
+  private static final ScheduledUndeployment SCHEDULED_UNDEPLOYMENT = constructScheduledUndeployment();
 
   @Override
   protected File getTestFolder()
@@ -48,13 +51,39 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
     CreateScheduledUndeploymentHandler sut = new CreateScheduledUndeploymentHandler(createEnvironment());
 
     //act
-    sut.createScheduledUndeployment(SCHEDULED_UNDEPLOYMENT_1);
+    sut.createScheduledUndeployment(SCHEDULED_UNDEPLOYMENT);
 
     //assert
     assertThat(httpHandler.getRequestCount()).isOne();
 
     Request request = httpHandler.getRequest();
     assertRequest(request);
+  }
+
+  @Test
+  public void createScheduledUndeployment_error()
+  {
+    // arrange
+    HttpHandler httpHandler =
+        new HttpHandler(500, "Etwas ist schiefgelaufen".getBytes(StandardCharsets.UTF_8));
+    httpServer = HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
+
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    CreateScheduledUndeploymentHandler sut = new CreateScheduledUndeploymentHandler(createEnvironment());
+
+    // act
+    assertThatThrownBy(() -> sut.createScheduledUndeployment(SCHEDULED_UNDEPLOYMENT))
+        .isExactlyInstanceOf(RuntimeException.class)
+        .hasMessage("Fehler beim Erstellen eines zeitgesteuerten Undeployment eines Online-Dienstes: "
+            + "HTTP-Response-Code: 500 Internal Server Error | Meldung des Servers: "
+            + "Etwas ist schiefgelaufen | URL: " + url + API_PATH);
+
+    // assert
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
+    assertThat(httpHandler.getResponseCode()).isEqualTo(500);
+
+    HttpHandler.Request actualRequest = httpHandler.getRequest();
+    assertRequest(actualRequest);
   }
 
   private static ScheduledUndeployment constructScheduledUndeployment()
@@ -70,7 +99,7 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
   {
     HttpHandler httpHandler = createHttpHandler();
     httpServer =
-        HttpServerFactory.createAndStartHttpServer(CreateScheduledUndeploymentHandler.API_PATH, httpHandler);
+        HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
 
     return httpHandler;
   }
@@ -94,11 +123,11 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
   private void assertRequest(Request request)
   {
     assertThat(request.getRequestMethod()).isEqualTo("POST");
-    assertThat(request.getPath()).isEqualTo(CreateScheduledUndeploymentHandler.API_PATH);
+    assertThat(request.getPath()).isEqualTo(API_PATH);
     assertThat(request.getQuery()).isNull();
 
     ScheduledUndeployment actualRequest =
         OBJECT_MAPPER.readValue(request.getRequestBody(), ScheduledUndeployment.class);
-    assertThat(actualRequest).usingRecursiveAssertion().isEqualTo(SCHEDULED_UNDEPLOYMENT_1);
+    assertThat(actualRequest).usingRecursiveAssertion().isEqualTo(SCHEDULED_UNDEPLOYMENT);
   }
 }

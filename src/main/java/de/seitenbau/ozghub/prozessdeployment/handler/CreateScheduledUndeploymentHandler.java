@@ -1,6 +1,5 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -43,7 +42,7 @@ public class CreateScheduledUndeploymentHandler extends DefaultHandler
       log.info("Das zeitgesteuerte Undeployment wurde erfolgreich erstellt");
       log.info("Ende des Tasks: createScheduledUndeployment");
     }
-    catch (IOException e)
+    catch (Exception e)
     {
       throw new RuntimeException(
           "Fehler beim Erstellen eines zeitgesteuerten Undeployment eines Online-Dienstes: " + e.getMessage(),
