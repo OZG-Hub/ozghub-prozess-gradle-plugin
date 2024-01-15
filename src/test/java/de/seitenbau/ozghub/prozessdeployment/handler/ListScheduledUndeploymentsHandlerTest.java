@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -16,13 +17,14 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler.Request
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ScheduledUndeployment;
+import de.seitenbau.ozghub.prozessdeployment.model.response.Aggregated;
 import lombok.SneakyThrows;
 
-public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
+public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
 {
-  private HttpServer httpServer = null;
+  private static final Aggregated<List<ScheduledUndeployment>> RESPONSE = constructResponse();
 
-  private static final ScheduledUndeployment SCHEDULED_UNDEPLOYMENT_1 = constructScheduledUndeployment("1");
+  private HttpServer httpServer = null;
 
   @Override
   protected File getTestFolder()
@@ -40,21 +42,30 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
   }
 
   @Test
-  public void createScheduledUndeployment_success()
+  public void listScheduledUndeployments_success()
   {
     //arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
-    CreateScheduledUndeploymentHandler sut = new CreateScheduledUndeploymentHandler(createEnvironment());
+    ListScheduledUndeploymentsHandler sut = new ListScheduledUndeploymentsHandler(createEnvironment());
 
     //act
-    sut.createScheduledUndeployment(SCHEDULED_UNDEPLOYMENT_1);
+    Aggregated<List<ScheduledUndeployment>> actual = sut.listScheduledUndeployments();
 
     //assert
     assertThat(httpHandler.getRequestCount()).isOne();
+    assertThat(actual).usingRecursiveAssertion().isEqualTo(RESPONSE);
 
     Request request = httpHandler.getRequest();
     assertRequest(request);
+  }
+
+  private static Aggregated<List<ScheduledUndeployment>> constructResponse()
+  {
+    return Aggregated.complete(List.of(
+        constructScheduledUndeployment("1"),
+        constructScheduledUndeployment("2")
+    ));
   }
 
   private static ScheduledUndeployment constructScheduledUndeployment(String suffix)
@@ -70,14 +81,16 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
   {
     HttpHandler httpHandler = createHttpHandler();
     httpServer =
-        HttpServerFactory.createAndStartHttpServer(CreateScheduledUndeploymentHandler.API_PATH, httpHandler);
+        HttpServerFactory.createAndStartHttpServer(ListScheduledUndeploymentsHandler.API_PATH, httpHandler);
 
     return httpHandler;
   }
 
+  @SneakyThrows
   private HttpHandler createHttpHandler()
   {
-    return new HttpHandler(204, new byte[0]);
+    byte[] responseBytes = OBJECT_MAPPER.writeValueAsBytes(RESPONSE);
+    return new HttpHandler(200, responseBytes);
   }
 
   private Environment createEnvironment()
@@ -93,12 +106,8 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
   @SneakyThrows
   private void assertRequest(Request request)
   {
-    assertThat(request.getRequestMethod()).isEqualTo("POST");
-    assertThat(request.getPath()).isEqualTo(CreateScheduledUndeploymentHandler.API_PATH);
+    assertThat(request.getRequestMethod()).isEqualTo("GET");
+    assertThat(request.getPath()).isEqualTo(ListScheduledUndeploymentsHandler.API_PATH);
     assertThat(request.getQuery()).isNull();
-
-    ScheduledUndeployment actualRequest =
-        OBJECT_MAPPER.readValue(request.getRequestBody(), ScheduledUndeployment.class);
-    assertThat(actualRequest).usingRecursiveAssertion().isEqualTo(SCHEDULED_UNDEPLOYMENT_1);
   }
 }

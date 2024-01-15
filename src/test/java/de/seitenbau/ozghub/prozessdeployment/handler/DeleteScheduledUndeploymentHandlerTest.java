@@ -3,7 +3,6 @@ package de.seitenbau.ozghub.prozessdeployment.handler;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -14,15 +13,11 @@ import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler.Request;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
-import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
-import de.seitenbau.ozghub.prozessdeployment.model.request.ScheduledUndeployment;
 import lombok.SneakyThrows;
 
-public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
+public class DeleteScheduledUndeploymentHandlerTest extends BaseTestHandler
 {
   private HttpServer httpServer = null;
-
-  private static final ScheduledUndeployment SCHEDULED_UNDEPLOYMENT_1 = constructScheduledUndeployment("1");
 
   @Override
   protected File getTestFolder()
@@ -40,30 +35,39 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
   }
 
   @Test
-  public void createScheduledUndeployment_success()
+  public void deleteScheduledUndeployment_success()
   {
     //arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
-    CreateScheduledUndeploymentHandler sut = new CreateScheduledUndeploymentHandler(createEnvironment());
+    DeleteScheduledUndeploymentHandler sut = new DeleteScheduledUndeploymentHandler(createEnvironment());
 
     //act
-    sut.createScheduledUndeployment(SCHEDULED_UNDEPLOYMENT_1);
+    sut.deleteScheduledUndeployment("deploymentId");
 
     //assert
     assertThat(httpHandler.getRequestCount()).isOne();
 
     Request request = httpHandler.getRequest();
-    assertRequest(request);
+    assertRequest(request, "deploymentId");
   }
 
-  private static ScheduledUndeployment constructScheduledUndeployment(String suffix)
+  @Test
+  public void deleteScheduledUndeployment_success_urlEncoding()
   {
-    return new ScheduledUndeployment(
-        "deploymentId" + suffix,
-        new Date(),
-        new Message("preUndeploymentSubject" + suffix, "preUndeploymentBody" + suffix),
-        new Message("undeploymentSubject" + suffix, "undeploymentBody" + suffix));
+    //arrange
+    HttpHandler httpHandler = createAndStartHttpServer();
+
+    DeleteScheduledUndeploymentHandler sut = new DeleteScheduledUndeploymentHandler(createEnvironment());
+
+    //act
+    sut.deleteScheduledUndeployment("?hack=1");
+
+    //assert
+    assertThat(httpHandler.getRequestCount()).isOne();
+
+    Request request = httpHandler.getRequest();
+    assertRequest(request, "?hack=1");
   }
 
   private HttpHandler createAndStartHttpServer()
@@ -91,14 +95,10 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
   }
 
   @SneakyThrows
-  private void assertRequest(Request request)
+  private void assertRequest(Request request, String deploymentId)
   {
-    assertThat(request.getRequestMethod()).isEqualTo("POST");
-    assertThat(request.getPath()).isEqualTo(CreateScheduledUndeploymentHandler.API_PATH);
+    assertThat(request.getRequestMethod()).isEqualTo("DELETE");
+    assertThat(request.getPath()).isEqualTo(DeleteScheduledUndeploymentHandler.API_PATH + "/" + deploymentId);
     assertThat(request.getQuery()).isNull();
-
-    ScheduledUndeployment actualRequest =
-        OBJECT_MAPPER.readValue(request.getRequestBody(), ScheduledUndeployment.class);
-    assertThat(actualRequest).usingRecursiveAssertion().isEqualTo(SCHEDULED_UNDEPLOYMENT_1);
   }
 }

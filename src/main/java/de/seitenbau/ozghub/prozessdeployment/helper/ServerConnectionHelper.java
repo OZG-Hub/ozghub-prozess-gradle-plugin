@@ -3,10 +3,12 @@ package de.seitenbau.ozghub.prozessdeployment.helper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
@@ -98,10 +100,25 @@ public class ServerConnectionHelper<T>
   {
     try (InputStream stream = deleteInternal(env, path, headers, data))
     {
+      if (responseType == null)
+      {
+        return null;
+      }
+
       return MAPPER.readValue(stream, responseType);
     }
   }
 
+  public String encodeUrl(String value) {
+    try
+    {
+      return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+    }
+    catch (UnsupportedEncodingException e)
+    {
+      throw new RuntimeException(e);
+    }
+  }
   private InputStream getInternal(Environment env, String path, Map<String, String> headers)
       throws IOException
   {
@@ -109,7 +126,7 @@ public class ServerConnectionHelper<T>
     {
       HttpURLConnection http = createHttpURLConnectionForGetRequest(env, path, headers);
 
-      if (http.getResponseCode() != 200)
+      if (http.getResponseCode() / 100 != 2)
       {
         try (InputStream inputStream = http.getErrorStream())
         {
@@ -167,7 +184,7 @@ public class ServerConnectionHelper<T>
       HttpURLConnection http = createHttpURLConnectionForDeleteRequest(env, path, headers, data);
       sendRequest(data, http);
 
-      if (http.getResponseCode() != 200)
+      if (http.getResponseCode() / 100 != 2)
       {
         try (InputStream inputStream = http.getErrorStream())
         {
