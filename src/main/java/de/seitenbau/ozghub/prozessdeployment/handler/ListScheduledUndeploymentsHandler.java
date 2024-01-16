@@ -36,7 +36,7 @@ public class ListScheduledUndeploymentsHandler
       log.warn("Es konnten nicht alle geplanten Undeployments von allen Prozessengines abgerufen werden.");
     }
 
-    log.info("Es sind " + aggregatedScheduledUndeployments.getValue().size() + " geplanten Undeployments:"
+    log.info("Es sind " + aggregatedScheduledUndeployments.getValue().size() + " geplanten Undeployments:\n"
         + getLogText(aggregatedScheduledUndeployments.getValue()));
   }
 
@@ -49,19 +49,25 @@ public class ListScheduledUndeploymentsHandler
 
   private static String getLogText(ScheduledUndeployment scheduledUndeployment)
   {
-    SimpleDateFormat formatter = new SimpleDateFormat("MM.dd.yyyy");
+    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+    String formattedUndeploymentDate = formatter.format(scheduledUndeployment.undeploymentDate());
 
     return "\nDeploymentId: " + scheduledUndeployment.deploymentId() + "\n"
-        + "Undeployment Datum: " + formatter.format(scheduledUndeployment.undeploymentDate()) + "\n"
+        + "Undeployment Datum: " + formattedUndeploymentDate + "\n"
         + "Ankündigungsnachricht:\n"
-        + getLogText(scheduledUndeployment.undeploymentAnnouncementMessage())
+        + getLogText(scheduledUndeployment.undeploymentAnnounceMessage())
         + "Nachricht:\n"
         + getLogText(scheduledUndeployment.undeploymentMessage());
   }
 
   private static String getLogText(Message message)
   {
-    return " - Betreff: " + message.subject() + "\n"
-        + " - Text: " + message.body() + "\n";
+    return " - Betreff: " + defaultIfNull(message.subject(), "*Betreff nicht gesetzt*") + "\n"
+        + " - Text: " + defaultIfNull(message.body(), "*Text nicht gesetzt*") + "\n";
+  }
+
+  private static String defaultIfNull(String string, String defaultString)
+  {
+    return string == null ? defaultString : string;
   }
 }

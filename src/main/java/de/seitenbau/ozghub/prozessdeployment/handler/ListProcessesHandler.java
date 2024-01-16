@@ -20,8 +20,8 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
     super(environment,
         new TypeReference<>()
         {
-        }
-        , API_PATH);
+        },
+        API_PATH);
   }
 
   protected void writeLogEntries(ProcessDeploymentList deploymentList)

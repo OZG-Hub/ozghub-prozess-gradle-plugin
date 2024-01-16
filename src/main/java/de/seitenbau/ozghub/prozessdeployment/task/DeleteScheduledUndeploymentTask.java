@@ -16,7 +16,8 @@ public class DeleteScheduledUndeploymentTask extends DefaultPluginTask
    * Deployment-ID des Online-Dienstes, der undeployt werden soll.
    */
   @Input
-  @Option(option = "deploymentId", description = "Deployment-ID des Online-Dienstes, der undeployt werden soll")
+  @Option(option = "deploymentId",
+      description = "Deployment-ID des Online-Dienstes, der undeployt werden soll")
   protected String deploymentId = null;
 
   @TaskAction

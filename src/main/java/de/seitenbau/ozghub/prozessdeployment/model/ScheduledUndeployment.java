@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 public record ScheduledUndeployment(
     String deploymentId,
     Date undeploymentDate,
-    Message undeploymentAnnouncementMessage,
+    Message undeploymentAnnounceMessage,
     Message undeploymentMessage
 )
 {

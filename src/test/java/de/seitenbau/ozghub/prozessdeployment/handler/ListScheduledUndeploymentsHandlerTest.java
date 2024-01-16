@@ -31,6 +31,7 @@ import lombok.SneakyThrows;
 public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
 {
   private static final Aggregated<List<ScheduledUndeployment>> RESPONSE = constructResponse();
+  private static final Aggregated<List<ScheduledUndeployment>> RESPONSE2 = constructResponse2();
 
   public static final String TASK_NAME = "listScheduledUndeployments";
 
@@ -58,7 +59,7 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
   {
     //arrange
     prepareLogging();
-    HttpHandler httpHandler = createAndStartHttpServer();
+    HttpHandler httpHandler = createAndStartHttpServer(RESPONSE);
 
     ListScheduledUndeploymentsHandler sut = new ListScheduledUndeploymentsHandler(createEnvironment());
 
@@ -76,8 +77,9 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
     assertThat(actualLogMessages).contains("INFO Start des Tasks: " + TASK_NAME);
     String expectedLog = """
         INFO Es sind 2 geplanten Undeployments:
+
         DeploymentId: deploymentId1
-        Undeployment Datum: 10.02.2999
+        Undeployment Datum: 30.11.2999
         Ankündigungsnachricht:
          - Betreff: preUndeploymentSubject1
          - Text: preUndeploymentBody1
@@ -86,13 +88,50 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
          - Text: undeploymentBody1
 
         DeploymentId: deploymentId2
-        Undeployment Datum: 11.02.2999
+        Undeployment Datum: 31.12.2999
         Ankündigungsnachricht:
          - Betreff: preUndeploymentSubject2
          - Text: preUndeploymentBody2
         Nachricht:
          - Betreff: undeploymentSubject2
          - Text: undeploymentBody2
+        """;
+    assertThat(actualLogMessages).contains(expectedLog);
+    assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
+  }
+
+  @Test
+  public void listScheduledUndeployments_success2()
+  {
+    //arrange
+    prepareLogging();
+    HttpHandler httpHandler = createAndStartHttpServer(RESPONSE2);
+
+    ListScheduledUndeploymentsHandler sut = new ListScheduledUndeploymentsHandler(createEnvironment());
+
+    //act
+    Aggregated<List<ScheduledUndeployment>> actual = sut.list(TASK_NAME);
+
+    //assert
+    assertThat(httpHandler.getRequestCount()).isOne();
+    assertThat(actual).usingRecursiveAssertion().isEqualTo(RESPONSE2);
+
+    Request request = httpHandler.getRequest();
+    assertRequest(request);
+
+    List<String> actualLogMessages = listAppender.getEventList();
+    assertThat(actualLogMessages).contains("INFO Start des Tasks: " + TASK_NAME);
+    String expectedLog = """
+        INFO Es sind 1 geplanten Undeployments:
+
+        DeploymentId: deploymentId1
+        Undeployment Datum: 30.11.2999
+        Ankündigungsnachricht:
+         - Betreff: preUndeploymentSubject1
+         - Text: preUndeploymentBody1
+        Nachricht:
+         - Betreff: *Betreff nicht gesetzt*
+         - Text: *Text nicht gesetzt*
         """;
     assertThat(actualLogMessages).contains(expectedLog);
     assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
@@ -127,15 +166,22 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
   private static Aggregated<List<ScheduledUndeployment>> constructResponse()
   {
     return Aggregated.complete(List.of(
-        constructScheduledUndeployment("1", "10.02.2999"),
-        constructScheduledUndeployment("2", "11.02.2999")
+        constructScheduledUndeployment("1", "30.11.2999"),
+        constructScheduledUndeployment("2", "31.12.2999")
+    ));
+  }
+
+  private static Aggregated<List<ScheduledUndeployment>> constructResponse2()
+  {
+    return Aggregated.complete(List.of(
+        constructScheduledUndeploymentWithoutMessage("1", "30.11.2999")
     ));
   }
 
   @SneakyThrows
   private static ScheduledUndeployment constructScheduledUndeployment(String suffix, String dateString)
   {
-    SimpleDateFormat formatter = new SimpleDateFormat("MM.dd.yyyy");
+    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
     Date date = formatter.parse(dateString);
     return new ScheduledUndeployment(
         "deploymentId" + suffix,
@@ -143,10 +189,21 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
         new Message("preUndeploymentSubject" + suffix, "preUndeploymentBody" + suffix),
         new Message("undeploymentSubject" + suffix, "undeploymentBody" + suffix));
   }
-
-  private HttpHandler createAndStartHttpServer()
+  @SneakyThrows
+  private static ScheduledUndeployment constructScheduledUndeploymentWithoutMessage(String suffix, String dateString)
   {
-    HttpHandler httpHandler = createHttpHandler();
+    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+    Date date = formatter.parse(dateString);
+    return new ScheduledUndeployment(
+        "deploymentId" + suffix,
+        date,
+        new Message("preUndeploymentSubject" + suffix, "preUndeploymentBody" + suffix),
+        new Message(null, null));
+  }
+
+  private HttpHandler createAndStartHttpServer(Aggregated<List<ScheduledUndeployment>> response)
+  {
+    HttpHandler httpHandler = createHttpHandler(response);
     httpServer =
         HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
 
@@ -154,9 +211,9 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
   }
 
   @SneakyThrows
-  private HttpHandler createHttpHandler()
+  private HttpHandler createHttpHandler(Aggregated<List<ScheduledUndeployment>> response)
   {
-    byte[] responseBytes = OBJECT_MAPPER.writeValueAsBytes(RESPONSE);
+    byte[] responseBytes = OBJECT_MAPPER.writeValueAsBytes(response);
     return new HttpHandler(200, responseBytes);
   }
 

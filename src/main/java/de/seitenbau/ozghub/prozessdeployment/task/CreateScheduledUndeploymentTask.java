@@ -20,34 +20,40 @@ public class CreateScheduledUndeploymentTask extends DefaultPluginTask
    * Deployment-ID des Online-Dienstes, der undeployt werden soll.
    */
   @Input
-  @Option(option = "deploymentId", description = "Deployment-ID des Online-Dienstes, der undeployt werden soll")
+  @Option(option = "deploymentId",
+      description = "Deployment-ID des Online-Dienstes, der undeployt werden soll")
   protected String deploymentId = null;
 
   /**
    * Das Datum, an dem der Online-Dienst undeployt werden soll.
    */
   @Input
-  @Option(option = "undeploymentDate", description = "Das Datum, an dem der Online-Dienst undeployt werden soll")
+  @Option(option = "undeploymentDate",
+      description = "Das Datum, an dem der Online-Dienst undeployt werden soll")
   protected Date undeploymentDate = null;
 
   @Input
   @org.gradle.api.tasks.Optional
-  @Option(option = "undeploymentAnnouncementMessageSubject", description = "Betreff der Ankündigungsnachricht eines Undeployments")
-  protected String undeploymentAnnouncementMessageSubject = null;
+  @Option(option = "undeploymentAnnounceMessageSubject",
+      description = "Betreff der Ankündigungsnachricht eines Undeployments")
+  protected String undeploymentAnnounceMessageSubject = null;
 
   @Input
   @org.gradle.api.tasks.Optional
-  @Option(option = "undeploymentAnnouncementMessageBody", description = "Text der Ankündigungsnachricht eines Undeployments")
-  protected String undeploymentAnnouncementMessageBody = null;
+  @Option(option = "undeploymentAnnounceMessageBody",
+      description = "Text der Ankündigungsnachricht eines Undeployments")
+  protected String undeploymentAnnounceMessageBody = null;
 
   @Input
   @org.gradle.api.tasks.Optional
-  @Option(option = "undeploymentMessageSubject", description = "Betreff der Nachricht eines Undeployments")
+  @Option(option = "undeploymentMessageSubject",
+      description = "Betreff der Nachricht eines Undeployments")
   protected String undeploymentMessageSubject = null;
 
   @Input
   @org.gradle.api.tasks.Optional
-  @Option(option = "undeploymentMessageBody", description = "Text der Nachricht eines Undeployments")
+  @Option(option = "undeploymentMessageBody",
+      description = "Text der Nachricht eines Undeployments")
   protected String undeploymentMessageBody = null;
 
   @TaskAction
@@ -58,7 +64,7 @@ public class CreateScheduledUndeploymentTask extends DefaultPluginTask
     handler.createScheduledUndeployment(new ScheduledUndeployment(
             deploymentId,
             undeploymentDate,
-            new Message(undeploymentAnnouncementMessageSubject, undeploymentAnnouncementMessageBody),
+            new Message(undeploymentAnnounceMessageSubject, undeploymentAnnounceMessageBody),
             new Message(undeploymentMessageSubject, undeploymentMessageBody)
         )
     );
