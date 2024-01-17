@@ -359,3 +359,119 @@ Ein Objekt (`application/json`), das den verschlüsselten Prozessparameterwert e
 ```
 
 ---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum auflisten aller erstellten zeitgesteuerte Undeployments
+
+#### Allgemein
+
+Die Schnittstelle listet alle zeitgesteuerten Undeployments für den übergebenen Mandanten auf.
+
+Der Aufruf muss als **GET** ausgeführt werden.
+
+#### Pfad
+
+`{URL der Umgebung}/prozess/scheduled/undeployment/list`
+
+#### Rückgabewerte
+
+Ein Objekt (`application/json`), das eine Liste der erstellten zeitgesteuerte Undeployments des Mandanten enthält.<br />
+
+```json
+{
+  "value": [
+      {
+          "deploymentId": "Sa6DGsfXOud4fWSpFPwOLD",
+          "undeploymentDate": 1707519600000,
+          "undeploymentMessage": {},
+          "undeploymentAnnounceMessage": {}
+      },
+      {
+          "deploymentId": "FFb0ffdVnt9VmUN6AtT7BQ",
+          "undeploymentDate": 1707519603500,
+          "undeploymentMessage": {
+              "subject": "Undeployment des Prozesses",
+              "body": "Der Prozess muss leider undeployed werden..."
+          },
+          "undeploymentAnnounceMessage": {}
+      }
+  ],
+    "complete": true
+}
+```
+
+---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum erstellen eines zeitgesteuertes Undeployments
+
+#### Allgemein
+
+Die Schnittstelle erstellt ein zeitgesteuertes Undeployment und setzt Parameter die später zum Benachrichtigen der User verwendet werden.
+
+Der Aufruf muss als **POST** ausgeführt werden.
+
+#### Pfad
+
+`{URL der Umgebung}/prozess/scheduled/undeployment`
+
+#### Request-Body
+
+- Die Schnittstelle erwartet als Body ein JSON-Objekt mit folgender Struktur:
+
+```json
+{
+    "deploymentId": "deploymentId des Prozessmodells",
+    "undeploymentDate": "2024-02-17",
+    "undeploymentAnnounceMessage": {
+        "subject": "Betreff der Nachricht",
+        "body": "Inhalt der Nachricht"
+    },
+    "undeploymentMessage": {
+        "subject": "Betreff der Nachricht",
+        "body": "Inhalt der Nachricht"
+    }
+}
+```
+
+| **Name**                    | **Pflicht** | **Typ** | **Beschreibung**                                                                                                      |
+|-----------------------------|-------------|---------|-----------------------------------------------------------------------------------------------------------------------|
+| deploymentId                | Ja          | String  | Deployment-ID des Online-Dienstes, der undeployt werden soll.                                                         |
+| undeploymentDate            | Ja          | Date    | Das Datum, an dem der Online-Dienst undeployt werden soll (TT.MM.YYYY).                                               |
+| undeploymentAnnounceMessage | Nein        | Message | Eine Nachricht die 1, 7 und 14 Tage vor dem eigentlichen Undeployment verschickt wird und das Undeployment ankündigt. |
+| undeploymentMessage         | Nein        | Message | Eine Nachricht die beim Undeployment des Prozessmodells verschickt wird.                                              |
+
+##### Message Objekt 
+
+| **Name** | **Pflicht** | **Typ** | **Beschreibung**                                               |
+|----------|-------------|---------|----------------------------------------------------------------|
+| subject  | Nein        | Objekt  | Der Betreff der Nachricht, darf maximal 255 Zeichen lang sein. |
+| body     | Nein        | Objekt  | Der Inhalt der Nachricht, darf maximal 2000 Zeichen lang sein. |
+
+
+#### Rückgabewerte
+
+Der Endpunkt liefert bei Erfolg den HTTP-Status `204 No content` ohne Response Body zurück. 
+
+---------------------------------------------------------------------------------------------------
+
+### Schnittstelle zum Löschen von zeitgesteuerte Undeployments
+
+#### Allgemein
+
+Die Schnittstelle löscht ein zeitgesteuertes Undeployment.
+
+Der Aufruf muss als **DELETE** ausgeführt werden.
+
+#### Pfad
+
+`{URL der Umgebung}/prozess/scheduled/undeployment/{deploymentId}`
+
+#### Path-Parameter
+
+| **Name**     | **Pflicht** | **Typ** | **Beschreibung**                                                                                 |
+|--------------|-------------|---------|--------------------------------------------------------------------------------------------------|
+| deploymentId | Ja          | String  | Deployment-ID des Online-Dienstes, für den das zeitgesteuerte Undeployment gelöscht werden soll. |
+
+
+#### Rückgabewerte
+
+Der Endpunkt liefert bei Erfolg den HTTP-Status `204 No content` ohne Response Body zurück.
