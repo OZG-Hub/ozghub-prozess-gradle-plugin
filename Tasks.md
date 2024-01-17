@@ -191,3 +191,43 @@ unterschiedlich ist.
 
 ---------------------------------------------------------------------------------------------------
 
+### Task _createScheduledUndeployment_
+
+#### Allgemein
+
+Erstellt ein zeitgesteuertes Undeployment eines Online-Dienstes.
+
+#### Parameter
+
+| Parameter                          | Pflicht? | Beschreibung                                                           |
+|------------------------------------|----------|------------------------------------------------------------------------|
+| deploymentId                       | Ja       | Deployment-ID des Online-Dienstes, der undeployt werden soll           |
+| undeploymentDate                   | Ja       | Das Datum, an dem der Online-Dienst undeployt werden soll (TT.MM.YYYY) |
+| undeploymentAnnounceMessageSubject | Nein     | Betreff der Ankündigungsnachricht eines Undeployments                  |
+| undeploymentAnnounceMessageBody    | Nein     | Text der Ankündigungsnachricht eines Undeployments                     |
+| undeploymentMessageSubject         | Nein     | Betreff der Nachricht eines Undeployments                              |
+| undeploymentMessageBody            | Nein     | Text der Nachricht eines Undeployments                                 |
+
+---------------------------------------------------------------------------------------------------
+
+### Task _deleteScheduledUndeployment_
+
+#### Allgemein
+
+Löscht ein zeitgesteuertes Undeployment eines Online-Dienstes.
+
+#### Parameter
+
+| Parameter     | Pflicht? | Beschreibung                                                                                     |
+|---------------|----------|--------------------------------------------------------------------------------------------------|
+| deploymentId  | Ja       | Deployment-ID des Online-Dienstes, für den das zeitgesteuerte Undeployment gelöscht werden soll. |
+
+---------------------------------------------------------------------------------------------------
+
+### Task _listScheduledUndeployments_
+
+#### Allgemein
+
+Listet alle zeitgesteuerten Undeployments von Online-Diensten auf.
+
+---------------------------------------------------------------------------------------------------
