@@ -441,11 +441,19 @@ Der Aufruf muss als **POST** ausgeführt werden.
 
 ##### Message Objekt 
 
-| **Name** | **Pflicht** | **Typ** | **Beschreibung**                                               |
-|----------|-------------|---------|----------------------------------------------------------------|
-| subject  | Nein        | Objekt  | Der Betreff der Nachricht, darf maximal 255 Zeichen lang sein. |
-| body     | Nein        | Objekt  | Der Inhalt der Nachricht, darf maximal 2000 Zeichen lang sein. |
+| **Name** | **Pflicht** | **Typ** | **Maximale Anzahl Zeichen** | **Beschreibung**                                                                                                                   |
+|----------|-------------|---------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| subject  | Nein        | Objekt  | 255                         | Der Betreff der Nachricht.                                                                                                         |
+| body     | Nein        | Objekt  | 2000                        | Der Inhalt der Nachricht. Hier können Platzhalter verwenden siehe hierzu "[Platzhalter Message Body](#Platzhalter-Message-Body)".  |
 
+###### Platzhalter Message Body
+
+| Name                      | Beschreibung                                         | Beispiel                                                                            |
+|---------------------------|------------------------------------------------------|-------------------------------------------------------------------------------------|
+| name                      | Wird aufgelöst zum Namen des Empfängers.             | Max Mustermann                                                                      |
+| tageBisUndeployment       | Anzahl der Tage bis der Onlinedienst undeployt wird. | 14                                                                                  |
+| linkAufAktuellenProzess   | Ein Verweis auf den aktuellen Prozess.               | {protal-url}/onlineantraege/onlineantrag?processInstanceId=zsoh_zgxiZaUpzuA6eLqzQ   |
+ 
 
 #### Rückgabewerte
 
