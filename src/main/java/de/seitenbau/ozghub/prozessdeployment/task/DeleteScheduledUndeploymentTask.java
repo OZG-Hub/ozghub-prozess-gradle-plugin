@@ -13,11 +13,12 @@ import lombok.Setter;
 public class DeleteScheduledUndeploymentTask extends DefaultPluginTask
 {
   /**
-   * Deployment-ID des Online-Dienstes, der undeployt werden soll.
+   * Deployment-ID des Online-Dienstes, für den das zeitgesteuerte Undeployment gelöscht werden soll.
    */
   @Input
   @Option(option = "deploymentId",
-      description = "Deployment-ID des Online-Dienstes, der undeployt werden soll")
+      description = "Deployment-ID des Online-Dienstes"
+          + ", für den das zeitgesteuerte Undeployment gelöscht werden soll")
   protected String deploymentId = null;
 
   @TaskAction
