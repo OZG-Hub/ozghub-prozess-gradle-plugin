@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import com.sun.net.httpserver.HttpServer;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
+import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler.Request;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
@@ -189,8 +190,10 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
         new Message("preUndeploymentSubject" + suffix, "preUndeploymentBody" + suffix),
         new Message("undeploymentSubject" + suffix, "undeploymentBody" + suffix));
   }
+
   @SneakyThrows
-  private static ScheduledUndeployment constructScheduledUndeploymentWithoutMessage(String suffix, String dateString)
+  private static ScheduledUndeployment constructScheduledUndeploymentWithoutMessage(String suffix,
+      String dateString)
   {
     SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
     Date date = formatter.parse(dateString);
@@ -233,6 +236,7 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
     assertThat(request.getRequestMethod()).isEqualTo("GET");
     assertThat(request.getPath()).isEqualTo(API_PATH);
     assertThat(request.getQuery()).isNull();
+    assertThat(request.getHeaders()).containsEntry(HTTPHeaderKeys.CACHE_CONTROL, List.of("no-cache"));
   }
 
   private void prepareLogging()

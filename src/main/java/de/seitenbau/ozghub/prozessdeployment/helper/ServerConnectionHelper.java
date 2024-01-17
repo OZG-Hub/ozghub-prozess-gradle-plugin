@@ -268,6 +268,9 @@ public class ServerConnectionHelper<T>
     // Authorization
     http.setRequestProperty(HTTPHeaderKeys.AUTHORIZATION, getBasicAuthToken(env));
 
+    // Prevent use of cached responses for GET requests
+    http.setRequestProperty(HTTPHeaderKeys.CACHE_CONTROL, "no-cache");
+
     // Weitere Header
     Optional.ofNullable(headers).ifPresent(h -> h.forEach(http::setRequestProperty));
   }

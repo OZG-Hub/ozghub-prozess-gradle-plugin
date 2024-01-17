@@ -60,6 +60,7 @@ public class ServerConnectionHelperTest
 
     HttpHandler.Request actualRequest = handler.getRequest();
     assertThat(handler.getRequestCount()).isEqualTo(1);
+    assertThat(actualRequest.getHeaders()).containsEntry(HTTPHeaderKeys.CACHE_CONTROL, List.of("no-cache"));
     assertGetRequest(actualRequest, env, headers);
   }
 
