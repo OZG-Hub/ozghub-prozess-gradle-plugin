@@ -435,7 +435,7 @@ Der Aufruf muss als **POST** ausgeführt werden.
 | **Name**                    | **Pflicht** | **Typ** | **Beschreibung**                                                                                                      |
 |-----------------------------|-------------|---------|-----------------------------------------------------------------------------------------------------------------------|
 | deploymentId                | Ja          | String  | Deployment-ID des Online-Dienstes, der undeployt werden soll.                                                         |
-| undeploymentDate            | Ja          | Date    | Das Datum, an dem der Online-Dienst undeployt werden soll (TT.MM.YYYY).                                               |
+| undeploymentDate            | Ja          | Date    | Das Datum, an dem der Online-Dienst undeployt werden soll (YYYY-MM-TT).                                              |
 | undeploymentAnnounceMessage | Nein        | Message | Eine Nachricht die 1, 7 und 14 Tage vor dem eigentlichen Undeployment verschickt wird und das Undeployment ankündigt. |
 | undeploymentMessage         | Nein        | Message | Eine Nachricht die beim Undeployment des Prozessmodells verschickt wird.                                              |
 
