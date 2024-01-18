@@ -1,6 +1,6 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
-import static de.seitenbau.ozghub.prozessdeployment.handler.CreateScheduledUndeploymentHandler.API_PATH;
+import static de.seitenbau.ozghub.prozessdeployment.handler.CreateScheduledUndeploymentOzgHandler.API_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -21,7 +21,7 @@ import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
 import lombok.SneakyThrows;
 
-public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
+public class CreateScheduledUndeploymentOzgHandlerTest extends BaseTestHandler
 {
   private HttpServer httpServer = null;
 
@@ -48,10 +48,10 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
     //arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
-    CreateScheduledUndeploymentHandler sut = new CreateScheduledUndeploymentHandler(createEnvironment());
+    CreateScheduledUndeploymentOzgHandler sut = new CreateScheduledUndeploymentOzgHandler(createEnvironment());
 
     //act
-    sut.createScheduledUndeployment(SCHEDULED_UNDEPLOYMENT);
+    sut.createScheduledUndeploymentOzg(SCHEDULED_UNDEPLOYMENT);
 
     //assert
     assertThat(httpHandler.getRequestCount()).isOne();
@@ -69,10 +69,10 @@ public class CreateScheduledUndeploymentHandlerTest extends BaseTestHandler
     httpServer = HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
-    CreateScheduledUndeploymentHandler sut = new CreateScheduledUndeploymentHandler(createEnvironment());
+    CreateScheduledUndeploymentOzgHandler sut = new CreateScheduledUndeploymentOzgHandler(createEnvironment());
 
     // act
-    assertThatThrownBy(() -> sut.createScheduledUndeployment(SCHEDULED_UNDEPLOYMENT))
+    assertThatThrownBy(() -> sut.createScheduledUndeploymentOzg(SCHEDULED_UNDEPLOYMENT))
         .isExactlyInstanceOf(RuntimeException.class)
         .hasMessage("Fehler beim Erstellen eines zeitgesteuerten Undeployment eines Online-Dienstes: "
             + "HTTP-Response-Code: 500 Internal Server Error | Meldung des Servers: "

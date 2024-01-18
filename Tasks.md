@@ -191,7 +191,7 @@ unterschiedlich ist.
 
 ---------------------------------------------------------------------------------------------------
 
-### Task _createScheduledUndeployment_
+### Task _createScheduledUndeploymentOzg_
 
 #### Allgemein
 
@@ -210,7 +210,7 @@ Erstellt ein zeitgesteuertes Undeployment eines Online-Dienstes.
 
 ---------------------------------------------------------------------------------------------------
 
-### Task _deleteScheduledUndeployment_
+### Task _deleteScheduledUndeploymentOzg_
 
 #### Allgemein
 
@@ -224,7 +224,7 @@ Löscht ein zeitgesteuertes Undeployment eines Online-Dienstes.
 
 ---------------------------------------------------------------------------------------------------
 
-### Task _listScheduledUndeployments_
+### Task _listScheduledUndeploymentsOzg_
 
 #### Allgemein
 

@@ -1,6 +1,6 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
-import static de.seitenbau.ozghub.prozessdeployment.handler.ListScheduledUndeploymentsHandler.API_PATH;
+import static de.seitenbau.ozghub.prozessdeployment.handler.ListScheduledUndeploymentsOzgHandler.API_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -29,7 +29,7 @@ import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
 import de.seitenbau.ozghub.prozessdeployment.model.response.Aggregated;
 import lombok.SneakyThrows;
 
-public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
+public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
 {
   private static final Aggregated<List<ScheduledUndeployment>> RESPONSE = constructResponse();
   private static final Aggregated<List<ScheduledUndeployment>> RESPONSE2 = constructResponse2();
@@ -62,7 +62,7 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
     prepareLogging();
     HttpHandler httpHandler = createAndStartHttpServer(RESPONSE);
 
-    ListScheduledUndeploymentsHandler sut = new ListScheduledUndeploymentsHandler(createEnvironment());
+    ListScheduledUndeploymentsOzgHandler sut = new ListScheduledUndeploymentsOzgHandler(createEnvironment());
 
     //act
     Aggregated<List<ScheduledUndeployment>> actual = sut.list(TASK_NAME);
@@ -108,7 +108,7 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
     prepareLogging();
     HttpHandler httpHandler = createAndStartHttpServer(RESPONSE2);
 
-    ListScheduledUndeploymentsHandler sut = new ListScheduledUndeploymentsHandler(createEnvironment());
+    ListScheduledUndeploymentsOzgHandler sut = new ListScheduledUndeploymentsOzgHandler(createEnvironment());
 
     //act
     Aggregated<List<ScheduledUndeployment>> actual = sut.list(TASK_NAME);
@@ -148,7 +148,7 @@ public class ListScheduledUndeploymentsHandlerTest extends BaseTestHandler
         HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
     String url = "http://localhost:" + httpServer.getAddress().getPort();
 
-    ListScheduledUndeploymentsHandler sut = new ListScheduledUndeploymentsHandler(createEnvironment());
+    ListScheduledUndeploymentsOzgHandler sut = new ListScheduledUndeploymentsOzgHandler(createEnvironment());
 
     //act
     assertThatThrownBy(() -> sut.list(TASK_NAME))

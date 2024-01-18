@@ -12,7 +12,7 @@ import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class CreateScheduledUndeploymentHandler extends DefaultHandler
+public class CreateScheduledUndeploymentOzgHandler extends DefaultHandler
 {
   public static final String API_PATH = "/prozess/scheduled/undeployment";
 
@@ -20,14 +20,14 @@ public class CreateScheduledUndeploymentHandler extends DefaultHandler
 
   private final ServerConnectionHelper<Void> serverConnectionHelper = new ServerConnectionHelper<>(null);
 
-  public CreateScheduledUndeploymentHandler(Environment environment)
+  public CreateScheduledUndeploymentOzgHandler(Environment environment)
   {
     super(environment);
   }
 
-  public void createScheduledUndeployment(ScheduledUndeployment scheduledUndeployment)
+  public void createScheduledUndeploymentOzg(ScheduledUndeployment scheduledUndeployment)
   {
-    log.info("Start des Tasks: createScheduledUndeployment");
+    log.info("Start des Tasks: createScheduledUndeploymentOzg");
     try
     {
       String payloadString = OBJECT_MAPPER.writeValueAsString(scheduledUndeployment);
@@ -40,7 +40,7 @@ public class CreateScheduledUndeploymentHandler extends DefaultHandler
           payload);
 
       log.info("Das zeitgesteuerte Undeployment wurde erfolgreich erstellt");
-      log.info("Ende des Tasks: createScheduledUndeployment");
+      log.info("Ende des Tasks: createScheduledUndeploymentOzg");
     }
     catch (Exception e)
     {

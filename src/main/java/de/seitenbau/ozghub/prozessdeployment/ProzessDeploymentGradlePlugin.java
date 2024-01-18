@@ -4,15 +4,15 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskContainer;
 
-import de.seitenbau.ozghub.prozessdeployment.task.CreateScheduledUndeploymentTask;
+import de.seitenbau.ozghub.prozessdeployment.task.CreateScheduledUndeploymentOzgTask;
 import de.seitenbau.ozghub.prozessdeployment.task.DefaultPluginTask;
-import de.seitenbau.ozghub.prozessdeployment.task.DeleteScheduledUndeploymentTask;
+import de.seitenbau.ozghub.prozessdeployment.task.DeleteScheduledUndeploymentOzgTask;
 import de.seitenbau.ozghub.prozessdeployment.task.DeployFormsTask;
 import de.seitenbau.ozghub.prozessdeployment.task.DeployProcessTask;
 import de.seitenbau.ozghub.prozessdeployment.task.EncryptParameterValueTask;
 import de.seitenbau.ozghub.prozessdeployment.task.ListFormsTask;
 import de.seitenbau.ozghub.prozessdeployment.task.ListProcessesTask;
-import de.seitenbau.ozghub.prozessdeployment.task.ListScheduledUndeploymentsTask;
+import de.seitenbau.ozghub.prozessdeployment.task.ListScheduledUndeploymentsOzgTask;
 import de.seitenbau.ozghub.prozessdeployment.task.UndeployFormTask;
 import de.seitenbau.ozghub.prozessdeployment.task.UndeployProcessTask;
 
@@ -61,18 +61,18 @@ public class ProzessDeploymentGradlePlugin implements Plugin<Project>
         "Verschlüsselt einen Prozessparameterwert");
 
     createTask(
-        "createScheduledUndeployment",
-        CreateScheduledUndeploymentTask.class,
+        "createScheduledUndeploymentOzg",
+        CreateScheduledUndeploymentOzgTask.class,
         "Erstellt ein zeitgesteuertes Undeployment eines Online-Dienstes.");
 
     createTask(
-        "deleteScheduledUndeployment",
-        DeleteScheduledUndeploymentTask.class,
+        "deleteScheduledUndeploymentOzg",
+        DeleteScheduledUndeploymentOzgTask.class,
         "Löscht ein zeitgesteuertes Undeployment eines Online-Dienstes.");
 
     createTask(
-        "listScheduledUndeployments",
-        ListScheduledUndeploymentsTask.class,
+        "listScheduledUndeploymentsOzg",
+        ListScheduledUndeploymentsOzgTask.class,
         "Listet alle zeitgesteuerten Undeployments von Online-Diensten auf.");
   }
 

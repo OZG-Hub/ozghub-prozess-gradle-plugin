@@ -4,13 +4,13 @@ import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.options.Option;
 
-import de.seitenbau.ozghub.prozessdeployment.handler.DeleteScheduledUndeploymentHandler;
+import de.seitenbau.ozghub.prozessdeployment.handler.DeleteScheduledUndeploymentOzgHandler;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class DeleteScheduledUndeploymentTask extends DefaultPluginTask
+public class DeleteScheduledUndeploymentOzgTask extends DefaultPluginTask
 {
   /**
    * Deployment-ID des Online-Dienstes, für den das zeitgesteuerte Undeployment gelöscht werden soll.
@@ -22,9 +22,10 @@ public class DeleteScheduledUndeploymentTask extends DefaultPluginTask
   protected String deploymentId = null;
 
   @TaskAction
-  public void deleteScheduledUndeployment()
+  public void deleteScheduledUndeploymentOzg()
   {
-    DeleteScheduledUndeploymentHandler handler = new DeleteScheduledUndeploymentHandler(getEnvironment());
+    DeleteScheduledUndeploymentOzgHandler handler =
+        new DeleteScheduledUndeploymentOzgHandler(getEnvironment());
     handler.deleteScheduledUndeployment(deploymentId);
   }
 }

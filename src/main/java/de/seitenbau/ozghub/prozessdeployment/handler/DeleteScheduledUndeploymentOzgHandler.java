@@ -8,26 +8,26 @@ import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class DeleteScheduledUndeploymentHandler extends DefaultHandler
+public class DeleteScheduledUndeploymentOzgHandler extends DefaultHandler
 {
   public static final String API_PATH = "/prozess/scheduled/undeployment";
 
   private final ServerConnectionHelper<Void> serverConnectionHelper = new ServerConnectionHelper<>(null);
 
-  public DeleteScheduledUndeploymentHandler(Environment environment)
+  public DeleteScheduledUndeploymentOzgHandler(Environment environment)
   {
     super(environment);
   }
 
   public void deleteScheduledUndeployment(String deploymentId)
   {
-    log.info("Start des Tasks: deleteScheduledUndeployment");
+    log.info("Start des Tasks: deleteScheduledUndeploymentOzg");
     try
     {
       String deploymentIdEncoded = serverConnectionHelper.encodeUrl(deploymentId);
       serverConnectionHelper.delete(environment, API_PATH + "/" + deploymentIdEncoded, getHeaders(), null);
       log.info("Das geplante Undeployment wurde erfolgreich gelöscht");
-      log.info("Ende des Tasks: deleteScheduledUndeployment");
+      log.info("Ende des Tasks: deleteScheduledUndeploymentOzg");
     }
     catch (Exception e)
     {

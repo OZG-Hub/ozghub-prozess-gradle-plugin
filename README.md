@@ -7,23 +7,13 @@ werden.
 
 ## System-Anforderungen
 
-- Das Plugin ist mit Gradle 7.6.2 getestet. Eventuell sind die Funktionen auch mit niedrigeren
+- Das Plugin ist mit Gradle 7.6.3 getestet. Eventuell sind die Funktionen auch mit niedrigeren
   Gradle-Versionen verfügbar.
 - Das verwendete Gradle muss minimal unter Java 17 laufen.
 
 ## Verwendung
 
-Das Gradle-Plugin stellt die folgenden Tasks zur Verfügung:
-
-- `deployProcess`: Deployt Prozessdefinitionen
-- `deployForms`: Deployt Formulare
-- `listProcesses`: Zeigt eine Liste aller deployten Prozesse an
-- `listForms`: Zeigt eine Liste aller deployten Formulare an
-- `undeployProcess`: Löscht ein Prozess-Deployment
-- `undeployForm`: Löscht ein Formular-Deployment
-- `encryptParameterValue`: Verschlüsselt einen Prozessparameterwert
-
-Die Tasks sind in [Tasks.md](Tasks.md) genauer beschrieben.
+Das Gradle-Plugin stellt Tasks zur Verfügung. Die Tasks sind in [Tasks.md](Tasks.md) beschrieben.
 
 Die Schnittstellen, die der OZG-Hub für Prozessmodellierer bereitstellt, werden in
 [Schnittstellen-Dokumentation](Schnittstellen.md) beschrieben. Die Schnittstellen enthalten sowohl

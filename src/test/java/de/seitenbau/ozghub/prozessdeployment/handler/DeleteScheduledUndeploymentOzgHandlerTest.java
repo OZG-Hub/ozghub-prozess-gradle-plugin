@@ -1,6 +1,6 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
-import static de.seitenbau.ozghub.prozessdeployment.handler.DeleteScheduledUndeploymentHandler.API_PATH;
+import static de.seitenbau.ozghub.prozessdeployment.handler.DeleteScheduledUndeploymentOzgHandler.API_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -18,7 +18,7 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler.Request
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import lombok.SneakyThrows;
 
-public class DeleteScheduledUndeploymentHandlerTest extends BaseTestHandler
+public class DeleteScheduledUndeploymentOzgHandlerTest extends BaseTestHandler
 {
   private HttpServer httpServer = null;
 
@@ -43,7 +43,7 @@ public class DeleteScheduledUndeploymentHandlerTest extends BaseTestHandler
     //arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
-    DeleteScheduledUndeploymentHandler sut = new DeleteScheduledUndeploymentHandler(createEnvironment());
+    DeleteScheduledUndeploymentOzgHandler sut = new DeleteScheduledUndeploymentOzgHandler(createEnvironment());
 
     //act
     sut.deleteScheduledUndeployment("deploymentId");
@@ -61,7 +61,7 @@ public class DeleteScheduledUndeploymentHandlerTest extends BaseTestHandler
     //arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
-    DeleteScheduledUndeploymentHandler sut = new DeleteScheduledUndeploymentHandler(createEnvironment());
+    DeleteScheduledUndeploymentOzgHandler sut = new DeleteScheduledUndeploymentOzgHandler(createEnvironment());
 
     //act
     sut.deleteScheduledUndeployment("?hack=1");
@@ -83,7 +83,7 @@ public class DeleteScheduledUndeploymentHandlerTest extends BaseTestHandler
         HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
-    DeleteScheduledUndeploymentHandler sut = new DeleteScheduledUndeploymentHandler(createEnvironment());
+    DeleteScheduledUndeploymentOzgHandler sut = new DeleteScheduledUndeploymentOzgHandler(createEnvironment());
 
     //act
     assertThatThrownBy(() -> sut.deleteScheduledUndeployment("deploymentId"))

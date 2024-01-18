@@ -13,12 +13,12 @@ import de.seitenbau.ozghub.prozessdeployment.model.response.Aggregated;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class ListScheduledUndeploymentsHandler
+public class ListScheduledUndeploymentsOzgHandler
     extends AbstractListHandler<Aggregated<List<ScheduledUndeployment>>>
 {
   public static final String API_PATH = "/prozess/scheduled/undeployment/list";
 
-  public ListScheduledUndeploymentsHandler(Environment environment)
+  public ListScheduledUndeploymentsOzgHandler(Environment environment)
   {
     super(environment,
         new TypeReference<>()
@@ -43,7 +43,7 @@ public class ListScheduledUndeploymentsHandler
   private static String getLogText(List<ScheduledUndeployment> scheduledUndeployments)
   {
     return scheduledUndeployments.stream()
-        .map(ListScheduledUndeploymentsHandler::getLogText)
+        .map(ListScheduledUndeploymentsOzgHandler::getLogText)
         .collect(Collectors.joining());
   }
 

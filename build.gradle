@@ -16,7 +16,7 @@ plugins {
     id 'com.gradle.plugin-publish' version '1.2.1'
 
     // https://plugins.gradle.org/plugin/org.owasp.dependencycheck
-    id "org.owasp.dependencycheck" version "9.0.8"
+    id "org.owasp.dependencycheck" version "9.0.9"
 
     // https://plugins.gradle.org/plugin/com.github.ben-manes.versions
     id "com.github.ben-manes.versions" version "0.50.0"
@@ -54,7 +54,7 @@ dependencies {
     compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.8.3'
 
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
-    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation 'org.assertj:assertj-core:3.25.1'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.1'
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
