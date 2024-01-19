@@ -3,6 +3,7 @@ package de.seitenbau.ozghub.prozessdeployment.task;
 import java.time.LocalDate;
 import java.util.Date;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.options.Option;
@@ -98,11 +99,35 @@ public class CreateScheduledUndeploymentOzgTask extends DefaultPluginTask
     handler.createScheduledUndeploymentOzg(new ScheduledUndeployment(
             deploymentId,
             undeploymentDate,
-            new Message(undeploymentAnnounceMessageSubject, undeploymentAnnounceMessageBody),
-            new Message(undeploymentMessageSubject, undeploymentMessageBody),
-            new UndeploymentHint(undeploymentHintText, valueOrDefault(startToDisplayUndeploymentHint))
+            createUndeploymentAnnounceMessage(),
+            createUndeploymentMessage(),
+            createUndeploymentHint()
         )
     );
+  }
+
+  private Message createUndeploymentAnnounceMessage()
+  {
+    return new Message(undeploymentAnnounceMessageSubject, undeploymentAnnounceMessageBody);
+  }
+
+  private Message createUndeploymentMessage()
+  {
+    return new Message(undeploymentMessageSubject, undeploymentMessageBody);
+  }
+
+  private UndeploymentHint createUndeploymentHint()
+  {
+    LocalDate whenToDisplayUndeploymentHint = getStartToDisplayUndeploymentHint();
+    return new UndeploymentHint(undeploymentHintText, whenToDisplayUndeploymentHint);
+  }
+
+  private LocalDate getStartToDisplayUndeploymentHint()
+  {
+    boolean undeploymentHintTextPassed = !ObjectUtils.isEmpty(undeploymentHintText);
+    return undeploymentHintTextPassed
+        ? valueOrDefault(startToDisplayUndeploymentHint)
+        : startToDisplayUndeploymentHint;
   }
 
   private LocalDate valueOrDefault(LocalDate startToDisplayUndeploymentHint)
