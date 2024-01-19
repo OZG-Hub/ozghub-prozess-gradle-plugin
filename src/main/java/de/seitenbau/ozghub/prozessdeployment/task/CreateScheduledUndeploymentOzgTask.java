@@ -32,24 +32,36 @@ public class CreateScheduledUndeploymentOzgTask extends DefaultPluginTask
       description = "Das Datum, an dem der Online-Dienst undeployt werden soll")
   protected Date undeploymentDate = null;
 
+  /**
+   * Betreff der Ankündigungsnachricht eines Undeployments.
+   */
   @Input
   @org.gradle.api.tasks.Optional
   @Option(option = "undeploymentAnnounceMessageSubject",
       description = "Betreff der Ankündigungsnachricht eines Undeployments")
   protected String undeploymentAnnounceMessageSubject = null;
 
+  /**
+   * Text der Ankündigungsnachricht eines Undeployments.
+   */
   @Input
   @org.gradle.api.tasks.Optional
   @Option(option = "undeploymentAnnounceMessageBody",
       description = "Text der Ankündigungsnachricht eines Undeployments")
   protected String undeploymentAnnounceMessageBody = null;
 
+  /**
+   * Betreff der Nachricht eines Undeployments.
+   */
   @Input
   @org.gradle.api.tasks.Optional
   @Option(option = "undeploymentMessageSubject",
       description = "Betreff der Nachricht eines Undeployments")
   protected String undeploymentMessageSubject = null;
 
+  /**
+   * Text der Nachricht eines Undeployments.
+   */
   @Input
   @org.gradle.api.tasks.Optional
   @Option(option = "undeploymentMessageBody",

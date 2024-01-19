@@ -120,7 +120,7 @@ public class ServerConnectionHelper<T>
     {
       HttpURLConnection http = createHttpURLConnectionForGetRequest(env, path, headers);
 
-      if (http.getResponseCode() / 100 != 2)
+      if (isSuccessCode(http))
       {
         try (InputStream inputStream = http.getErrorStream())
         {
@@ -149,7 +149,7 @@ public class ServerConnectionHelper<T>
       HttpURLConnection http = createHttpURLConnectionForPostRequest(env, path, headers, data);
       sendRequest(data, http);
 
-      if (http.getResponseCode() / 100 != 2) // 2xx
+      if (isSuccessCode(http))
       {
         try (InputStream inputStream = http.getErrorStream())
         {
@@ -170,6 +170,11 @@ public class ServerConnectionHelper<T>
     }
   }
 
+  private static boolean isSuccessCode(HttpURLConnection http) throws IOException
+  {
+    return http.getResponseCode() / 100 != 2;
+  }
+
   private InputStream deleteInternal(Environment env, String path, Map<String, String> headers, byte[] data)
       throws IOException
   {
@@ -178,7 +183,7 @@ public class ServerConnectionHelper<T>
       HttpURLConnection http = createHttpURLConnectionForDeleteRequest(env, path, headers, data);
       sendRequest(data, http);
 
-      if (http.getResponseCode() / 100 != 2)
+      if (isSuccessCode(http))
       {
         try (InputStream inputStream = http.getErrorStream())
         {
@@ -265,7 +270,6 @@ public class ServerConnectionHelper<T>
     http.setDoOutput(false);
     http.setRequestMethod("GET");
 
-    // Authorization
     http.setRequestProperty(HTTPHeaderKeys.AUTHORIZATION, getBasicAuthToken(env));
 
     // Prevent use of cached responses for GET requests
@@ -282,7 +286,6 @@ public class ServerConnectionHelper<T>
     http.setDoOutput(true);
     http.setRequestMethod("POST");
 
-    // Authorization
     http.setRequestProperty(HTTPHeaderKeys.AUTHORIZATION, getBasicAuthToken(env));
 
     // Weitere Header
@@ -298,7 +301,6 @@ public class ServerConnectionHelper<T>
     allowTransferRequestBodyWhenNonEmptyBody(http, data);
     http.setRequestMethod("DELETE");
 
-    // Authorization
     http.setRequestProperty(HTTPHeaderKeys.AUTHORIZATION, getBasicAuthToken(env));
 
     // Weitere Header
@@ -338,17 +340,22 @@ public class ServerConnectionHelper<T>
 
     if (data != null)
     {
-      try (OutputStream os = http.getOutputStream())
-      {
-        os.write(data);
-        os.flush();
-        log.debug("Response Code: " + http.getResponseCode());
-      }
-      catch (Exception e)
-      {
-        http.disconnect();
-        throw createRuntimeException(http, e);
-      }
+      writeData(data, http);
+    }
+  }
+
+  private void writeData(byte[] data, HttpURLConnection http)
+  {
+    try (OutputStream os = http.getOutputStream())
+    {
+      os.write(data);
+      os.flush();
+      log.debug("Response Code: " + http.getResponseCode());
+    }
+    catch (Exception e)
+    {
+      http.disconnect();
+      throw createRuntimeException(http, e);
     }
   }
 

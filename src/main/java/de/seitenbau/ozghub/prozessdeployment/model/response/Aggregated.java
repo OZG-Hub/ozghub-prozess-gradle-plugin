@@ -1,5 +1,6 @@
 package de.seitenbau.ozghub.prozessdeployment.model.response;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -15,16 +16,17 @@ import lombok.ToString;
  *
  * @param <T> der Typ des Ergebnisses.
  */
+@Getter
 @EqualsAndHashCode
 @ToString
 public final class Aggregated<T> implements Serializable
 {
+  @Serial
   private static final long serialVersionUID = 1L;
 
   /**
    * Das aus mehreren Methodenaufrufen zusammengesetzte Gesamtergebnis.
    */
-  @Getter
   private final T value;
 
   /**
@@ -32,7 +34,6 @@ public final class Aggregated<T> implements Serializable
    * tatsächlich ein Ergebnis geliefert haben.
    * False, wenn mindestens ein Aufruf kein Ergebnis geliefert hat (Timeout, Fehler oder ähnliches).
    */
-  @Getter
   private final boolean complete;
 
   private Aggregated(T value, boolean complete)
@@ -44,16 +45,6 @@ public final class Aggregated<T> implements Serializable
   public static <T> Aggregated<T> complete(T value)
   {
     return new Aggregated<>(value, true);
-  }
-
-  public static <T> Aggregated<T> incomplete()
-  {
-    return new Aggregated<>(null, false);
-  }
-
-  public static <T> Aggregated<T> incomplete(T value)
-  {
-    return new Aggregated<>(value, false);
   }
 
   @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)

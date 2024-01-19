@@ -125,11 +125,11 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
     String expectedLog = """
         INFO Es sind 1 geplanten Undeployments:
 
-        DeploymentId: deploymentId1
+        DeploymentId: deploymentId
         Undeployment Datum: 30.11.2999
         Ankündigungsnachricht:
-         - Betreff: preUndeploymentSubject1
-         - Text: preUndeploymentBody1
+         - Betreff: preUndeploymentSubject
+         - Text: preUndeploymentBody
         Nachricht:
          - Betreff: *Betreff nicht gesetzt*
          - Text: *Text nicht gesetzt*
@@ -175,7 +175,7 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
   private static Aggregated<List<ScheduledUndeployment>> constructResponse2()
   {
     return Aggregated.complete(List.of(
-        constructScheduledUndeploymentWithoutMessage("1", "30.11.2999")
+        constructScheduledUndeploymentWithoutMessage()
     ));
   }
 
@@ -192,15 +192,14 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
   }
 
   @SneakyThrows
-  private static ScheduledUndeployment constructScheduledUndeploymentWithoutMessage(String suffix,
-      String dateString)
+  private static ScheduledUndeployment constructScheduledUndeploymentWithoutMessage()
   {
     SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-    Date date = formatter.parse(dateString);
+    Date date = formatter.parse("30.11.2999");
     return new ScheduledUndeployment(
-        "deploymentId" + suffix,
+        "deploymentId",
         date,
-        new Message("preUndeploymentSubject" + suffix, "preUndeploymentBody" + suffix),
+        new Message("preUndeploymentSubject", "preUndeploymentBody"),
         new Message(null, null));
   }
 
