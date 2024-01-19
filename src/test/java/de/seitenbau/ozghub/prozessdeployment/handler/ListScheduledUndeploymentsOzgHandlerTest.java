@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler.Request
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
+import de.seitenbau.ozghub.prozessdeployment.model.UndeploymentHint;
 import de.seitenbau.ozghub.prozessdeployment.model.response.Aggregated;
 import lombok.SneakyThrows;
 
@@ -188,7 +190,8 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
         "deploymentId" + suffix,
         date,
         new Message("preUndeploymentSubject" + suffix, "preUndeploymentBody" + suffix),
-        new Message("undeploymentSubject" + suffix, "undeploymentBody" + suffix));
+        new Message("undeploymentSubject" + suffix, "undeploymentBody" + suffix),
+        new UndeploymentHint("hintText" + suffix, LocalDate.now()));
   }
 
   @SneakyThrows
@@ -200,7 +203,8 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
         "deploymentId",
         date,
         new Message("preUndeploymentSubject", "preUndeploymentBody"),
-        new Message(null, null));
+        new Message(null, null),
+        new UndeploymentHint(null, null));
   }
 
   private HttpHandler createAndStartHttpServer(Aggregated<List<ScheduledUndeployment>> response)

@@ -1,5 +1,6 @@
 package de.seitenbau.ozghub.prozessdeployment.task;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.gradle.api.tasks.Input;
@@ -9,6 +10,7 @@ import org.gradle.api.tasks.options.Option;
 import de.seitenbau.ozghub.prozessdeployment.handler.CreateScheduledUndeploymentOzgHandler;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
+import de.seitenbau.ozghub.prozessdeployment.model.UndeploymentHint;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -68,6 +70,25 @@ public class CreateScheduledUndeploymentOzgTask extends DefaultPluginTask
       description = "Text der Nachricht eines Undeployments")
   protected String undeploymentMessageBody = null;
 
+  /**
+   * Ein Hinweistext der dem Nutzer angezeigt wird,
+   * wenn ein zeitgesteuertes Undeployment für den Prozess vorliegt.
+   */
+  @Input
+  @org.gradle.api.tasks.Optional
+  @Option(option = "undeploymentHintText",
+      description = "Hinweistext der für Nutzer während des Prozesses sichtbar ist.")
+  protected String undeploymentHintText;
+
+  /**
+   * Ein Datum ab welchem der Hinweistext für Nutzer dargestellt werden soll.
+   */
+  @Input
+  @org.gradle.api.tasks.Optional
+  @Option(option = "startToDisplayUndeploymentHint",
+      description = "Datum ab dem der Hinweistext angezeigt werden soll.")
+  protected LocalDate startToDisplayUndeploymentHint;
+
   @TaskAction
   public void createScheduledUndeploymentOzg()
   {
@@ -78,8 +99,14 @@ public class CreateScheduledUndeploymentOzgTask extends DefaultPluginTask
             deploymentId,
             undeploymentDate,
             new Message(undeploymentAnnounceMessageSubject, undeploymentAnnounceMessageBody),
-            new Message(undeploymentMessageSubject, undeploymentMessageBody)
+            new Message(undeploymentMessageSubject, undeploymentMessageBody),
+            new UndeploymentHint(undeploymentHintText, valueOrDefault(startToDisplayUndeploymentHint))
         )
     );
+  }
+
+  private LocalDate valueOrDefault(LocalDate startToDisplayUndeploymentHint)
+  {
+    return startToDisplayUndeploymentHint == null ? LocalDate.now() : startToDisplayUndeploymentHint;
   }
 }

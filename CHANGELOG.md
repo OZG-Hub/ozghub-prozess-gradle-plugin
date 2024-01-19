@@ -1,5 +1,10 @@
 # Aktualisierungen
 
+## 2024.01.20-0
+- Feature: Neue Parameter für zeitgesteuerte Undeployments (Task: `createScheduledUndeployment`)
+  - undeploymentHintText: Hinweistext der den Nutzer vor dem Undeployment angezeigt wird
+  - startToDisplayUndeploymentHint: Das Datum ab dem der Hinweistext angezeigt werden soll.
+
 ## 2024.01.19-0
 - Tasks für zeitgesteuertes Undeployment hinzugefügt
   - createScheduledUndeploymentOzg

@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
@@ -23,6 +24,8 @@ public class CreateScheduledUndeploymentOzgHandler extends DefaultHandler
   public CreateScheduledUndeploymentOzgHandler(Environment environment)
   {
     super(environment);
+    // Jackson hat aktuell (19.01.2024) keinen nativen Support für LocalDate, erweitere jackson
+    OBJECT_MAPPER.registerModule(new JavaTimeModule());
   }
 
   public void createScheduledUndeploymentOzg(ScheduledUndeployment scheduledUndeployment)

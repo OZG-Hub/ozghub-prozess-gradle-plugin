@@ -10,7 +10,8 @@ public record ScheduledUndeployment(
     String deploymentId,
     Date undeploymentDate,
     Message undeploymentAnnounceMessage,
-    Message undeploymentMessage
+    Message undeploymentMessage,
+    UndeploymentHint hint
 )
 {
   public ScheduledUndeployment

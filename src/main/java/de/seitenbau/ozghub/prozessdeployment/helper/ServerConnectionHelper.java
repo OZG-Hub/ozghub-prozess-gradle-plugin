@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
@@ -27,7 +28,15 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class ServerConnectionHelper<T>
 {
-  private static final ObjectMapper MAPPER = new ObjectMapper();
+  private static final ObjectMapper MAPPER = createObjectMapper();
+
+  private static ObjectMapper createObjectMapper()
+  {
+    ObjectMapper objectMapper = new ObjectMapper();
+    // Jackson hat aktuell (19.01.2024) keinen nativen Support für LocalDate, erweitere jackson
+    objectMapper.registerModule(new JavaTimeModule());
+    return objectMapper;
+  }
 
   private final TypeReference<T> responseType;
 
