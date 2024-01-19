@@ -360,7 +360,7 @@ Ein Objekt (`application/json`), das den verschlüsselten Prozessparameterwert e
 
 ---------------------------------------------------------------------------------------------------
 
-### Schnittstelle zum auflisten aller erstellten zeitgesteuerte Undeployments
+### Schnittstelle zum Auflisten aller zeitgesteuerten Undeployments
 
 #### Allgemein
 
@@ -374,7 +374,7 @@ Der Aufruf muss als **GET** ausgeführt werden.
 
 #### Rückgabewerte
 
-Ein Objekt (`application/json`), das eine Liste der erstellten zeitgesteuerte Undeployments des Mandanten enthält.<br />
+Ein Objekt (`application/json`), das eine Liste der zeitgesteuerten Undeployments des Mandanten enthält.<br />
 
 ```json
 {
@@ -401,7 +401,7 @@ Ein Objekt (`application/json`), das eine Liste der erstellten zeitgesteuerte Un
 
 ---------------------------------------------------------------------------------------------------
 
-### Schnittstelle zum erstellen eines zeitgesteuertes Undeployments
+### Schnittstelle zum Erstellen eines zeitgesteuerten Undeployments
 
 #### Allgemein
 
@@ -441,12 +441,12 @@ Der Aufruf muss als **POST** ausgeführt werden.
 
 ##### Message Objekt 
 
-| **Name** | **Pflicht** | **Typ** | **Maximale Anzahl Zeichen** | **Beschreibung**                                                                                                                   |
-|----------|-------------|---------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| subject  | Nein        | Objekt  | 255                         | Der Betreff der Nachricht.                                                                                                         |
-| body     | Nein        | Objekt  | 2000                        | Der Inhalt der Nachricht. Hier können Platzhalter verwenden siehe hierzu "[Platzhalter Message Body](#Platzhalter-Message-Body)".  |
+| **Name** | **Pflicht** | **Typ** | **Maximale Anzahl Zeichen** | **Beschreibung**                                                                                                                        |
+|----------|-------------|---------|-----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| subject  | Nein        | Objekt  | 255                         | Der Betreff der Nachricht.                                                                                                              |
+| body     | Nein        | Objekt  | 2000                        | Der Inhalt der Nachricht. Hier können Platzhalter verwenden siehe hierzu "[Platzhalter im Message Body](#Platzhalter-im-Message-Body)". |
 
-###### Platzhalter Message Body
+###### Platzhalter im Message Body
 
 | Name                      | Beschreibung                                         | Beispiel                                                                            |
 |---------------------------|------------------------------------------------------|-------------------------------------------------------------------------------------|
@@ -461,7 +461,7 @@ Der Endpunkt liefert bei Erfolg den HTTP-Status `204 No content` ohne Response B
 
 ---------------------------------------------------------------------------------------------------
 
-### Schnittstelle zum Löschen von zeitgesteuerte Undeployments
+### Schnittstelle zum Löschen von zeitgesteuerten Undeployments
 
 #### Allgemein
 
