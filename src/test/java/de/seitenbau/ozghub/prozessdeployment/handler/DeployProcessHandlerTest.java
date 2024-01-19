@@ -1,5 +1,6 @@
 package de.seitenbau.ozghub.prozessdeployment.handler;
 
+import static de.seitenbau.ozghub.prozessdeployment.handler.DeployProcessHandler.API_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatRuntimeException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -28,13 +29,13 @@ import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
-import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
 import lombok.SneakyThrows;
 
-public class DeployProcessHandlerTest extends HandlerTestBase
+public class DeployProcessHandlerTest extends BaseTestHandler
 {
   private static final File TEST_FOLDER =
       new File("src/test/resources/handler/deployProcessHandler/");
@@ -151,7 +152,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
                 + ") konnte nicht gefunden werden");
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(0);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(0);
   }
 
   @Test
@@ -323,7 +324,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     // arrange
     byte[] response = "Etwas ist schiefgelaufen".getBytes(StandardCharsets.UTF_8);
     HttpHandler httpHandler = new HttpHandler(500, response);
-    httpServer = HttpServerFactory.createAndStartHttpServer(DeployProcessHandler.API_PATH, httpHandler);
+    httpServer = HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
     Environment env = new Environment(url, "foo3", "bar3");
@@ -341,11 +342,11 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     // act
     assertThatThrownBy(() -> sut.deploy())
         .isExactlyInstanceOf(GradleException.class)
-        .hasMessage("Fehler: HTTP-Response-Code: 500 Internal Server Error | Meldung des Servers: Etwas ist "
-            + "schiefgelaufen | URL: " + url + DeployProcessHandler.API_PATH);
+        .hasMessage("Fehler: HTTP-Response-Code: 500 Internal Server Error | Meldung des Servers: "
+            + "Etwas ist schiefgelaufen | URL: " + url + API_PATH);
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(500);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -422,18 +423,18 @@ public class DeployProcessHandlerTest extends HandlerTestBase
     Message message = request.getUndeploymentMessage();
     if (requestHasMessage)
     {
-      assertThat(message.getSubject()).isNotEmpty();
-      assertThat(message.getBody()).isNotEmpty();
+      assertThat(message.subject()).isNotEmpty();
+      assertThat(message.body()).isNotEmpty();
       return;
     }
 
-    assertThat(message.getSubject()).isNull();
-    assertThat(message.getBody()).isNull();
+    assertThat(message.subject()).isNull();
+    assertThat(message.body()).isNull();
   }
 
   private void assertResponse(HttpHandler handler)
   {
-    assertThat(handler.countRequests()).isEqualTo(1);
+    assertThat(handler.getRequestCount()).isEqualTo(1);
     assertThat(handler.getResponseCode()).isEqualTo(200);
     assertThat(handler.getResponseBody()).isEqualTo(createDeploymentResponse());
   }
@@ -441,7 +442,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   private void assertRequest(HttpHandler.Request request)
   {
     assertThat(request.getRequestMethod()).isEqualTo("POST");
-    assertThat(request.getPath()).isEqualTo(DeployProcessHandler.API_PATH);
+    assertThat(request.getPath()).isEqualTo(API_PATH);
     assertThat(request.getQuery()).isNull();
   }
 
@@ -468,7 +469,7 @@ public class DeployProcessHandlerTest extends HandlerTestBase
   {
     byte[] response = createDeploymentResponse();
     HttpHandler httpHandler = new HttpHandler(200, response);
-    httpServer = HttpServerFactory.createAndStartHttpServer(DeployProcessHandler.API_PATH, httpHandler);
+    httpServer = HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
     return httpHandler;
   }
 

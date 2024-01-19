@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.gradle.api.GradleException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
@@ -18,11 +20,11 @@ public abstract class AbstractListHandler<T> extends DefaultHandler
 {
   private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-  private final Class<T> responseType;
+  private final TypeReference<T> responseType;
 
   private final String apiPath;
 
-  public AbstractListHandler(Environment environment, Class<T> responseType, String apiPath)
+  public AbstractListHandler(Environment environment, TypeReference<T> responseType, String apiPath)
   {
     super(environment);
     this.responseType = responseType;
@@ -43,7 +45,7 @@ public abstract class AbstractListHandler<T> extends DefaultHandler
     return headers;
   }
 
-  public void list(String taskName)
+  public T list(String taskName)
   {
     log.info("Start des Tasks: " + taskName);
 
@@ -51,12 +53,14 @@ public abstract class AbstractListHandler<T> extends DefaultHandler
     {
       T list = getList();
       writeLogEntries(list);
+
+      log.info("Ende des Tasks: " + taskName);
+      return list;
     }
     catch (Exception e)
     {
       throw new GradleException("Fehler: " + e.getMessage(), e);
     }
-    log.info("Ende des Tasks: " + taskName);
   }
 
   protected abstract void writeLogEntries(T list) throws IOException;

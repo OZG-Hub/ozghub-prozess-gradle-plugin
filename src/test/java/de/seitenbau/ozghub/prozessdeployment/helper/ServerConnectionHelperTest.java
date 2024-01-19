@@ -12,6 +12,7 @@ import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpServer;
 
@@ -19,7 +20,6 @@ import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
-import lombok.SneakyThrows;
 
 public class ServerConnectionHelperTest
 {
@@ -27,7 +27,9 @@ public class ServerConnectionHelperTest
 
   private HttpServer httpServer = null;
 
-  private final ServerConnectionHelper<TestResponse> sut = new ServerConnectionHelper<>(TestResponse.class);
+  private final ServerConnectionHelper<TestResponse> sut = new ServerConnectionHelper<>(new TypeReference<>()
+  {
+  });
 
   @AfterEach
   public void after()
@@ -39,8 +41,7 @@ public class ServerConnectionHelperTest
   }
 
   @Test
-  @SneakyThrows
-  public void get()
+  public void get() throws Exception
   {
     // arrange
     HttpHandler handler = createAndStartHttpServer();
@@ -58,12 +59,12 @@ public class ServerConnectionHelperTest
     assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
 
     HttpHandler.Request actualRequest = handler.getRequest();
-    assertThat(handler.countRequests()).isEqualTo(1);
+    assertThat(handler.getRequestCount()).isEqualTo(1);
+    assertThat(actualRequest.getHeaders()).containsEntry(HTTPHeaderKeys.CACHE_CONTROL, List.of("no-cache"));
     assertGetRequest(actualRequest, env, headers);
   }
 
   @Test
-  @SneakyThrows
   public void get_badRequest()
   {
     // arrange
@@ -83,13 +84,12 @@ public class ServerConnectionHelperTest
 
     // assert
     HttpHandler.Request actualRequest = httpHandler.getRequest();
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertGetRequest(actualRequest, env, headers);
   }
 
   @Test
-  @SneakyThrows
-  public void post()
+  public void post() throws Exception
   {
     // arrange
     HttpHandler handler = createAndStartHttpServer();
@@ -108,12 +108,39 @@ public class ServerConnectionHelperTest
     assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
 
     HttpHandler.Request actualRequest = handler.getRequest();
-    assertThat(handler.countRequests()).isEqualTo(1);
+    assertThat(handler.getRequestCount()).isEqualTo(1);
     assertPostRequest(actualRequest, env, headers, data);
   }
 
   @Test
-  @SneakyThrows
+  public void postReturningVoid() throws Exception
+  {
+    // arrange
+    HttpHandler handler = createAndStartHttpServer();
+
+    String url = "http://localhost:" + httpServer.getAddress().getPort();
+    Environment env = new Environment(url, "foo", "bar");
+    Map<String, String> headers = Map.of("header-key", "header-value");
+    byte[] data = new byte[]{1, -2, 3, -4};
+
+    ServerConnectionHelper<Void> sutWithVoidResponse =
+        new ServerConnectionHelper<>(new TypeReference<>()
+        {
+        });
+
+
+    // act
+    Void actual = sutWithVoidResponse.post(env, "/api/pfad", headers, data);
+
+    // assert
+    assertThat(actual).isNull();
+
+    HttpHandler.Request actualRequest = handler.getRequest();
+    assertThat(handler.getRequestCount()).isEqualTo(1);
+    assertPostRequest(actualRequest, env, headers, data);
+  }
+
+  @Test
   public void post_badRequest()
   {
     // arrange
@@ -134,13 +161,12 @@ public class ServerConnectionHelperTest
 
     // assert
     HttpHandler.Request actualRequest = httpHandler.getRequest();
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertPostRequest(actualRequest, env, headers, data);
   }
 
   @Test
-  @SneakyThrows
-  public void delete()
+  public void delete() throws Exception
   {
     // arrange
     HttpHandler handler = createAndStartHttpServer();
@@ -152,18 +178,17 @@ public class ServerConnectionHelperTest
     TestResponse expected = createTestResponse();
 
     // act
-    TestResponse actual = sut.delete(env, "/api/pfad", headers);
+    TestResponse actual = sut.delete(env, "/api/pfad", headers, null);
 
     // assert
     assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
 
     HttpHandler.Request actualRequest = handler.getRequest();
-    assertThat(handler.countRequests()).isEqualTo(1);
+    assertThat(handler.getRequestCount()).isEqualTo(1);
     assertDeleteRequest(actualRequest, env, headers);
   }
 
   @Test
-  @SneakyThrows
   public void delete_badRequest()
   {
     // arrange
@@ -176,14 +201,14 @@ public class ServerConnectionHelperTest
     Map<String, String> headers = Map.of("header-key", "header-value");
 
     // act
-    assertThatThrownBy(() -> sut.delete(env, "/api/pfad", headers))
+    assertThatThrownBy(() -> sut.delete(env, "/api/pfad", headers, null))
         .isExactlyInstanceOf(RuntimeException.class)
         .hasMessage("HTTP-Response-Code: 400 Bad Request | Meldung des Servers: Es ist ein Fehler aufgetreten"
             + " | URL: " + url + "/api/pfad");
 
     // assert
     HttpHandler.Request actualRequest = httpHandler.getRequest();
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertDeleteRequest(actualRequest, env, headers);
   }
 
@@ -230,8 +255,7 @@ public class ServerConnectionHelperTest
     assertThat(request.getHeaders()).containsEntry(HTTPHeaderKeys.AUTHORIZATION, List.of(auth));
   }
 
-  @SneakyThrows
-  private HttpHandler createAndStartHttpServer()
+  private HttpHandler createAndStartHttpServer() throws Exception
   {
     byte[] response = OBJECT_MAPPER.writeValueAsBytes(createTestResponse());
     HttpHandler httpHandler = new HttpHandler(200, response);

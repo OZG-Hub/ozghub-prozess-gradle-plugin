@@ -5,7 +5,7 @@ import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
 
 import de.seitenbau.ozghub.prozessdeployment.handler.UndeployProcessHandler;
-import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,7 +42,7 @@ public class UndeployProcessTask extends DefaultPluginTask
   private String undeploymentMessageBody;
 
   @TaskAction
-  public void run()
+  public void undeployProcess()
   {
     UndeployProcessHandler handler = new UndeployProcessHandler(
         getEnvironment(),

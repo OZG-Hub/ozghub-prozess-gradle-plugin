@@ -70,7 +70,7 @@ public class ListFormsHandlerTest
     sut.list(TASK_NAME);
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(200);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();

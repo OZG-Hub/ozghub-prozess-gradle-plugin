@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
@@ -27,9 +29,9 @@ public class ServerConnectionHelper<T>
 {
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
-  private final Class<T> responseType;
+  private final TypeReference<T> responseType;
 
-  public ServerConnectionHelper(Class<T> responseType)
+  public ServerConnectionHelper(TypeReference<T> responseType)
   {
     this.responseType = responseType;
   }
@@ -69,9 +71,13 @@ public class ServerConnectionHelper<T>
    */
   public T post(Environment env, String path, Map<String, String> headers, byte[] data) throws IOException
   {
-    try (InputStream stream = postInternal(env, path, headers, data))
+    try (InputStream responseStream = postInternal(env, path, headers, data))
     {
-      return MAPPER.readValue(stream, responseType);
+      if (responseType == null)
+      {
+        return null;
+      }
+      return MAPPER.readValue(responseStream, responseType);
     }
   }
 
@@ -93,28 +99,18 @@ public class ServerConnectionHelper<T>
   {
     try (InputStream stream = deleteInternal(env, path, headers, data))
     {
+      if (responseType == null)
+      {
+        return null;
+      }
+
       return MAPPER.readValue(stream, responseType);
     }
   }
 
-  /**
-   * DELETE-Request an eine Schnittstelle senden. Die URL der Schnittstelle setzt sich aus der URL des
-   * Environments und dem Pfad der API zusammen. Es sind nur HTTP oder HTTPS-URLs möglich.
-   *
-   * @param env Informationen über den Server der Schnittstelle
-   * @param path Pfad der API
-   * @param headers HTTP-Header
-   *
-   * @return Rückgabewert des Servers
-   * @throws IOException Wenn beim Aufrufen der Schnittstelle oder beim Bearbeiten der Anfrage beim Server ein
-   * Fehler aufgetreten ist
-   */
-  public T delete(Environment env, String path, Map<String, String> headers) throws IOException
+  public String encodeUrl(String value)
   {
-    try (InputStream stream = deleteInternal(env, path, headers))
-    {
-      return MAPPER.readValue(stream, responseType);
-    }
+    return URLEncoder.encode(value, StandardCharsets.UTF_8);
   }
 
   private InputStream getInternal(Environment env, String path, Map<String, String> headers)
@@ -124,11 +120,11 @@ public class ServerConnectionHelper<T>
     {
       HttpURLConnection http = createHttpURLConnectionForGetRequest(env, path, headers);
 
-      if (http.getResponseCode() != 200)
+      if (isSuccessCode(http))
       {
         try (InputStream inputStream = http.getErrorStream())
         {
-          String response = convertToStringUsingServerResponseType(inputStream);
+          String response = convertToString(inputStream);
           throw new RuntimeException(createErrorMessage(http, response));
         }
       }
@@ -151,13 +147,13 @@ public class ServerConnectionHelper<T>
     try
     {
       HttpURLConnection http = createHttpURLConnectionForPostRequest(env, path, headers, data);
-      sendData(data, http);
+      sendRequest(data, http);
 
-      if (http.getResponseCode() != 200)
+      if (isSuccessCode(http))
       {
         try (InputStream inputStream = http.getErrorStream())
         {
-          String response = convertToStringUsingServerResponseType(inputStream);
+          String response = convertToString(inputStream);
           throw new RuntimeException(createErrorMessage(http, response));
         }
       }
@@ -174,10 +170,9 @@ public class ServerConnectionHelper<T>
     }
   }
 
-  private InputStream deleteInternal(Environment env, String path, Map<String, String> headers)
-      throws IOException
+  private static boolean isSuccessCode(HttpURLConnection http) throws IOException
   {
-    return deleteInternal(env, path, headers, new byte[0]);
+    return http.getResponseCode() / 100 != 2;
   }
 
   private InputStream deleteInternal(Environment env, String path, Map<String, String> headers, byte[] data)
@@ -186,16 +181,13 @@ public class ServerConnectionHelper<T>
     try
     {
       HttpURLConnection http = createHttpURLConnectionForDeleteRequest(env, path, headers, data);
-      if (data.length > 0)
-      {
-        sendData(data, http);
-      }
+      sendRequest(data, http);
 
-      if (http.getResponseCode() != 200)
+      if (isSuccessCode(http))
       {
         try (InputStream inputStream = http.getErrorStream())
         {
-          String response = convertToStringUsingServerResponseType(inputStream);
+          String response = convertToString(inputStream);
           throw new RuntimeException(createErrorMessage(http, response));
         }
       }
@@ -267,7 +259,7 @@ public class ServerConnectionHelper<T>
     }
 
     HttpURLConnection http = (HttpURLConnection) url.openConnection();
-    setConnectionParametersForDeleteRequest(env, data.length, headers, http);
+    setConnectionParametersForDeleteRequest(env, data, headers, http);
 
     return http;
   }
@@ -278,8 +270,10 @@ public class ServerConnectionHelper<T>
     http.setDoOutput(false);
     http.setRequestMethod("GET");
 
-    // Authorisierungsdaten
     http.setRequestProperty(HTTPHeaderKeys.AUTHORIZATION, getBasicAuthToken(env));
+
+    // Prevent use of cached responses for GET requests
+    http.setRequestProperty(HTTPHeaderKeys.CACHE_CONTROL, "no-cache");
 
     // Weitere Header
     Optional.ofNullable(headers).ifPresent(h -> h.forEach(http::setRequestProperty));
@@ -292,31 +286,32 @@ public class ServerConnectionHelper<T>
     http.setDoOutput(true);
     http.setRequestMethod("POST");
 
-    // Authorisierungsdaten
     http.setRequestProperty(HTTPHeaderKeys.AUTHORIZATION, getBasicAuthToken(env));
 
     // Weitere Header
     Optional.ofNullable(headers).ifPresent(h -> h.forEach(http::setRequestProperty));
   }
 
-  private void setConnectionParametersForDeleteRequest(Environment env, int bodyLength, Map<String, String> headers,
+  private void setConnectionParametersForDeleteRequest(
+      Environment env,
+      byte[] data,
+      Map<String, String> headers,
       HttpURLConnection http) throws ProtocolException
   {
-    allowTransferRequestBodyWhenNonEmptyBody(http, bodyLength);
+    allowTransferRequestBodyWhenNonEmptyBody(http, data);
     http.setRequestMethod("DELETE");
 
-    // Authorisierungsdaten
     http.setRequestProperty(HTTPHeaderKeys.AUTHORIZATION, getBasicAuthToken(env));
 
     // Weitere Header
     Optional.ofNullable(headers).ifPresent(h -> h.forEach(http::setRequestProperty));
   }
 
-  private static void allowTransferRequestBodyWhenNonEmptyBody(HttpURLConnection http, int bodyLength)
+  private static void allowTransferRequestBodyWhenNonEmptyBody(HttpURLConnection http, byte[] data)
   {
-    if (bodyLength > 0)
+    if (data != null && data.length > 0)
     {
-      http.setFixedLengthStreamingMode(bodyLength);
+      http.setFixedLengthStreamingMode(data.length);
       http.setDoOutput(true);
     }
     else
@@ -332,13 +327,30 @@ public class ServerConnectionHelper<T>
     return "Basic " + encoding;
   }
 
-  private void sendData(byte[] data, HttpURLConnection http)
+  private void sendRequest(byte[] data, HttpURLConnection http)
+  {
+    try
+    {
+      http.connect();
+    }
+    catch (IOException e)
+    {
+      throw createRuntimeException(http, e);
+    }
+
+    if (data != null)
+    {
+      writeData(data, http);
+    }
+  }
+
+  private void writeData(byte[] data, HttpURLConnection http)
   {
     try (OutputStream os = http.getOutputStream())
     {
-      http.connect();
       os.write(data);
       os.flush();
+      log.debug("Response Code: " + http.getResponseCode());
     }
     catch (Exception e)
     {
@@ -347,23 +359,14 @@ public class ServerConnectionHelper<T>
     }
   }
 
-  private String convertToStringUsingServerResponseType(InputStream inputStream) throws IOException
+  private String convertToString(InputStream inputStream) throws IOException
   {
     if (inputStream == null)
     {
       return "";
     }
 
-    String responseAsString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-    try
-    {
-      T value = MAPPER.readValue(responseAsString, responseType);
-      return value.toString();
-    }
-    catch (IOException e)
-    {
-      return responseAsString;
-    }
+    return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
   }
 
   private RuntimeException createRuntimeException(HttpURLConnection http, Exception e)

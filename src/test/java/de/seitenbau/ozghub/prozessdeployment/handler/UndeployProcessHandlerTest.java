@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
@@ -21,12 +20,12 @@ import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
-import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessUndeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessUndeploymentResponse;
 import lombok.SneakyThrows;
 
-public class UndeployProcessHandlerTest extends HandlerTestBase
+public class UndeployProcessHandlerTest extends BaseTestHandler
 {
   private HttpServer httpServer = null;
 
@@ -113,7 +112,7 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
             + "schiefgelaufen | URL: " + url + UndeployProcessHandler.API_PATH);
 
     // assert
-    assertThat(httpHandler.countRequests()).isEqualTo(1);
+    assertThat(httpHandler.getRequestCount()).isEqualTo(1);
     assertThat(httpHandler.getResponseCode()).isEqualTo(500);
 
     HttpHandler.Request actualRequest = httpHandler.getRequest();
@@ -124,7 +123,7 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
 
   private void assertResponse(HttpHandler handler)
   {
-    assertThat(handler.countRequests()).isEqualTo(1);
+    assertThat(handler.getRequestCount()).isEqualTo(1);
     assertThat(handler.getResponseCode()).isEqualTo(200);
     assertThat(handler.getResponseBody()).isEqualTo(createUndeploymentResponse());
   }
@@ -142,7 +141,8 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
   }
 
   @SneakyThrows
-  private void assertRequestBody(byte[] data, String deploymentId, boolean deleteProcessInstances, boolean requestHasMessage)
+  private void assertRequestBody(byte[] data, String deploymentId, boolean deleteProcessInstances,
+      boolean requestHasMessage)
   {
     ProcessUndeploymentRequest request = OBJECT_MAPPER.readValue(data, ProcessUndeploymentRequest.class);
 
@@ -151,13 +151,13 @@ public class UndeployProcessHandlerTest extends HandlerTestBase
     Message undeploymentMessage = request.getUndeploymentMessage();
     if (requestHasMessage)
     {
-      assertThat(undeploymentMessage.getSubject()).isNotNull();
-      assertThat(undeploymentMessage.getBody()).isNotNull();
+      assertThat(undeploymentMessage.subject()).isNotNull();
+      assertThat(undeploymentMessage.body()).isNotNull();
       return;
     }
 
-    assertThat(undeploymentMessage.getSubject()).isNull();
-    assertThat(undeploymentMessage.getBody()).isNull();
+    assertThat(undeploymentMessage.subject()).isNull();
+    assertThat(undeploymentMessage.body()).isNull();
   }
 
   private void assertRequestHeaders(HttpHandler.Request request, Environment env)

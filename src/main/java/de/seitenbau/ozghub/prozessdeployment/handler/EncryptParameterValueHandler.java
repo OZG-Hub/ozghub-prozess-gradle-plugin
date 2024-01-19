@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.GradleException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
@@ -33,7 +34,9 @@ public class EncryptParameterValueHandler extends DefaultHandler
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   private static final ServerConnectionHelper<EncryptParameterValueResponse> CONNECTION_HELPER =
-      new ServerConnectionHelper<>(EncryptParameterValueResponse.class);
+      new ServerConnectionHelper<>(new TypeReference<>()
+      {
+      });
 
   private final File projectDir;
 

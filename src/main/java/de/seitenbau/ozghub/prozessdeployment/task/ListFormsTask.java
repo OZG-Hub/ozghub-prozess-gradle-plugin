@@ -10,12 +10,11 @@ import lombok.Setter;
 @Setter
 public class ListFormsTask extends DefaultPluginTask
 {
-
   @TaskAction
   public void run()
   {
     ListFormsHandler handler = new ListFormsHandler(getEnvironment());
 
-    handler.list(this.getName());
+    handler.list(getName());
   }
 }

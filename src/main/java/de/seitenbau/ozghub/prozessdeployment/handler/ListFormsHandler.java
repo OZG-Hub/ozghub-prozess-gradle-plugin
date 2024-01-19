@@ -2,6 +2,8 @@ package de.seitenbau.ozghub.prozessdeployment.handler;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.model.response.FormDeploymentList;
 import lombok.extern.log4j.Log4j2;
@@ -13,7 +15,11 @@ public class ListFormsHandler extends AbstractListHandler<FormDeploymentList>
 
   public ListFormsHandler(Environment environment)
   {
-    super(environment, FormDeploymentList.class, API_PATH);
+    super(environment,
+        new TypeReference<>()
+        {
+        },
+        API_PATH);
   }
 
   @Override

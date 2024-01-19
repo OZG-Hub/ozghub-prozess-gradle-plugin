@@ -2,6 +2,8 @@ package de.seitenbau.ozghub.prozessdeployment.handler;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentList;
 import lombok.extern.log4j.Log4j2;
@@ -15,12 +17,16 @@ public class ListProcessesHandler extends AbstractListHandler<ProcessDeploymentL
 
   public ListProcessesHandler(Environment environment)
   {
-    super(environment, ProcessDeploymentList.class, API_PATH);
+    super(environment,
+        new TypeReference<>()
+        {
+        },
+        API_PATH);
   }
 
   protected void writeLogEntries(ProcessDeploymentList deploymentList)
   {
-    if (!Boolean.TRUE.equals(deploymentList.isComplete()))
+    if (!deploymentList.isComplete())
     {
       log.warn("Es konnten nicht alle Deployments von allen Prozessengines abgerufen werden.");
     }

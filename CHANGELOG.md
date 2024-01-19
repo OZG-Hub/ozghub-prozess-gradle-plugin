@@ -1,5 +1,14 @@
 # Aktualisierungen
 
+## 2024.01.19-0
+- Tasks für zeitgesteuertes Undeployment hinzugefügt
+  - createScheduledUndeploymentOzg
+  - deleteScheduledUndeploymentOzg
+  - listScheduledUndeploymentsOzg
+- Feature: Dependencies aktualisiert
+- Feature: Gradle Version aktualisiert auf 7.6.3
+- Feature: Java 17 wird benötigt
+
 ## 2024.01-11-0
 - Feature: Für die Tasks `deployProcess` und `undeployProcess` wurden neue Parameter hinzugefügt
   - `undeployMessageSubject`: Betreff der Nachricht die beim Undeployment des Prozesses verschickt wird.

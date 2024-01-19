@@ -7,12 +7,13 @@ import java.util.Map;
 
 import org.gradle.api.GradleException;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
-import de.seitenbau.ozghub.prozessdeployment.model.request.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessUndeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessUndeploymentResponse;
 import lombok.extern.log4j.Log4j2;
@@ -25,7 +26,9 @@ public class UndeployProcessHandler extends DefaultHandler
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   private static final ServerConnectionHelper<ProcessUndeploymentResponse> CONNECTION_HELPER =
-      new ServerConnectionHelper<>(ProcessUndeploymentResponse.class);
+      new ServerConnectionHelper<>(new TypeReference<>()
+      {
+      });
 
   private final String deploymentId;
 

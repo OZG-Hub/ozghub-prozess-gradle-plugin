@@ -2,6 +2,7 @@ package de.seitenbau.ozghub.prozessdeployment.model.request;
 
 import java.util.Map;
 
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
