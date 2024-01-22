@@ -89,6 +89,9 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
         Nachricht:
          - Betreff: undeploymentSubject1
          - Text: undeploymentBody1
+        Hinweis:
+         - Text: hintText1
+         - Darstellung ab: 23.01.2024
 
         DeploymentId: deploymentId2
         Undeployment Datum: 31.12.2999
@@ -98,6 +101,9 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
         Nachricht:
          - Betreff: undeploymentSubject2
          - Text: undeploymentBody2
+        Hinweis:
+         - Text: hintText2
+         - Darstellung ab: 23.01.2024
         """;
     assertThat(actualLogMessages).contains(expectedLog);
     assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
@@ -135,6 +141,9 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
         Nachricht:
          - Betreff: *Betreff nicht gesetzt*
          - Text: *Text nicht gesetzt*
+        Hinweis:
+         - Text: *Text nicht gesetzt*
+         - Darstellung ab: *Datum nicht gesetzt*
         """;
     assertThat(actualLogMessages).contains(expectedLog);
     assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);

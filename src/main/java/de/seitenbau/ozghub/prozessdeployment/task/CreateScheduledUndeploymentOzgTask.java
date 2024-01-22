@@ -79,7 +79,7 @@ public class CreateScheduledUndeploymentOzgTask extends DefaultPluginTask
   @org.gradle.api.tasks.Optional
   @Option(option = "undeploymentHintText",
       description = "Hinweistext der für Nutzer während des Prozesses sichtbar ist.")
-  protected String undeploymentHintText;
+  protected String undeploymentHintText = null;
 
   /**
    * Ein Datum ab welchem der Hinweistext für Nutzer dargestellt werden soll.
@@ -88,7 +88,7 @@ public class CreateScheduledUndeploymentOzgTask extends DefaultPluginTask
   @org.gradle.api.tasks.Optional
   @Option(option = "startToDisplayUndeploymentHint",
       description = "Datum ab dem der Hinweistext angezeigt werden soll.")
-  protected LocalDate startToDisplayUndeploymentHint;
+  protected LocalDate startToDisplayUndeploymentHint = null;
 
   @TaskAction
   public void createScheduledUndeploymentOzg()
@@ -118,11 +118,11 @@ public class CreateScheduledUndeploymentOzgTask extends DefaultPluginTask
 
   private UndeploymentHint createUndeploymentHint()
   {
-    LocalDate whenToDisplayUndeploymentHint = getStartToDisplayUndeploymentHint();
+    LocalDate whenToDisplayUndeploymentHint = getStartToDisplayUndeploymentHintOrDefault();
     return new UndeploymentHint(undeploymentHintText, whenToDisplayUndeploymentHint);
   }
 
-  private LocalDate getStartToDisplayUndeploymentHint()
+  private LocalDate getStartToDisplayUndeploymentHintOrDefault()
   {
     boolean undeploymentHintTextPassed = !ObjectUtils.isEmpty(undeploymentHintText);
     return undeploymentHintTextPassed
