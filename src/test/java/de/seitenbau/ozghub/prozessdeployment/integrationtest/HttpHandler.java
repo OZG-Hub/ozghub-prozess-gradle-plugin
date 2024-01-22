@@ -47,6 +47,7 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler
           is.readAllBytes(),
           httpExchange.getRequestHeaders(),
           httpExchange.getRequestURI().getPath(),
+          httpExchange.getRequestURI().getRawPath(),
           httpExchange.getRequestURI().getQuery()));
     }
 
@@ -71,6 +72,8 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler
     private final Map<String, List<String>> headers;
 
     private final String path;
+
+    private final String rawPath;
 
     private final String query;
   }
