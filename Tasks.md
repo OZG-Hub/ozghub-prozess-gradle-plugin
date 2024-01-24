@@ -199,16 +199,16 @@ Erstellt ein zeitgesteuertes Undeployment eines Online-Dienstes.
 
 #### Parameter
 
-| Parameter                          | Pflicht? | Beschreibung                                                                                                                      |
-|------------------------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------|
-| deploymentId                       | Ja       | Deployment-ID des Online-Dienstes, der undeployt werden soll                                                                      |
-| undeploymentDate                   | Ja       | Das Datum, an dem der Online-Dienst undeployt werden soll (TT.MM.YYYY)                                                            |
-| undeploymentAnnounceMessageSubject | Nein     | Betreff der Ankündigungsnachricht eines Undeployments                                                                             |
-| undeploymentAnnounceMessageBody    | Nein     | Text der Ankündigungsnachricht eines Undeployments                                                                                |
-| undeploymentMessageSubject         | Nein     | Betreff der Nachricht eines Undeployments                                                                                         |
-| undeploymentMessageBody            | Nein     | Text der Nachricht eines Undeployments                                                                                            |
-| undeploymentHintText               | Nein     | Hinweistext der dem Nutzer angezeigt werden soll                                                                                  |
-| startToDisplayUndeploymentHint     | Nein     | Das Datum ab dem der Hinweistext angezeigt werden soll. (default = Der Tag an dem das zeitgesteuerte Undeployment erstellt wurde) |
+| Parameter                          | Pflicht? | Beschreibung                                                                                                                                                    |
+|------------------------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| deploymentId                       | Ja       | Deployment-ID des Online-Dienstes, der undeployt werden soll                                                                                                    |
+| undeploymentDate                   | Ja       | Das Datum, an dem der Online-Dienst undeployt werden soll (**Format:** `TT.MM.YYYY`)                                                                            |
+| undeploymentAnnounceMessageSubject | Nein     | Betreff der Ankündigungsnachricht eines Undeployments                                                                                                           |
+| undeploymentAnnounceMessageBody    | Nein     | Text der Ankündigungsnachricht eines Undeployments                                                                                                              |
+| undeploymentMessageSubject         | Nein     | Betreff der Nachricht eines Undeployments                                                                                                                       |
+| undeploymentMessageBody            | Nein     | Text der Nachricht eines Undeployments                                                                                                                          |
+| undeploymentHintText               | Nein     | Hinweistext der dem Nutzer angezeigt werden soll                                                                                                                |
+| startToDisplayUndeploymentHint     | Nein     | Das Datum ab dem der Hinweistext angezeigt werden soll. (**Format:** `TT.MM.YYYY`) (**default:** Der Tag an dem das zeitgesteuerte Undeployment erstellt wurde) |
 
 ---------------------------------------------------------------------------------------------------
 
