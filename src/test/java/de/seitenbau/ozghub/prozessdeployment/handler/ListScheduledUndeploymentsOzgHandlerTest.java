@@ -6,10 +6,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+
+import javax.swing.text.DateFormatter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -91,7 +95,7 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
          - Text: undeploymentBody1
         Hinweis:
          - Text: hintText1
-         - Darstellung ab: 23.01.2024
+         - Darstellung ab: 30.11.2999
 
         DeploymentId: deploymentId2
         Undeployment Datum: 31.12.2999
@@ -103,7 +107,7 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
          - Text: undeploymentBody2
         Hinweis:
          - Text: hintText2
-         - Darstellung ab: 23.01.2024
+         - Darstellung ab: 31.12.2999
         """;
     assertThat(actualLogMessages).contains(expectedLog);
     assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
@@ -193,14 +197,16 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
   @SneakyThrows
   private static ScheduledUndeployment constructScheduledUndeployment(String suffix, String dateString)
   {
-    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+    String pattern = "dd.MM.yyyy";
+    SimpleDateFormat formatter = new SimpleDateFormat(pattern);
     Date date = formatter.parse(dateString);
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
     return new ScheduledUndeployment(
         "deploymentId" + suffix,
         date,
         new Message("preUndeploymentSubject" + suffix, "preUndeploymentBody" + suffix),
         new Message("undeploymentSubject" + suffix, "undeploymentBody" + suffix),
-        new UndeploymentHint("hintText" + suffix, LocalDate.now()));
+        new UndeploymentHint("hintText" + suffix, LocalDate.parse(dateString, dateTimeFormatter)));
   }
 
   @SneakyThrows
