@@ -3,7 +3,6 @@ package de.seitenbau.ozghub.prozessdeployment.task;
 import java.time.LocalDate;
 import java.util.Date;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.options.Option;
@@ -118,20 +117,6 @@ public class CreateScheduledUndeploymentOzgTask extends DefaultPluginTask
 
   private UndeploymentHint createUndeploymentHint()
   {
-    LocalDate whenToDisplayUndeploymentHint = getStartToDisplayUndeploymentHintOrDefault();
-    return new UndeploymentHint(undeploymentHintText, whenToDisplayUndeploymentHint);
-  }
-
-  private LocalDate getStartToDisplayUndeploymentHintOrDefault()
-  {
-    boolean undeploymentHintTextPassed = !ObjectUtils.isEmpty(undeploymentHintText);
-    return undeploymentHintTextPassed
-        ? valueOrDefault(startToDisplayUndeploymentHint)
-        : startToDisplayUndeploymentHint;
-  }
-
-  private LocalDate valueOrDefault(LocalDate startToDisplayUndeploymentHint)
-  {
-    return startToDisplayUndeploymentHint == null ? LocalDate.now() : startToDisplayUndeploymentHint;
+    return new UndeploymentHint(undeploymentHintText, startToDisplayUndeploymentHint);
   }
 }
