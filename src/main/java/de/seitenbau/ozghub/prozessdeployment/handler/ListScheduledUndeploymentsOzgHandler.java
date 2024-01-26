@@ -26,6 +26,7 @@ public class ListScheduledUndeploymentsOzgHandler
   public static final String DEFAULT_BODY_TEXT = "*Text nicht gesetzt*";
 
   public static final String DEFAULT_DATE_TEXT = "*Datum nicht gesetzt*";
+  public static final String DATE_PATTERN = "dd.MM.yyyy";
 
   public ListScheduledUndeploymentsOzgHandler(Environment environment)
   {
@@ -58,9 +59,8 @@ public class ListScheduledUndeploymentsOzgHandler
 
   private static String getLogText(ScheduledUndeployment scheduledUndeployment)
   {
-    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-    String formattedUndeploymentDate = formatter.format(scheduledUndeployment.undeploymentDate());
-
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+    String formattedUndeploymentDate = dateTimeFormatter.format(scheduledUndeployment.undeploymentDate());
     return """
         \nDeploymentId: %s
         Undeployment Datum: %s
@@ -127,7 +127,7 @@ public class ListScheduledUndeploymentsOzgHandler
   private static String getHintDisplayDate(UndeploymentHint hint)
   {
     LocalDate localDate = hint.startToDisplay();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
     return localDate != null ? localDate.format(formatter) : null;
   }
 }

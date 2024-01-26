@@ -6,14 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
-
-import javax.swing.text.DateFormatter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -41,6 +36,7 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
   private static final Aggregated<List<ScheduledUndeployment>> RESPONSE2 = constructResponse2();
 
   public static final String TASK_NAME = "listScheduledUndeployments";
+  public static final String DATE_PATTERN = "dd.MM.yyyy";
 
   private HttpServer httpServer = null;
 
@@ -197,13 +193,11 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
   @SneakyThrows
   private static ScheduledUndeployment constructScheduledUndeployment(String suffix, String dateString)
   {
-    String pattern = "dd.MM.yyyy";
-    SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-    Date date = formatter.parse(dateString);
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+    LocalDate undeploymentDate = LocalDate.parse(dateString, dateTimeFormatter);
     return new ScheduledUndeployment(
         "deploymentId" + suffix,
-        date,
+        undeploymentDate,
         new Message("preUndeploymentSubject" + suffix, "preUndeploymentBody" + suffix),
         new Message("undeploymentSubject" + suffix, "undeploymentBody" + suffix),
         new UndeploymentHint("hintText" + suffix, LocalDate.parse(dateString, dateTimeFormatter)));
@@ -212,11 +206,11 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
   @SneakyThrows
   private static ScheduledUndeployment constructScheduledUndeploymentWithoutMessage()
   {
-    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-    Date date = formatter.parse("30.11.2999");
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+    LocalDate undeploymentDate = LocalDate.parse("30.11.2999", dateTimeFormatter);
     return new ScheduledUndeployment(
         "deploymentId",
-        date,
+        undeploymentDate,
         new Message("preUndeploymentSubject", "preUndeploymentBody"),
         new Message(null, null),
         new UndeploymentHint(null, null));

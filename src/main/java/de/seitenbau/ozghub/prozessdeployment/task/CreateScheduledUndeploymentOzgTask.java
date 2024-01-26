@@ -1,7 +1,6 @@
 package de.seitenbau.ozghub.prozessdeployment.task;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
@@ -32,7 +31,7 @@ public class CreateScheduledUndeploymentOzgTask extends DefaultPluginTask
   @Input
   @Option(option = "undeploymentDate",
       description = "Das Datum, an dem der Online-Dienst undeployt werden soll")
-  protected Date undeploymentDate = null;
+  protected LocalDate undeploymentDate = null;
 
   /**
    * Betreff der Ankündigungsnachricht eines Undeployments.

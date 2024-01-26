@@ -92,7 +92,7 @@ public class CreateScheduledUndeploymentOzgHandlerTest extends BaseTestHandler
   {
     return new ScheduledUndeployment(
         "deploymentId",
-        new Date(),
+        LocalDate.now(),
         new Message("preUndeploymentSubject", "preUndeploymentBody"),
         new Message("undeploymentSubject", "undeploymentBody"),
         new UndeploymentHint("undeploymentHintText", LocalDate.now()));
