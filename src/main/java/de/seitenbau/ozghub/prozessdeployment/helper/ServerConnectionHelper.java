@@ -57,11 +57,12 @@ public class ServerConnectionHelper<T>
    * @throws IOException Wenn beim Aufrufen der Schnittstelle oder beim Bearbeiten der Anfrage beim Server ein
    * Fehler aufgetreten ist
    */
-  public T get(Environment env, String path, Map<String, String> headers) throws IOException
+  public T get(Environment env, String path, Map<String, String> headers)
+      throws IOException
   {
     try (InputStream stream = getInternal(env, path, headers))
     {
-      return MAPPER.readValue(stream, responseType);
+      return getResponseObject(stream);
     }
   }
 
@@ -78,15 +79,12 @@ public class ServerConnectionHelper<T>
    * @throws IOException Wenn beim Aufrufen der Schnittstelle oder beim Bearbeiten der Anfrage beim Server ein
    * Fehler aufgetreten ist
    */
-  public T post(Environment env, String path, Map<String, String> headers, byte[] data) throws IOException
+  public T post(Environment env, String path, Map<String, String> headers, byte[] data)
+      throws IOException
   {
-    try (InputStream responseStream = postInternal(env, path, headers, data))
+    try (InputStream stream = postInternal(env, path, headers, data))
     {
-      if (responseType == null)
-      {
-        return null;
-      }
-      return MAPPER.readValue(responseStream, responseType);
+      return getResponseObject(stream);
     }
   }
 
@@ -103,23 +101,13 @@ public class ServerConnectionHelper<T>
    * @throws IOException Wenn beim Aufrufen der Schnittstelle oder beim Bearbeiten der Anfrage beim Server ein
    * Fehler aufgetreten ist
    */
-  public T delete(
-      Environment env, String path, Map<String, String> headers, byte[] data) throws IOException
+  public T delete(Environment env, String path, Map<String, String> headers, byte[] data)
+      throws IOException
   {
     try (InputStream stream = deleteInternal(env, path, headers, data))
     {
-      if (responseType == null)
-      {
-        return null;
-      }
-
-      return MAPPER.readValue(stream, responseType);
+      return getResponseObject(stream);
     }
-  }
-
-  public String encodeUrl(String value)
-  {
-    return URLEncoder.encode(value, StandardCharsets.UTF_8);
   }
 
   private InputStream getInternal(Environment env, String path, Map<String, String> headers)
@@ -129,13 +117,9 @@ public class ServerConnectionHelper<T>
     {
       HttpURLConnection http = createHttpURLConnectionForGetRequest(env, path, headers);
 
-      if (isSuccessCode(http))
+      if (isNotSuccessCode(http))
       {
-        try (InputStream inputStream = http.getErrorStream())
-        {
-          String response = convertToString(inputStream);
-          throw new RuntimeException(createErrorMessage(http, response));
-        }
+        throw exceptionForErrorResponse(http);
       }
 
       return http.getInputStream();
@@ -158,13 +142,9 @@ public class ServerConnectionHelper<T>
       HttpURLConnection http = createHttpURLConnectionForPostRequest(env, path, headers, data);
       sendRequest(data, http);
 
-      if (isSuccessCode(http))
+      if (isNotSuccessCode(http))
       {
-        try (InputStream inputStream = http.getErrorStream())
-        {
-          String response = convertToString(inputStream);
-          throw new RuntimeException(createErrorMessage(http, response));
-        }
+        throw exceptionForErrorResponse(http);
       }
 
       return http.getInputStream();
@@ -177,11 +157,6 @@ public class ServerConnectionHelper<T>
     {
       throw new RuntimeException("Protokoll-Fehler", e);
     }
-  }
-
-  private static boolean isSuccessCode(HttpURLConnection http) throws IOException
-  {
-    return http.getResponseCode() / 100 != 2;
   }
 
   private InputStream deleteInternal(Environment env, String path, Map<String, String> headers, byte[] data)
@@ -192,13 +167,9 @@ public class ServerConnectionHelper<T>
       HttpURLConnection http = createHttpURLConnectionForDeleteRequest(env, path, headers, data);
       sendRequest(data, http);
 
-      if (isSuccessCode(http))
+      if (isNotSuccessCode(http))
       {
-        try (InputStream inputStream = http.getErrorStream())
-        {
-          String response = convertToString(inputStream);
-          throw new RuntimeException(createErrorMessage(http, response));
-        }
+        throw exceptionForErrorResponse(http);
       }
 
       return http.getInputStream();
@@ -211,6 +182,28 @@ public class ServerConnectionHelper<T>
     {
       throw new RuntimeException("Protokoll-Fehler", e);
     }
+  }
+
+  private static boolean isNotSuccessCode(HttpURLConnection http) throws IOException
+  {
+    return http.getResponseCode() / 100 != 2;
+  }
+
+  @SuppressWarnings("unchecked")
+  private T getResponseObject(InputStream responseStream) throws IOException
+  {
+    if (responseType == null)
+    {
+      return null;
+    }
+
+    // Special handling for String responses.
+    if (responseType.getType().getTypeName().equals(String.class.getName()))
+    {
+      return (T) IOUtils.toString(responseStream, StandardCharsets.UTF_8);
+    }
+
+    return MAPPER.readValue(responseStream, responseType);
   }
 
   @SuppressFBWarnings("URLCONNECTION_SSRF_FD")
@@ -368,16 +361,6 @@ public class ServerConnectionHelper<T>
     }
   }
 
-  private String convertToString(InputStream inputStream) throws IOException
-  {
-    if (inputStream == null)
-    {
-      return "";
-    }
-
-    return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-  }
-
   private RuntimeException createRuntimeException(HttpURLConnection http, Exception e)
   {
     try
@@ -391,11 +374,16 @@ public class ServerConnectionHelper<T>
     }
   }
 
+  private RuntimeException exceptionForErrorResponse(HttpURLConnection http) throws IOException
+  {
+    return new RuntimeException(createErrorMessage(http));
+  }
+
   private String createErrorMessage(HttpURLConnection http) throws IOException
   {
-    try (InputStream inputStream = http.getErrorStream())
+    try (InputStream errorStream = http.getErrorStream())
     {
-      String message = convertToStringWithEmptyDefault(inputStream);
+      String message = convertToString(errorStream);
       return createErrorMessage(http, message);
     }
   }
@@ -417,8 +405,13 @@ public class ServerConnectionHelper<T>
     return builder.append(" | URL: ").append(http.getURL()).toString();
   }
 
-  private String convertToStringWithEmptyDefault(InputStream inputStream) throws IOException
+  private String convertToString(InputStream inputStream) throws IOException
   {
     return inputStream == null ? "" : IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+  }
+
+  public static String encodeUrl(String value)
+  {
+    return URLEncoder.encode(value, StandardCharsets.UTF_8);
   }
 }

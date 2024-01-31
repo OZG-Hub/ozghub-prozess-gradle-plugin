@@ -10,7 +10,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class DeleteScheduledUndeploymentOzgHandler extends DefaultHandler
 {
-  public static final String API_PATH = "/prozess/scheduled/undeployment";
+  public static final String API_PATH = "/prozess/scheduled/undeployment/%s";
 
   private final ServerConnectionHelper<Void> serverConnectionHelper = new ServerConnectionHelper<>(null);
 
@@ -24,8 +24,7 @@ public class DeleteScheduledUndeploymentOzgHandler extends DefaultHandler
     log.info("Start des Tasks: deleteScheduledUndeploymentOzg");
     try
     {
-      String deploymentIdEncoded = serverConnectionHelper.encodeUrl(deploymentId);
-      serverConnectionHelper.delete(environment, API_PATH + "/" + deploymentIdEncoded, getHeaders(), null);
+      serverConnectionHelper.delete(environment, getApiPath(deploymentId), getHeaders(), null);
       log.info("Das geplante Undeployment wurde erfolgreich gelöscht");
       log.info("Ende des Tasks: deleteScheduledUndeploymentOzg");
     }
@@ -40,5 +39,10 @@ public class DeleteScheduledUndeploymentOzgHandler extends DefaultHandler
   private Map<String, String> getHeaders()
   {
     return Map.of(HTTPHeaderKeys.CONTENT_TYPE, "application/json");
+  }
+
+  protected static String getApiPath(String deploymentId)
+  {
+    return API_PATH.formatted(ServerConnectionHelper.encodeUrl(deploymentId));
   }
 }
