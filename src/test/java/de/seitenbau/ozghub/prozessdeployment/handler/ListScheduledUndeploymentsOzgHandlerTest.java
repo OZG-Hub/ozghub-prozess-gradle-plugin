@@ -77,7 +77,7 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
     List<String> actualLogMessages = listAppender.getEventList();
     assertThat(actualLogMessages).contains("INFO Start des Tasks: " + TASK_NAME);
     String expectedLog = """
-        INFO Es sind 2 geplanten Undeployments:
+        INFO Es sind 2 geplante Undeployments:
 
         DeploymentId: deploymentId1
         Undeployment Datum: 30.11.2999
@@ -123,7 +123,7 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
     List<String> actualLogMessages = listAppender.getEventList();
     assertThat(actualLogMessages).contains("INFO Start des Tasks: " + TASK_NAME);
     String expectedLog = """
-        INFO Es sind 1 geplanten Undeployments:
+        INFO Es sind 1 geplante Undeployments:
 
         DeploymentId: deploymentId
         Undeployment Datum: 30.11.2999
