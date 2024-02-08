@@ -45,7 +45,7 @@ public class ListScheduledUndeploymentsOzgHandler
       log.warn("Es konnten nicht alle geplanten Undeployments von allen Prozessengines abgerufen werden.");
     }
 
-    log.info("Es sind " + aggregatedScheduledUndeployments.getValue().size() + " geplanten Undeployments:\n"
+    log.info("Es sind " + aggregatedScheduledUndeployments.getValue().size() + " geplante Undeployments:\n"
         + getLogText(aggregatedScheduledUndeployments.getValue()));
   }
 
