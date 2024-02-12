@@ -1,16 +1,15 @@
 package de.seitenbau.ozghub.prozessdeployment.model;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
 public record ScheduledUndeployment(
     String deploymentId,
-    Date undeploymentDate,
+    LocalDate undeploymentDate,
     Message undeploymentAnnounceMessage,
-    Message undeploymentMessage
+    Message undeploymentMessage,
+    UndeploymentHint hint
 )
 {
   public ScheduledUndeployment
@@ -27,27 +26,17 @@ public record ScheduledUndeployment(
     }
   }
 
-  private static void validateUndeploymentDate(Date undeploymentDate)
+  private static void validateUndeploymentDate(LocalDate undeploymentDate)
   {
     if (undeploymentDate == null)
     {
       throw new IllegalArgumentException("Der Parameter 'undeploymentDate' muss gesetzt sein");
     }
 
-    if (toLocalDate(undeploymentDate).isBefore(LocalDate.now()))
+    if (undeploymentDate.isBefore(LocalDate.now()))
     {
       throw new IllegalArgumentException(
           "Der Wert des Parameters 'undeploymentDate' muss in der Zukunft liegen");
     }
-  }
-
-  private static LocalDate toLocalDate(Date date)
-  {
-    if (date == null)
-    {
-      return null;
-    }
-
-    return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
   }
 }

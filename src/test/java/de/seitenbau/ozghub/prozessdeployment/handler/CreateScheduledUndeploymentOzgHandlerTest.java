@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
@@ -19,6 +20,7 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler.Request
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
+import de.seitenbau.ozghub.prozessdeployment.model.UndeploymentHint;
 import lombok.SneakyThrows;
 
 public class CreateScheduledUndeploymentOzgHandlerTest extends BaseTestHandler
@@ -90,9 +92,10 @@ public class CreateScheduledUndeploymentOzgHandlerTest extends BaseTestHandler
   {
     return new ScheduledUndeployment(
         "deploymentId",
-        new Date(),
+        LocalDate.now(),
         new Message("preUndeploymentSubject", "preUndeploymentBody"),
-        new Message("undeploymentSubject", "undeploymentBody"));
+        new Message("undeploymentSubject", "undeploymentBody"),
+        new UndeploymentHint("undeploymentHintText", LocalDate.now()));
   }
 
   private HttpHandler createAndStartHttpServer()

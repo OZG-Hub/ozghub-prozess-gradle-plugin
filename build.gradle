@@ -50,6 +50,12 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.0'
 
+    // Zum serialisieren/deserialisieren von LocalDate nötig
+    // kann entfernt werden wenn jackson das nativ unterstützt
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.16.1
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.16.0'
+
+
     // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
     compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.8.3'
 

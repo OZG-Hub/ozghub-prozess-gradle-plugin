@@ -6,8 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +26,7 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler.Request
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
+import de.seitenbau.ozghub.prozessdeployment.model.UndeploymentHint;
 import de.seitenbau.ozghub.prozessdeployment.model.response.Aggregated;
 import lombok.SneakyThrows;
 
@@ -35,6 +36,7 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
   private static final Aggregated<List<ScheduledUndeployment>> RESPONSE2 = constructResponse2();
 
   public static final String TASK_NAME = "listScheduledUndeployments";
+  public static final String DATE_PATTERN = "dd.MM.yyyy";
 
   private HttpServer httpServer = null;
 
@@ -87,6 +89,9 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
         Nachricht:
          - Betreff: undeploymentSubject1
          - Text: undeploymentBody1
+        Hinweis:
+         - Text: hintText1
+         - Darstellung ab: 30.11.2999
 
         DeploymentId: deploymentId2
         Undeployment Datum: 31.12.2999
@@ -96,6 +101,9 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
         Nachricht:
          - Betreff: undeploymentSubject2
          - Text: undeploymentBody2
+        Hinweis:
+         - Text: hintText2
+         - Darstellung ab: 31.12.2999
         """;
     assertThat(actualLogMessages).contains(expectedLog);
     assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
@@ -133,6 +141,9 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
         Nachricht:
          - Betreff: *Betreff nicht gesetzt*
          - Text: *Text nicht gesetzt*
+        Hinweis:
+         - Text: *Text nicht gesetzt*
+         - Darstellung ab: *Datum nicht gesetzt*
         """;
     assertThat(actualLogMessages).contains(expectedLog);
     assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
@@ -182,25 +193,27 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
   @SneakyThrows
   private static ScheduledUndeployment constructScheduledUndeployment(String suffix, String dateString)
   {
-    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-    Date date = formatter.parse(dateString);
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+    LocalDate undeploymentDate = LocalDate.parse(dateString, dateTimeFormatter);
     return new ScheduledUndeployment(
         "deploymentId" + suffix,
-        date,
+        undeploymentDate,
         new Message("preUndeploymentSubject" + suffix, "preUndeploymentBody" + suffix),
-        new Message("undeploymentSubject" + suffix, "undeploymentBody" + suffix));
+        new Message("undeploymentSubject" + suffix, "undeploymentBody" + suffix),
+        new UndeploymentHint("hintText" + suffix, LocalDate.parse(dateString, dateTimeFormatter)));
   }
 
   @SneakyThrows
   private static ScheduledUndeployment constructScheduledUndeploymentWithoutMessage()
   {
-    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-    Date date = formatter.parse("30.11.2999");
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+    LocalDate undeploymentDate = LocalDate.parse("30.11.2999", dateTimeFormatter);
     return new ScheduledUndeployment(
         "deploymentId",
-        date,
+        undeploymentDate,
         new Message("preUndeploymentSubject", "preUndeploymentBody"),
-        new Message(null, null));
+        new Message(null, null),
+        new UndeploymentHint(null, null));
   }
 
   private HttpHandler createAndStartHttpServer(Aggregated<List<ScheduledUndeployment>> response)
