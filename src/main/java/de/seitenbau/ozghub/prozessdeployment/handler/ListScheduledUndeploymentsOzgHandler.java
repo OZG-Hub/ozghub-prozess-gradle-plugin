@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
-import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
+import de.seitenbau.ozghub.prozessdeployment.model.response.ScheduledUndeployment;
 import de.seitenbau.ozghub.prozessdeployment.model.UndeploymentHint;
 import de.seitenbau.ozghub.prozessdeployment.model.response.Aggregated;
 import lombok.extern.log4j.Log4j2;
