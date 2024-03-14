@@ -12,13 +12,13 @@ public record ScheduledUndeployment(
     UndeploymentHint hint
 )
 {
-  public ScheduledUndeployment
+  public void validate()
   {
-    validateDeploymentId(deploymentId);
-    validateUndeploymentDate(undeploymentDate);
+    validateDeploymentId();
+    validateUndeploymentDate();
   }
 
-  private static void validateDeploymentId(String deploymentId)
+  private void validateDeploymentId()
   {
     if (StringUtils.isBlank(deploymentId))
     {
@@ -26,7 +26,7 @@ public record ScheduledUndeployment(
     }
   }
 
-  private static void validateUndeploymentDate(LocalDate undeploymentDate)
+  private void validateUndeploymentDate()
   {
     if (undeploymentDate == null)
     {

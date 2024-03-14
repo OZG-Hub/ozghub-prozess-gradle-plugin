@@ -94,14 +94,15 @@ public class CreateScheduledUndeploymentOzgTask extends DefaultPluginTask
     CreateScheduledUndeploymentOzgHandler handler =
         new CreateScheduledUndeploymentOzgHandler(getEnvironment());
 
-    handler.createScheduledUndeploymentOzg(new ScheduledUndeployment(
-            deploymentId,
-            undeploymentDate,
-            createUndeploymentAnnounceMessage(),
-            createUndeploymentMessage(),
-            createUndeploymentHint()
-        )
-    );
+    ScheduledUndeployment deployment = new ScheduledUndeployment(
+        deploymentId,
+        undeploymentDate,
+        createUndeploymentAnnounceMessage(),
+        createUndeploymentMessage(),
+        createUndeploymentHint());
+    deployment.validate();
+
+    handler.createScheduledUndeploymentOzg(deployment);
   }
 
   private Message createUndeploymentAnnounceMessage()

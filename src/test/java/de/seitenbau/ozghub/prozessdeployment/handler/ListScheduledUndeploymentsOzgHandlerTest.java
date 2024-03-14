@@ -94,7 +94,7 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
          - Darstellung ab: 30.11.2999
 
         DeploymentId: deploymentId2
-        Undeployment Datum: 31.12.2999
+        Undeployment Datum: 31.12.2023
         Ankündigungsnachricht:
          - Betreff: preUndeploymentSubject2
          - Text: preUndeploymentBody2
@@ -103,7 +103,7 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
          - Text: undeploymentBody2
         Hinweis:
          - Text: hintText2
-         - Darstellung ab: 31.12.2999
+         - Darstellung ab: 31.12.2023
         """;
     assertThat(actualLogMessages).contains(expectedLog);
     assertThat(actualLogMessages).contains("INFO Ende des Tasks: " + TASK_NAME);
@@ -179,7 +179,7 @@ public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
   {
     return Aggregated.complete(List.of(
         constructScheduledUndeployment("1", "30.11.2999"),
-        constructScheduledUndeployment("2", "31.12.2999")
+        constructScheduledUndeployment("2", "31.12.2023")
     ));
   }
 
