@@ -8,8 +8,8 @@ import org.gradle.api.tasks.options.Option;
 
 import de.seitenbau.ozghub.prozessdeployment.handler.CreateScheduledUndeploymentOzgHandler;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
-import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
 import de.seitenbau.ozghub.prozessdeployment.model.UndeploymentHint;
+import de.seitenbau.ozghub.prozessdeployment.model.request.CreateScheduledUndeployment;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -94,7 +94,7 @@ public class CreateScheduledUndeploymentOzgTask extends DefaultPluginTask
     CreateScheduledUndeploymentOzgHandler handler =
         new CreateScheduledUndeploymentOzgHandler(getEnvironment());
 
-    handler.createScheduledUndeploymentOzg(new ScheduledUndeployment(
+    handler.createScheduledUndeploymentOzg(new CreateScheduledUndeployment(
             deploymentId,
             undeploymentDate,
             createUndeploymentAnnounceMessage(),

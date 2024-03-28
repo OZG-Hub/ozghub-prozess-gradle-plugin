@@ -1,10 +1,13 @@
-package de.seitenbau.ozghub.prozessdeployment.model;
+package de.seitenbau.ozghub.prozessdeployment.model.request;
 
 import java.time.LocalDate;
 
 import org.apache.commons.lang3.StringUtils;
 
-public record ScheduledUndeployment(
+import de.seitenbau.ozghub.prozessdeployment.model.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.UndeploymentHint;
+
+public record CreateScheduledUndeployment(
     String deploymentId,
     LocalDate undeploymentDate,
     Message undeploymentAnnounceMessage,
@@ -12,7 +15,7 @@ public record ScheduledUndeployment(
     UndeploymentHint hint
 )
 {
-  public ScheduledUndeployment
+  public CreateScheduledUndeployment
   {
     validateDeploymentId(deploymentId);
     validateUndeploymentDate(undeploymentDate);

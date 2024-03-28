@@ -9,7 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
-import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
+import de.seitenbau.ozghub.prozessdeployment.model.request.CreateScheduledUndeployment;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -28,7 +28,7 @@ public class CreateScheduledUndeploymentOzgHandler extends DefaultHandler
     OBJECT_MAPPER.registerModule(new JavaTimeModule());
   }
 
-  public void createScheduledUndeploymentOzg(ScheduledUndeployment scheduledUndeployment)
+  public void createScheduledUndeploymentOzg(CreateScheduledUndeployment scheduledUndeployment)
   {
     log.info("Start des Tasks: createScheduledUndeploymentOzg");
     try

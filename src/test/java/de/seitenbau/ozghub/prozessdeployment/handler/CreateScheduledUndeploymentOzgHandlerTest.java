@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -19,15 +18,15 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler.Request;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
-import de.seitenbau.ozghub.prozessdeployment.model.ScheduledUndeployment;
 import de.seitenbau.ozghub.prozessdeployment.model.UndeploymentHint;
+import de.seitenbau.ozghub.prozessdeployment.model.request.CreateScheduledUndeployment;
 import lombok.SneakyThrows;
 
 public class CreateScheduledUndeploymentOzgHandlerTest extends BaseTestHandler
 {
   private HttpServer httpServer = null;
 
-  private static final ScheduledUndeployment SCHEDULED_UNDEPLOYMENT = constructScheduledUndeployment();
+  private static final CreateScheduledUndeployment SCHEDULED_UNDEPLOYMENT = constructScheduledUndeployment();
 
   @Override
   protected File getTestFolder()
@@ -50,7 +49,8 @@ public class CreateScheduledUndeploymentOzgHandlerTest extends BaseTestHandler
     //arrange
     HttpHandler httpHandler = createAndStartHttpServer();
 
-    CreateScheduledUndeploymentOzgHandler sut = new CreateScheduledUndeploymentOzgHandler(createEnvironment());
+    CreateScheduledUndeploymentOzgHandler sut =
+        new CreateScheduledUndeploymentOzgHandler(createEnvironment());
 
     //act
     sut.createScheduledUndeploymentOzg(SCHEDULED_UNDEPLOYMENT);
@@ -71,7 +71,8 @@ public class CreateScheduledUndeploymentOzgHandlerTest extends BaseTestHandler
     httpServer = HttpServerFactory.createAndStartHttpServer(API_PATH, httpHandler);
 
     String url = "http://localhost:" + httpServer.getAddress().getPort();
-    CreateScheduledUndeploymentOzgHandler sut = new CreateScheduledUndeploymentOzgHandler(createEnvironment());
+    CreateScheduledUndeploymentOzgHandler sut =
+        new CreateScheduledUndeploymentOzgHandler(createEnvironment());
 
     // act
     assertThatThrownBy(() -> sut.createScheduledUndeploymentOzg(SCHEDULED_UNDEPLOYMENT))
@@ -88,9 +89,9 @@ public class CreateScheduledUndeploymentOzgHandlerTest extends BaseTestHandler
     assertRequest(actualRequest);
   }
 
-  private static ScheduledUndeployment constructScheduledUndeployment()
+  private static CreateScheduledUndeployment constructScheduledUndeployment()
   {
-    return new ScheduledUndeployment(
+    return new CreateScheduledUndeployment(
         "deploymentId",
         LocalDate.now(),
         new Message("preUndeploymentSubject", "preUndeploymentBody"),
@@ -129,8 +130,8 @@ public class CreateScheduledUndeploymentOzgHandlerTest extends BaseTestHandler
     assertThat(request.getPath()).isEqualTo(API_PATH);
     assertThat(request.getQuery()).isNull();
 
-    ScheduledUndeployment actualRequest =
-        OBJECT_MAPPER.readValue(request.getRequestBody(), ScheduledUndeployment.class);
+    CreateScheduledUndeployment actualRequest =
+        OBJECT_MAPPER.readValue(request.getRequestBody(), CreateScheduledUndeployment.class);
     assertThat(actualRequest).usingRecursiveAssertion().isEqualTo(SCHEDULED_UNDEPLOYMENT);
   }
 }
