@@ -25,9 +25,9 @@ import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler.Request;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
-import de.seitenbau.ozghub.prozessdeployment.model.response.ScheduledUndeployment;
 import de.seitenbau.ozghub.prozessdeployment.model.UndeploymentHint;
 import de.seitenbau.ozghub.prozessdeployment.model.response.Aggregated;
+import de.seitenbau.ozghub.prozessdeployment.model.response.ScheduledUndeployment;
 import lombok.SneakyThrows;
 
 public class ListScheduledUndeploymentsOzgHandlerTest extends BaseTestHandler
