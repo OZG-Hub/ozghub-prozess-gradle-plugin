@@ -24,7 +24,7 @@ public class DeleteScheduledUndeploymentOzgHandler extends DefaultHandler
   public void deleteScheduledUndeployment(String deploymentId)
   {
     log.info("Start des Tasks: deleteScheduledUndeploymentOzg");
-    validateNotEmpty(deploymentId, "deploymentId");
+    validateNotBlank(deploymentId, "deploymentId");
 
     try
     {
@@ -40,7 +40,7 @@ public class DeleteScheduledUndeploymentOzgHandler extends DefaultHandler
     }
   }
 
-  private void validateNotEmpty(String value, String parameterName)
+  private void validateNotBlank(String value, String parameterName)
   {
     if (StringUtils.isBlank(value))
     {
