@@ -28,8 +28,8 @@ import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
-import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
@@ -237,9 +237,32 @@ public class DeployProcessHandlerTest extends BaseTestHandler
     assertThatRuntimeException()
         .isThrownBy(() -> sut.deploy())
         .withMessageContaining("Fehler: Fehler beim Einlesen der Metadata-Datei")
-        .withMessageContaining("Cannot deserialize value of type "
-            + "`de.seitenbau.ozghub.prozessdeployment.model.request.ProcessAuthenticationType` "
-            + "from String \"SERVICEKONTO\": not one of the values accepted for Enum class: [BUND_ID, MUK]");
+        .withMessageContaining("Der String 'SERVICEKONTO' ist keine gültige Authentisierungsoption."
+            + " Mögliche Werte sind [BUND_ID, MUK]");
+  }
+
+  @Test
+  public void deploy_invalidMetadata_UnknownLoa()
+  {
+    // arrange
+    Environment env = new Environment("http://wontBeCalled", "foo3", "bar3");
+
+    sut = new DeployProcessHandler(env,
+        getProjectDir(),
+        "build/models/example.bpmn20.xml",
+        "deployment1",
+        "v1.0",
+        DuplicateProcessKeyAction.UNDEPLOY,
+        null,
+        "metadataUnknownLoa",
+        EMPTY_MESSAGE);
+
+    // act
+    assertThatRuntimeException()
+        .isThrownBy(() -> sut.deploy())
+        .withMessageContaining("Fehler: Fehler beim Einlesen der Metadata-Datei")
+        .withMessageContaining("Der String 'unknown' ist kein gültiges Vertrauensniveau."
+            + " Mögliche Werte sind [BASIS, SUBSTANZIELL, HOCH]");
   }
 
   @Test
