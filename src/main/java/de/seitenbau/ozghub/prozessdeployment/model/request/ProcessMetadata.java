@@ -12,5 +12,5 @@ public class ProcessMetadata
 
   private Set<ProcessAuthenticationType> authenticationTypes;
 
-  private Map<String, LevelOfAssuranceAttribute> levelOfAssuranceAttributes;
+  private Map<String, LevelOfAssuranceAttributeDetail> levelOfAssuranceAttributes;
 }

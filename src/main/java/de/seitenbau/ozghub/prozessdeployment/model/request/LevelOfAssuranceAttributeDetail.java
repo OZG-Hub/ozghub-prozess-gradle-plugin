@@ -3,7 +3,7 @@ package de.seitenbau.ozghub.prozessdeployment.model.request;
 import lombok.Data;
 
 @Data
-public class LevelOfAssuranceAttribute
+public class LevelOfAssuranceAttributeDetail
 {
   private LevelOfAssurance level;
 
