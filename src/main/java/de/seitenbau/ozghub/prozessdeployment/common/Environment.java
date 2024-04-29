@@ -1,18 +1,22 @@
 package de.seitenbau.ozghub.prozessdeployment.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
-@Getter
-@AllArgsConstructor
-public class Environment
+public record Environment(String url, String user, String password)
 {
-  /** URL zu einer OZG-Hub-Umgebung. */
-  private final String url;
+  public Environment
+  {
+    validateNotEmpty(url, "url");
+    validateNotEmpty(user, "user");
+    validateNotEmpty(password, "password");
+  }
 
-  /** Benutzername zur Authentifizierung. */
-  private final String user;
-
-  /** Password zur Authentifizierung. */
-  private final String password;
+  private void validateNotEmpty(String str, String parameterName)
+  {
+    if (StringUtils.isBlank(str))
+    {
+      throw new IllegalArgumentException("Der Parameter '" + parameterName
+          + "' muss gesetzt und nicht leer sein.");
+    }
+  }
 }
