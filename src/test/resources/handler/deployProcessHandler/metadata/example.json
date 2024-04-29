@@ -3,5 +3,17 @@
   "authenticationTypes": [
     "BUND_ID",
     "MUK"
-  ]
+  ],
+  "levelOfAssuranceAttributes": {
+    "vorname": {
+      "level": "BASIS"
+    },
+    "nachname": {
+      "level": "SUBSTANZIELL",
+      "required": true
+    },
+    "email": {
+      "level": "HOCH"
+    }
+  }
 }
