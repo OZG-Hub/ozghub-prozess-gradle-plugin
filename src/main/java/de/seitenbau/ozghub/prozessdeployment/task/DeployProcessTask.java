@@ -5,8 +5,8 @@ import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.TaskAction;
 
 import de.seitenbau.ozghub.prozessdeployment.handler.DeployProcessHandler;
-import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import lombok.Getter;
 import lombok.Setter;
 

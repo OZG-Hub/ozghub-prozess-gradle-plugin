@@ -25,16 +25,16 @@ public class EnvironmentTest
   }
 
   @ParameterizedTest
-  @MethodSource("provide_exception")
-  public void constructor_exception(String url, String user, String passowrd, String paramterName)
+  @MethodSource("provide_constructor_exception")
+  public void constructor_exception(String url, String user, String passowrd, String parameterName)
   {
     // act & assert
     assertThatIllegalArgumentException()
         .isThrownBy(() -> new Environment(url, user, passowrd))
-        .withMessage("Der Parameter '" + paramterName + "' muss gesetzt und nicht leer sein.");
+        .withMessage("Der Parameter '" + parameterName + "' muss gesetzt und nicht leer sein.");
   }
 
-  private static Stream<Arguments> provide_exception()
+  private static Stream<Arguments> provide_constructor_exception()
   {
     return Stream.of(
         Arguments.of(null, "user", "passord", "url"),

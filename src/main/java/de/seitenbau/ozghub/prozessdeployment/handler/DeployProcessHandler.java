@@ -23,8 +23,9 @@ import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.helper.FileHelper;
 import de.seitenbau.ozghub.prozessdeployment.helper.ServerConnectionHelper;
-import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
+import de.seitenbau.ozghub.prozessdeployment.helper.ValidationHelper;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
@@ -83,6 +84,10 @@ public class DeployProcessHandler extends DefaultHandler
     this.engineId = engineId;
     this.metadataFolder = metadataFolder;
     this.undeploymentMessage = undeploymentMessage;
+
+    ValidationHelper.validateNotBlank(deploymentName, "deploymentName");
+    ValidationHelper.validateNotBlank(versionName, "versionName");
+
   }
   // CHECKSTYLE:ON ParameterNumberCheck
 

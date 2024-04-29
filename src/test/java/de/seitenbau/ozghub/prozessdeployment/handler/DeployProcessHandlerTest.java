@@ -2,6 +2,7 @@ package de.seitenbau.ozghub.prozessdeployment.handler;
 
 import static de.seitenbau.ozghub.prozessdeployment.handler.DeployProcessHandler.API_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatRuntimeException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -15,12 +16,16 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.gradle.api.GradleException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -28,8 +33,8 @@ import de.seitenbau.ozghub.prozessdeployment.common.Environment;
 import de.seitenbau.ozghub.prozessdeployment.common.HTTPHeaderKeys;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpHandler;
 import de.seitenbau.ozghub.prozessdeployment.integrationtest.HttpServerFactory;
-import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
+import de.seitenbau.ozghub.prozessdeployment.model.request.DuplicateProcessKeyAction;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessDeploymentRequest;
 import de.seitenbau.ozghub.prozessdeployment.model.request.ProcessMetadata;
 import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessDeploymentResponse;
@@ -353,6 +358,29 @@ public class DeployProcessHandlerTest extends BaseTestHandler
     assertRequest(actualRequest);
     assertRequestHeaders(actualRequest, env, DuplicateProcessKeyAction.UNDEPLOY, null);
     assertRequestBody(actualRequest.getRequestBody());
+  }
+
+  @ParameterizedTest
+  @MethodSource("provide_constructor_invalidParameter")
+  public void constructor_invalidParameter(String deploymentName, String versionName, String parameterName)
+  {
+    // act & assert
+    assertThatIllegalArgumentException()
+        .isThrownBy(() -> new DeployProcessHandler(null, null, null, deploymentName, versionName,
+            null, null, null, null))
+        .withMessage("Der Parameter '" + parameterName + "' muss gesetzt und nicht leer sein.");
+  }
+
+  private static Stream<Arguments> provide_constructor_invalidParameter()
+  {
+    return Stream.of(
+        Arguments.of(null, "version", "deploymentName"),
+        Arguments.of("", "version", "deploymentName"),
+        Arguments.of(" ", "version", "deploymentName"),
+        Arguments.of("deploy", null, "versionName"),
+        Arguments.of("deploy", "", "versionName"),
+        Arguments.of("deploy", " ", "versionName")
+    );
   }
 
   private void assertRequestBody(byte[] data)
