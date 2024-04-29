@@ -84,16 +84,14 @@ public class DeployProcessHandler extends DefaultHandler
     this.engineId = engineId;
     this.metadataFolder = metadataFolder;
     this.undeploymentMessage = undeploymentMessage;
-
-    ValidationHelper.validateNotBlank(deploymentName, "deploymentName");
-    ValidationHelper.validateNotBlank(versionName, "versionName");
-
   }
   // CHECKSTYLE:ON ParameterNumberCheck
 
   public void deploy()
   {
     log.info("Start des Tasks: Deployment eines Prozessmodells");
+    ValidationHelper.validateNotBlank(deploymentName, "deploymentName");
+    ValidationHelper.validateNotBlank(versionName, "versionName");
 
     try
     {

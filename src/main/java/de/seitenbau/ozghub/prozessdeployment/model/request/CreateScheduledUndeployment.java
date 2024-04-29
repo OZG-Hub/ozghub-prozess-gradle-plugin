@@ -2,8 +2,7 @@ package de.seitenbau.ozghub.prozessdeployment.model.request;
 
 import java.time.LocalDate;
 
-import org.apache.commons.lang3.StringUtils;
-
+import de.seitenbau.ozghub.prozessdeployment.helper.ValidationHelper;
 import de.seitenbau.ozghub.prozessdeployment.model.Message;
 import de.seitenbau.ozghub.prozessdeployment.model.UndeploymentHint;
 
@@ -17,16 +16,8 @@ public record CreateScheduledUndeployment(
 {
   public CreateScheduledUndeployment
   {
-    validateDeploymentId(deploymentId);
+    ValidationHelper.validateNotBlank(deploymentId, "deploymentId");
     validateUndeploymentDate(undeploymentDate);
-  }
-
-  private static void validateDeploymentId(String deploymentId)
-  {
-    if (StringUtils.isBlank(deploymentId))
-    {
-      throw new IllegalArgumentException("Der Parameter 'deploymentId' muss gesetzt und nicht leer sein");
-    }
   }
 
   private static void validateUndeploymentDate(LocalDate undeploymentDate)

@@ -361,17 +361,19 @@ public class DeployProcessHandlerTest extends BaseTestHandler
   }
 
   @ParameterizedTest
-  @MethodSource("provide_constructor_invalidParameter")
-  public void constructor_invalidParameter(String deploymentName, String versionName, String parameterName)
+  @MethodSource("provide_deploy_invalidParameter")
+  public void deploy_invalidParameter(String deploymentName, String versionName, String parameterName)
   {
+    // arrange
+    sut = new DeployProcessHandler(null, null, null, deploymentName, versionName, null, null, null, null);
+
     // act & assert
     assertThatIllegalArgumentException()
-        .isThrownBy(() -> new DeployProcessHandler(null, null, null, deploymentName, versionName,
-            null, null, null, null))
+        .isThrownBy(() -> sut.deploy())
         .withMessage("Der Parameter '" + parameterName + "' muss gesetzt und nicht leer sein.");
   }
 
-  private static Stream<Arguments> provide_constructor_invalidParameter()
+  private static Stream<Arguments> provide_deploy_invalidParameter()
   {
     return Stream.of(
         Arguments.of(null, "version", "deploymentName"),
