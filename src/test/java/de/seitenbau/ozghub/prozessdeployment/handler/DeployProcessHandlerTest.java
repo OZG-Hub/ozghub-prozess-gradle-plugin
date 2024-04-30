@@ -2,6 +2,7 @@ package de.seitenbau.ozghub.prozessdeployment.handler;
 
 import static de.seitenbau.ozghub.prozessdeployment.handler.DeployProcessHandler.API_PATH;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatRuntimeException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -15,12 +16,16 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.gradle.api.GradleException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -378,6 +383,31 @@ public class DeployProcessHandlerTest extends BaseTestHandler
     assertRequestBody(actualRequest.getRequestBody());
   }
 
+  @ParameterizedTest
+  @MethodSource("provide_deploy_invalidParameter")
+  public void deploy_invalidParameter(String deploymentName, String versionName, String parameterName)
+  {
+    // arrange
+    sut = new DeployProcessHandler(null, null, null, deploymentName, versionName, null, null, null, null);
+
+    // act & assert
+    assertThatIllegalArgumentException()
+        .isThrownBy(() -> sut.deploy())
+        .withMessage("Der Parameter '" + parameterName + "' muss gesetzt und nicht leer sein.");
+  }
+
+  private static Stream<Arguments> provide_deploy_invalidParameter()
+  {
+    return Stream.of(
+        Arguments.of(null, "version", "deploymentName"),
+        Arguments.of("", "version", "deploymentName"),
+        Arguments.of(" ", "version", "deploymentName"),
+        Arguments.of("deploy", null, "versionName"),
+        Arguments.of("deploy", "", "versionName"),
+        Arguments.of("deploy", " ", "versionName")
+    );
+  }
+
   private void assertRequestBody(byte[] data)
   {
     assertRequestBody(data, true, false);
@@ -483,7 +513,7 @@ public class DeployProcessHandlerTest extends BaseTestHandler
       assertThat(headers).containsEntry(HTTPHeaderKeys.PROCESS_ENGINE, List.of(engineId));
     }
 
-    String tmp = env.getUser() + ':' + env.getPassword();
+    String tmp = env.user() + ':' + env.password();
     String auth = "Basic " + Base64.getEncoder().encodeToString(tmp.getBytes(StandardCharsets.UTF_8));
     assertThat(headers).containsEntry(HTTPHeaderKeys.AUTHORIZATION, List.of(auth));
   }

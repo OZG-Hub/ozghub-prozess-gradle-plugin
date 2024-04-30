@@ -112,7 +112,7 @@ public class UndeployFormHandlerTest extends BaseTestHandler
     Map<String, List<String>> headers = request.getHeaders();
     assertThat(headers).containsEntry(HTTPHeaderKeys.DEPLOYMENT_ID, List.of(deploymentId));
 
-    String tmp = env.getUser() + ':' + env.getPassword();
+    String tmp = env.user() + ':' + env.password();
     String auth = "Basic " + Base64.getEncoder().encodeToString(tmp.getBytes(StandardCharsets.UTF_8));
     assertThat(headers).containsEntry(HTTPHeaderKeys.AUTHORIZATION, List.of(auth));
   }

@@ -210,7 +210,7 @@ public class ServerConnectionHelper<T>
   private HttpURLConnection createHttpURLConnectionForGetRequest(Environment env, String path,
       Map<String, String> headers) throws IOException
   {
-    String serverUrl = env.getUrl() + path;
+    String serverUrl = env.url() + path;
 
     log.info("Sende GET-Request an {}", serverUrl);
     URL url = new URL(serverUrl);
@@ -230,7 +230,7 @@ public class ServerConnectionHelper<T>
   private HttpURLConnection createHttpURLConnectionForPostRequest(Environment env, String path,
       Map<String, String> headers, byte[] data) throws IOException
   {
-    String serverUrl = env.getUrl() + path;
+    String serverUrl = env.url() + path;
 
     log.info("Sende POST-Request an {}", serverUrl);
     URL url = new URL(serverUrl);
@@ -250,7 +250,7 @@ public class ServerConnectionHelper<T>
   private HttpURLConnection createHttpURLConnectionForDeleteRequest(Environment env, String path,
       Map<String, String> headers, byte[] data) throws IOException
   {
-    String serverUrl = env.getUrl() + path;
+    String serverUrl = env.url() + path;
 
     log.info("Sende DELETE-Request an {}", serverUrl);
     URL url = new URL(serverUrl);
@@ -324,7 +324,7 @@ public class ServerConnectionHelper<T>
 
   private String getBasicAuthToken(Environment env)
   {
-    String tmp = env.getUser() + ':' + env.getPassword();
+    String tmp = env.user() + ':' + env.password();
     String encoding = Base64.getEncoder().encodeToString(tmp.getBytes(StandardCharsets.UTF_8));
     return "Basic " + encoding;
   }

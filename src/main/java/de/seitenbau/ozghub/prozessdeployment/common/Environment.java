@@ -1,18 +1,13 @@
 package de.seitenbau.ozghub.prozessdeployment.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import de.seitenbau.ozghub.prozessdeployment.helper.ValidationHelper;
 
-@Getter
-@AllArgsConstructor
-public class Environment
+public record Environment(String url, String user, String password)
 {
-  /** URL zu einer OZG-Hub-Umgebung. */
-  private final String url;
-
-  /** Benutzername zur Authentifizierung. */
-  private final String user;
-
-  /** Password zur Authentifizierung. */
-  private final String password;
+  public Environment
+  {
+    ValidationHelper.validateNotBlank(url, "url");
+    ValidationHelper.validateNotBlank(user, "user");
+    ValidationHelper.validateNotBlank(password, "password");
+  }
 }
