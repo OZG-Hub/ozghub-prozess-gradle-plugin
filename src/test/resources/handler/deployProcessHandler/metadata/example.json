@@ -15,5 +15,6 @@
     "email": {
       "level": "HOCH"
     }
-  }
+  },
+  "completedProcessDataRetentionDays": 123
 }
