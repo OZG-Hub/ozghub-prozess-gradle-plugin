@@ -13,4 +13,6 @@ public class ProcessMetadata
   private Set<ProcessAuthenticationType> authenticationTypes;
 
   private Map<String, LevelOfAssuranceAttributeDetail> levelOfAssuranceAttributes;
+
+  private Integer completedProcessDataRetentionDays;
 }
