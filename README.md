@@ -16,6 +16,6 @@ werden.
 Das Gradle-Plugin stellt Tasks zur Verfügung. Diese sind im [Wiki](https://doku.pmp.seitenbau.com/display/DFO/Tasks+Gradle-PlugIn+OZG-Hub) beschrieben.
 
 Die Schnittstellen, die der OZG-Hub für Prozessmodellierer bereitstellt, werden in der
-[Schnittstellen-Dokumentation OZG-Hub](https://doku.pmp.seitenbau.com/display/DFO/Schnittstellendokumentation+OZG-Hub) beschrieben. Die Schnittstellen enthalten sowohl
+[OD-Management API Dokumentation](https://doku.pmp.seitenbau.com/x/YAdfAw) beschrieben. Die Dokumentation enthält sowohl
 die Schnittstellen, die vom Gradle-Plugin angesprochen werden, als auch weitere Schnittstellen z.B.
 zum Zugriff auf Logdateien.
