@@ -17,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -35,6 +36,7 @@ public class ServerConnectionHelper<T>
     ObjectMapper objectMapper = new ObjectMapper();
     // Jackson hat aktuell (19.01.2024) keinen nativen Support für LocalDate, erweitere jackson
     objectMapper.registerModule(new JavaTimeModule());
+    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     return objectMapper;
   }
 
