@@ -10,6 +10,7 @@ import de.seitenbau.ozghub.prozessdeployment.task.DeleteScheduledUndeploymentOzg
 import de.seitenbau.ozghub.prozessdeployment.task.DeployFormsTask;
 import de.seitenbau.ozghub.prozessdeployment.task.DeployProcessTask;
 import de.seitenbau.ozghub.prozessdeployment.task.EncryptParameterValueTask;
+import de.seitenbau.ozghub.prozessdeployment.task.GetActiveProcessEnginesOzgTask;
 import de.seitenbau.ozghub.prozessdeployment.task.ListFormsTask;
 import de.seitenbau.ozghub.prozessdeployment.task.ListProcessesTask;
 import de.seitenbau.ozghub.prozessdeployment.task.ListScheduledUndeploymentsOzgTask;
@@ -74,6 +75,11 @@ public class ProzessDeploymentGradlePlugin implements Plugin<Project>
         "listScheduledUndeploymentsOzg",
         ListScheduledUndeploymentsOzgTask.class,
         "Listet alle zeitgesteuerten Undeployments von Online-Diensten auf.");
+
+    createTask(
+        "getActiveProcessEnginesOzg",
+        GetActiveProcessEnginesOzgTask.class,
+        "Holt die Liste der aktuell zur Verfügung stehenden Prozess-Engines.");
   }
 
   private <K extends DefaultPluginTask> void createTask(String name, Class<K> aClass, String description)
