@@ -14,18 +14,16 @@ import de.seitenbau.ozghub.prozessdeployment.model.response.ProcessEngine;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class GetActiveProcessEnginesTaskOzgHandler extends DefaultHandler
+public class GetActiveProcessEnginesOzgHandler extends DefaultHandler
 {
   private static final String URL = "/prozess/engine/aggregated";
-
-  public static final String API_PATH = "/prozess/ozghub/undeployV2";
 
   private static final ServerConnectionHelper<Aggregated<List<ProcessEngine>>> CONNECTION_HELPER =
       new ServerConnectionHelper<>(new TypeReference<>()
       {
       });
 
-  public GetActiveProcessEnginesTaskOzgHandler(Environment environment)
+  public GetActiveProcessEnginesOzgHandler(Environment environment)
   {
     super(environment);
   }
@@ -85,15 +83,5 @@ public class GetActiveProcessEnginesTaskOzgHandler extends DefaultHandler
   private Aggregated<List<ProcessEngine>> getEngines(Map<String, String> headers) throws IOException
   {
     return CONNECTION_HELPER.get(environment, URL, headers);
-  }
-
-  private byte[] getRequestBody() throws IOException
-  {
-    return new byte[]{};
-//    ProcessUndeploymentRequest undeploymentRequest = new ProcessUndeploymentRequest(
-//        deploymentId, deleteProcessInstances, undeploymentMessage);
-//
-//    String undeploymentRequestString = OBJECT_MAPPER.writeValueAsString(undeploymentRequest);
-//    return undeploymentRequestString.getBytes(StandardCharsets.UTF_8);
   }
 }
