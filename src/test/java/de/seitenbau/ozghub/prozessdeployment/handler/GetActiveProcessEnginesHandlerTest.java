@@ -26,6 +26,8 @@ public class GetActiveProcessEnginesHandlerTest extends BaseTestHandler
 {
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
+  public static final String TASK_NAME = "getActiveProcessEngines";
+
   private HttpServer httpServer = null;
 
   private GetActiveProcessEnginesOzgHandler sut;
@@ -58,7 +60,7 @@ public class GetActiveProcessEnginesHandlerTest extends BaseTestHandler
     sut = new GetActiveProcessEnginesOzgHandler(env);
 
     //act
-    sut.getAndLogActiveProcessEngines();
+    sut.list(TASK_NAME);
 
     //assert
     assertThat(httpHandler.getRequestCount()).isEqualTo(1);
@@ -100,7 +102,7 @@ public class GetActiveProcessEnginesHandlerTest extends BaseTestHandler
     sut = new GetActiveProcessEnginesOzgHandler(env);
 
     //act
-    sut.getAndLogActiveProcessEngines();
+    sut.list(TASK_NAME);
 
     //assert
     assertThat(httpHandler.getRequestCount()).isEqualTo(1);
@@ -126,7 +128,7 @@ public class GetActiveProcessEnginesHandlerTest extends BaseTestHandler
     sut = new GetActiveProcessEnginesOzgHandler(env);
 
     //act
-    sut.getAndLogActiveProcessEngines();
+    sut.list(TASK_NAME);
 
     //assert
     assertThat(httpHandler.getRequestCount()).isEqualTo(1);

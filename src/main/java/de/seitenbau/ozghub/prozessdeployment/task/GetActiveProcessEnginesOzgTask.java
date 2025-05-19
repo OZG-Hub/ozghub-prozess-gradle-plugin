@@ -7,10 +7,9 @@ import de.seitenbau.ozghub.prozessdeployment.handler.GetActiveProcessEnginesOzgH
 public class GetActiveProcessEnginesOzgTask extends DefaultPluginTask
 {
   @TaskAction
-  public void createScheduledUndeploymentOzg()
+  public void getActiveProcessEngines()
   {
-    GetActiveProcessEnginesOzgHandler handler =
-        new GetActiveProcessEnginesOzgHandler(getEnvironment());
-    handler.getAndLogActiveProcessEngines();
+    GetActiveProcessEnginesOzgHandler handler = new GetActiveProcessEnginesOzgHandler(getEnvironment());
+    handler.list(getName());
   }
 }
