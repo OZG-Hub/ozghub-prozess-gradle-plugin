@@ -96,6 +96,10 @@ test {
     maxHeapSize = '1G'
     finalizedBy jacocoTestReport
     systemProperty 'file.encoding', 'UTF-8'
+    testLogging {
+        events "failed"
+        exceptionFormat "full"
+    }
 }
 
 jacocoTestReport {
