@@ -88,8 +88,8 @@ public class UndeployProcessHandler extends DefaultHandler
 
   private void logEndOfTask(ProcessUndeploymentResponse response)
   {
-    log.info("Das Undeployment wurde erfolgreich abgeschlossen:");
-    log.info("- Prozessdefinitionen mit folgenden Prozess-Keys wurden undeployt:");
+    log.info("Das Undeployment wurde asynchron gestartet:");
+    log.info("- Prozessdefinitionen mit folgenden Prozess-Keys werden undeployt:");
     response.getProcessKeys().forEach(k -> log.info("  - {}", k));
 
     log.info("Ende des Tasks: Löschen eines Prozess-Deployments");
