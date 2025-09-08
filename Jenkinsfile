@@ -43,19 +43,18 @@ pipeline {
         }
     }
 
-    // Generates "BITBUCKET_AUTHENTICATION_USR" and "BITBUCKET_AUTHENTICATION_PSW"
     // Generates "GRADLE_AUTHENTICATION_USR" and "GRADLE_AUTHENTICATION_PSW"
     environment {
-        BITBUCKET_AUTHENTICATION = credentials('9026a4c0-38cf-4fb8-b487-efddde85a6be')
         GRADLE_AUTHENTICATION = credentials('61e7b4b8-f75b-11ea-adc1-0242ac120002')
     }
 
     stages {
         stage('Build und Test') {
             steps {
-                gitlab.init(projectId: 'dev/imbw-sbw/ozghub-prozess-pipeline')
-                gitlab.updateCommitStatus(state: 'running')
-
+                script {
+                    gitlab.init(projectId: 'dev/imbw-sbw/ozghub-prozess-pipeline')
+                    gitlab.updateCommitStatus(state: 'running')
+                }
                 container('gradle') {
                     sh 'gradle clean build test --no-daemon -PpluginVersion=' + getPluginVersion()
                 }
@@ -131,13 +130,13 @@ pipeline {
             jacoco()
         }
         failure {
-            gitlab.updateCommitStatus(state: 'failed')
+            script { gitlab.updateCommitStatus(state: 'failed') }
         }
         success {
-            gitlab.updateCommitStatus(state: 'success')
+            script { gitlab.updateCommitStatus(state: 'success') }
         }
         aborted {
-            gitlab.updateCommitStatus(state: 'canceled')
+            script { gitlab.updateCommitStatus(state: 'canceled') }
         }
     }
 }
@@ -182,7 +181,7 @@ def gitCommitAndTagRelease(newVersion) {
     sh "git config user.name \"Jenkins\""
     sh "git tag \"${tagName}\""
     def gitUrl = sh(returnStdout: true, script: "git config remote.origin.url").trim()
-    withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "9026a4c0-38cf-4fb8-b487-efddde85a6be", usernameVariable: "GIT_AUTHOR_NAME", passwordVariable: "GIT_PASSWORD"]]) {
+    withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "jenkins-gitlab-spc-accesstoken", usernameVariable: "GIT_AUTHOR_NAME", passwordVariable: "GIT_PASSWORD"]]) {
         gitUrl = gitUrl.replaceAll(/\/\/(.*@)?/, "//${GIT_AUTHOR_NAME}:${GIT_PASSWORD}@")
         sh "git push ${gitUrl} \"${tagName}\""
     }
