@@ -1,3 +1,5 @@
+@Library(['serviceportal-pipeline-shared-lib@v2023-05']) _
+
 pipeline {
     parameters {
         string defaultValue: '', description: 'Versionsnummer im Format YYYY.MM.DD-Nr', name: 'PLUGIN_VERSION'
@@ -10,6 +12,7 @@ pipeline {
     }
     agent {
         kubernetes {
+            cloud 'imbw-sbw'
             label "ozghub-prozessdeployment-${UUID.randomUUID().toString()}"
             idleMinutes 1
             yaml """
@@ -50,6 +53,9 @@ pipeline {
     stages {
         stage('Build und Test') {
             steps {
+                gitlab.init(projectId: 'dev/imbw-sbw/ozghub-prozess-pipeline')
+                gitlab.updateCommitStatus(state: 'running')
+
                 container('gradle') {
                     sh 'gradle clean build test --no-daemon -PpluginVersion=' + getPluginVersion()
                 }
@@ -123,6 +129,15 @@ pipeline {
                     checkStyle(pattern: 'build/**/checkstyle/**/*.xml', reportEncoding: 'UTF-8'),
                     owaspDependencyCheck()])
             jacoco()
+        }
+        failure {
+            gitlab.updateCommitStatus(state: 'failed')
+        }
+        success {
+            gitlab.updateCommitStatus(state: 'success')
+        }
+        aborted {
+            gitlab.updateCommitStatus(state: 'canceled')
         }
     }
 }
