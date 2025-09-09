@@ -33,12 +33,16 @@ pipeline {
                 memory: 1024Mi
                 cpu: 1000m
             volumeMounts:
-            - name: gradle-settings
-              mountPath: /root/.gradle/gradle.properties
-          volumes:
-          - name: gradle-settings
-            hostPath:
-              path: /home/jenkins/.gradle/gradle.properties
+            - mountPath: "/home/jenkins/agent"
+              name: "workspace-volume"
+              readOnly: false
+            - mountPath: "/home/gradle/.gradle/init.gradle"
+              name: "gradle"
+              subPath: "init.gradle"
+            - mountPath: "/home/gradle/.gradle/gradle.properties"
+              name: "gradle"
+              subPath: "gradle.properties"
+            workingDir: "/home/jenkins/agent"
         """
         }
     }
