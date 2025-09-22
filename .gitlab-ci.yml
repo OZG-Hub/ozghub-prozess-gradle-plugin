@@ -3,7 +3,7 @@ spec:
     PLUGIN_VERSION:
       type: 'string'
       default: '$CI_PIPELINE_ID-ci'
-      regex: ^(?:\d{4})\.(?:0[1-9]|1[0-2])\.(?:0[1-9]|[12]\d|3[01])-\d+$
+      regex: ^(.+-ci|(?:\d{4})\.(?:0[1-9]|1[0-2])\.(?:0[1-9]|[12]\d|3[01])-\d+)$
       description: 'Versionsnummer im Format YYYY.MM.DD-Nr (pushed ins Release statt Snapshot-repository)'
     UPLOAD_TO_SEITENBAU_GRADLE_REPO:
       type: 'boolean'
