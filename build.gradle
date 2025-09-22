@@ -69,6 +69,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.42'
     testCompileOnly 'org.projectlombok:lombok:1.18.42'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.42'
+
+    // Process sources using:
+    // * `PluginProcessor` to generate `Log4j2Plugins.dat`
+    // * `GraalVmProcessor` to generate a GraalVM reachability metadata file
+    testAnnotationProcessor('org.apache.logging.log4j:log4j-core:2.25.2')
 }
 
 java {
@@ -77,6 +82,7 @@ java {
 
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
+    compileTestJava.options.compilerArgs = ["-Alog4j.graalvm.groupId=${project.group}", "-Alog4j.graalvm.artifactId=${project.name}"]
     javadoc.options.encoding = 'UTF-8'
 
     // ignore missing javadoc comments
