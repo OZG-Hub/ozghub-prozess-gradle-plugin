@@ -103,7 +103,7 @@ jacocoTestReport {
 spotbugsMain {
     ignoreFailures = true
     effort = Effort.MAX
-    excludeFilter.set(file('src/main/resources/spotbugs-exclude.xml'))
+    setExcludeFilter(file('src/main/plugin-config/spotbugs-exclude.xml'))
 }
 
 // https://github.com/spotbugs/spotbugs-gradle-plugin/issues/391
@@ -115,20 +115,20 @@ checkstyle {
     checkstyleTest.enabled = false
 }
 
-// ##########  Lokaler Build  ##########
-if (System.getenv('JENKINS_HOME') == null || System.getenv('JENKINS_HOME').isEmpty()) {
+if ('true' != System.getenv('CI')) {
+    //##########  Lokaler Build  ##########
+    getLogger().info('Lokaler Build')
     publishing {
         repositories {
             mavenLocal()
         }
     }
-}
-
-// ##########  Build auf Jenkins  ##########
-else {
+} else {
+    //##########  Build auf CI  ##########
+    getLogger().info('CI Build')
     publishing {
         publications {
-            maven(MavenPublication) {
+            mavenJava(MavenPublication) {
                 from components.java
             }
         }
@@ -153,7 +153,7 @@ else {
     }
 
     jar {
-        baseName 'ozghub-prozessdeployment-gradle-plugin'
+        archiveBaseName = 'ozghub-prozessdeployment-gradle-plugin'
     }
 
     artifactoryPublish {
