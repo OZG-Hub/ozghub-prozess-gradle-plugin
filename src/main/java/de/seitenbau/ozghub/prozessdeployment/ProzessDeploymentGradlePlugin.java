@@ -91,7 +91,9 @@ public class ProzessDeploymentGradlePlugin implements Plugin<Project>
         "Holt die Liste der aktuell zur Verfügung stehenden Prozess-Engines.");
   }
 
-  private <K extends DefaultPluginTask> void createTask(TaskContainer tasks, String name, Class<K> taskClass,
+  private <K extends DefaultPluginTask> void createTask(TaskContainer tasks,
+      String name,
+      Class<K> taskClass,
       String description)
   {
     tasks.register(name, taskClass, task -> {

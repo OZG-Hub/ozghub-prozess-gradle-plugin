@@ -28,11 +28,6 @@ group = 'de.seitenbau.ozghub.prozessdeployment'
 version = project.hasProperty('pluginVersion') ? pluginVersion : '99.0.0-SNAPSHOT'
 println 'Plugin-Version ist  : ' + version
 
-if (!project.hasProperty('artifactoryJenkinsPassword')
-        && System.getenv('JENKINS_HOME') != null && !System.getenv('JENKINS_HOME').isEmpty()) {
-    println 'WARN: Artifactory password is not set'
-}
-
 repositories {
     mavenLocal()
     maven {
@@ -117,7 +112,6 @@ spotbugsTest.enabled = false
 // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html
 checkstyle {
     // https://checkstyle.sourceforge.io/releasenotes.html
-    toolVersion = '10.12.3'
     checkstyleTest.enabled = false
 }
 
@@ -132,8 +126,6 @@ if (System.getenv('JENKINS_HOME') == null || System.getenv('JENKINS_HOME').isEmp
 
 // ##########  Build auf Jenkins  ##########
 else {
-    def repositoryKey = project.hasProperty('repositoryKey') ? repositoryKey : 'ci-snapshots'
-
     publishing {
         publications {
             maven(MavenPublication) {
@@ -143,12 +135,13 @@ else {
     }
 
     artifactory {
-        contextUrl = 'https://shadow-artifactory.infra.dev.seitenbau.net/artifactory'
         publish {
+            contextUrl = System.getenv('JF_REPO_URL')
+            publishBuildInfo = false
             repository {
-                repoKey = repositoryKey
-                username = 'jenkins'
-                password = artifactoryJenkinsPassword
+                repoKey = System.getenv('JF_REPO_KEY')
+                username = System.getenv('JF_RW_USER')
+                password = System.getenv('JF_RW_PASSWORD')
                 ivy {
                     mavenCompatible = true
                 }
