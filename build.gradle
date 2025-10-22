@@ -169,12 +169,15 @@ if ('true' != System.getenv('CI')) {
 // See https://plugins.gradle.org/docs/publish-plugin
 // See https://docs.gradle.org/current/userguide/java_gradle_plugin.html
 gradlePlugin {
+    website = 'https://www.seitenbau.com/'
+    vcsUrl = 'https://github.com/OZG-Hub/ozghub-prozess-gradle-plugin'
     plugins {
         OzghubProzessGradlePlugin {
             description = 'Tools zum automatischen Deployment von Prozessen im OZG-Hub'
             id = 'de.seitenbau.ozghub.prozessdeployment'
             implementationClass = 'de.seitenbau.ozghub.prozessdeployment.ProzessDeploymentGradlePlugin'
             displayName = 'Gradle Plugin zum Deployen von Prozessen und Formularen im OZG-Hub'
+            tags.set(['serviceportal', 'deployment', 'prozesse', 'ozg'])
         }
     }
 }
