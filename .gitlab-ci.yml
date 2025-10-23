@@ -31,6 +31,18 @@ variables:
   JF_RW_USER: $JF_USER_RW
   JF_RW_PASSWORD: $JF_USER_RW_PASSWORD
 
+include:
+  - component: $CI_SERVER_FQDN/dev/sds/sds-pipeline-components/util-components/rocket-chat@0.0.5
+    inputs:
+      room_id: '"@$GITLAB_USER_LOGIN"'
+      text: |
+        [$CI_PROJECT_PATH #$CI_PIPELINE_ID]($CI_PIPELINE_URL) (trigger: $CI_PIPELINE_SOURCE)
+        ```
+        $CI_COMMIT_AUTHOR
+        $CI_COMMIT_SHORT_SHA ($CI_COMMIT_BRANCH) $CI_COMMIT_TITLE
+        ```
+      additional_json: '{"emoji": "$PIPELINE_RESULT_EMOJI"}'
+
 default:
   image: docker-io.repo.sds.seitenbau.net/library/eclipse-temurin:17
   cache:
