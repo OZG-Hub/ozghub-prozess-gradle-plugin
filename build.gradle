@@ -2,7 +2,6 @@ import com.github.spotbugs.snom.Effort
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    id 'java'
     id 'jacoco'
     id 'checkstyle'
 
@@ -173,6 +172,8 @@ gradlePlugin {
     vcsUrl = 'https://github.com/OZG-Hub/ozghub-prozess-gradle-plugin'
     plugins {
         OzghubProzessGradlePlugin {
+            // You can ignore: Warning: Cannot assign 'String' to 'T'
+            // See https://stackoverflow.com/questions/61983733/cannot-assign-string-to-t
             description = 'Tools zum automatischen Deployment von Prozessen im OZG-Hub'
             id = 'de.seitenbau.ozghub.prozessdeployment'
             implementationClass = 'de.seitenbau.ozghub.prozessdeployment.ProzessDeploymentGradlePlugin'
@@ -181,18 +182,6 @@ gradlePlugin {
         }
     }
 }
-
-// Specify plugin properties that apply to the whole publishing bundle
-// (ie. all plugins in the current publication).
-// See https://plugins.gradle.org/docs/publish-plugin
-//pluginBundle {
-//    // These are the properties used in the publication on the Gradle plugins site
-//    // https://plugins.gradle.org/plugin/de.seitenbau.ozghub.prozessdeployment
-//    website = 'https://github.com/OZG-Hub/ozghub-prozess-gradle-plugin'
-//    vcsUrl = 'https://github.com/OZG-Hub/ozghub-prozess-gradle-plugin'
-//    description = 'Tools zum Deployen von Prozessen und Formularen im OZG-Hub'
-//    tags = ['deployment', 'prozess', 'formular', 'ozg', 'ozg-hub']
-//}
 
 dependencyCheck {
     suppressionFile = file('config/dependency-suppression.xml')
