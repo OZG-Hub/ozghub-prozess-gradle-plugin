@@ -21,72 +21,84 @@ public class ProzessDeploymentGradlePlugin implements Plugin<Project>
 {
   private static final String TASK_GROUP_NAME = "OZG-Hub";
 
-  private TaskContainer taskContainer;
-
   public void apply(Project project)
   {
-    taskContainer = project.getTasks();
+    TaskContainer tasks = project.getTasks();
     createTask(
+        tasks,
         "deployProcess",
         DeployProcessTask.class,
         "Deployt Prozessdefinitionen");
 
     createTask(
+        tasks,
         "deployForms",
         DeployFormsTask.class,
         "Deployt Formulare");
 
     createTask(
+        tasks,
         "undeployProcess",
         UndeployProcessTask.class,
         "Löscht ein Prozess-Deployment");
 
     createTask(
+        tasks,
         "undeployForm",
         UndeployFormTask.class,
         "Löscht ein Formular-Deployment");
 
     createTask(
+        tasks,
         "listProcesses",
         ListProcessesTask.class,
         "Zeigt eine Liste aller deployten Prozesse an");
 
     createTask(
+        tasks,
         "listForms",
         ListFormsTask.class,
         "Zeigt eine Liste aller deployten Formulare an");
 
     createTask(
+        tasks,
         "encryptParameterValue",
         EncryptParameterValueTask.class,
         "Verschlüsselt einen Prozessparameterwert");
 
     createTask(
+        tasks,
         "createScheduledUndeploymentOzg",
         CreateScheduledUndeploymentOzgTask.class,
         "Erstellt ein zeitgesteuertes Undeployment eines Online-Dienstes.");
 
     createTask(
+        tasks,
         "deleteScheduledUndeploymentOzg",
         DeleteScheduledUndeploymentOzgTask.class,
         "Löscht ein zeitgesteuertes Undeployment eines Online-Dienstes.");
 
     createTask(
+        tasks,
         "listScheduledUndeploymentsOzg",
         ListScheduledUndeploymentsOzgTask.class,
         "Listet alle zeitgesteuerten Undeployments von Online-Diensten auf.");
 
     createTask(
+        tasks,
         "getActiveProcessEnginesOzg",
         GetActiveProcessEnginesOzgTask.class,
         "Holt die Liste der aktuell zur Verfügung stehenden Prozess-Engines.");
   }
 
-  private <K extends DefaultPluginTask> void createTask(String name, Class<K> aClass, String description)
+  private <K extends DefaultPluginTask> void createTask(TaskContainer tasks,
+      String name,
+      Class<K> taskClass,
+      String description)
   {
-    K createdTask = taskContainer.create(name, aClass, (task) -> {
+    tasks.register(name, taskClass, task -> {
+      task.setGroup(TASK_GROUP_NAME);
+      task.setDescription(description);
     });
-    createdTask.setDescription(description);
-    createdTask.setGroup(TASK_GROUP_NAME);
   }
 }

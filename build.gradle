@@ -1,83 +1,73 @@
 import com.github.spotbugs.snom.Effort
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    id 'java'
     id 'jacoco'
     id 'checkstyle'
 
     // https://plugins.gradle.org/plugin/com.github.spotbugs
-    id 'com.github.spotbugs' version '6.0.6'
+    id 'com.github.spotbugs' version '6.4.2'
 
     // https://plugins.gradle.org/plugin/com.jfrog.artifactory
-    id "com.jfrog.artifactory" version "5.1.11"
+    id 'com.jfrog.artifactory' version '6.0.1'
 
     // https://plugins.gradle.org/plugin/com.gradle.plugin-publish
     // com.gradle.plugin-publish auto-applies `java-gradle-plugin` and `maven-publish` plugins
-    id 'com.gradle.plugin-publish' version '1.2.1'
+    id 'com.gradle.plugin-publish' version '2.0.0'
 
     // https://plugins.gradle.org/plugin/org.owasp.dependencycheck
-    id "org.owasp.dependencycheck" version "9.0.9"
+    id 'org.owasp.dependencycheck' version '12.1.5'
 
     // https://plugins.gradle.org/plugin/com.github.ben-manes.versions
-    id "com.github.ben-manes.versions" version "0.50.0"
+    id 'com.github.ben-manes.versions' version '0.52.0'
 }
 
-group 'de.seitenbau.ozghub.prozessdeployment'
+group = 'de.seitenbau.ozghub.prozessdeployment'
 
 version = project.hasProperty('pluginVersion') ? pluginVersion : '99.0.0-SNAPSHOT'
 println 'Plugin-Version ist  : ' + version
 
-if (!project.hasProperty('artifactoryJenkinsPassword')
-        && System.getenv('JENKINS_HOME') != null && !System.getenv('JENKINS_HOME').isEmpty()) {
-    println 'WARN: Artifactory password is not set'
-}
-
 repositories {
     mavenLocal()
+    maven {
+        url = 'https://maven2.seitenbau.net/artifactory/all'
+    }
     mavenCentral()
 }
 
 dependencies {
     implementation gradleApi()
-    // https://mvnrepository.com/artifact/commons-io/commons-io
-    implementation group: 'commons-io', name: 'commons-io', version: '2.15.1'
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
-    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.22.1'
-    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.22.1'
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.0'
+    implementation 'commons-io:commons-io:2.20.0'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
+    implementation 'org.apache.logging.log4j:log4j-api:2.25.2'
+    implementation 'org.apache.logging.log4j:log4j-core:2.25.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.0'
 
     // Zum serialisieren/deserialisieren von LocalDate nötig
     // kann entfernt werden wenn jackson das nativ unterstützt
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.16.1
-    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.16.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.0'
 
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.9.6'
 
-    // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-annotations
-    compileOnly group: 'com.github.spotbugs', name: 'spotbugs-annotations', version: '4.8.3'
+    testImplementation 'org.assertj:assertj-core:3.27.5'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.13.4'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.13.4'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.13.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
 
-    // https://mvnrepository.com/artifact/org.assertj/assertj-core
-    testImplementation 'org.assertj:assertj-core:3.25.1'
-    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.1'
-    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.1'
-    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.10.1'
-
-    // https://mvnrepository.com/artifact/com.h3xstream.findsecbugs/findsecbugs-plugin
     // https://github.com/spotbugs/spotbugs-gradle-plugin#spotbugs-version-mapping
-    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0'
 
-    // https://mvnrepository.com/artifact/org.projectlombok/lombok
     // https://projectlombok.org/setup/gradle
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
-    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
-    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+    compileOnly 'org.projectlombok:lombok:1.18.42'
+    annotationProcessor 'org.projectlombok:lombok:1.18.42'
+    testCompileOnly 'org.projectlombok:lombok:1.18.42'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.42'
+
+    // Process sources using:
+    // * `PluginProcessor` to generate `Log4j2Plugins.dat`
+    // * `GraalVmProcessor` to generate a GraalVM reachability metadata file
+    testAnnotationProcessor('org.apache.logging.log4j:log4j-core:2.25.2')
 }
 
 java {
@@ -86,7 +76,9 @@ java {
 
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
+    compileTestJava.options.compilerArgs = ["-Alog4j.graalvm.groupId=${project.group}", "-Alog4j.graalvm.artifactId=${project.name}"]
     javadoc.options.encoding = 'UTF-8'
+
     // ignore missing javadoc comments
     javadoc.options.addStringOption('Xdoclint:none', '-quiet')
 }
@@ -97,8 +89,8 @@ test {
     finalizedBy jacocoTestReport
     systemProperty 'file.encoding', 'UTF-8'
     testLogging {
-        events "failed"
-        exceptionFormat "full"
+        events TestLogEvent.FAILED
+        exceptionFormat = 'full'
     }
 }
 
@@ -110,7 +102,7 @@ jacocoTestReport {
 spotbugsMain {
     ignoreFailures = true
     effort = Effort.MAX
-    excludeFilter.set(file('src/main/resources/spotbugs-exclude.xml'))
+    setExcludeFilter(file('src/main/plugin-config/spotbugs-exclude.xml'))
 }
 
 // https://github.com/spotbugs/spotbugs-gradle-plugin/issues/391
@@ -119,49 +111,36 @@ spotbugsTest.enabled = false
 // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html
 checkstyle {
     // https://checkstyle.sourceforge.io/releasenotes.html
-    toolVersion = '10.12.3'
     checkstyleTest.enabled = false
 }
 
-dependencyCheck {
-    suppressionFile = file('config/dependency-suppression.xml')
-    formats = ['HTML', 'JSON']
-    analyzers {
-        // Disable use of the https://ossindex.sonatype.org/ as they use rate limiting which causes errors
-        ossIndex {
-            enabled = false
-        }
-    }
-}
-
-// ##########  Lokaler Build  ##########
-if (System.getenv('JENKINS_HOME') == null || System.getenv('JENKINS_HOME').isEmpty()) {
+if ('true' != System.getenv('CI')) {
+    //##########  Lokaler Build  ##########
+    getLogger().info('Lokaler Build')
     publishing {
         repositories {
             mavenLocal()
         }
     }
-}
-
-// ##########  Build auf Jenkins  ##########
-else {
-    def repositoryKey = project.hasProperty('repositoryKey') ? repositoryKey : 'ci-snapshots'
-
+} else {
+    //##########  Build auf CI  ##########
+    getLogger().info('CI Build')
     publishing {
         publications {
-            maven(MavenPublication) {
+            mavenJava(MavenPublication) {
                 from components.java
             }
         }
     }
 
     artifactory {
-        contextUrl = 'http://shadow-artifactory.infra.dev.seitenbau.net/artifactory'
         publish {
+            contextUrl = System.getenv('JF_REPO_URL')
+            publishBuildInfo = false
             repository {
-                repoKey = repositoryKey
-                username = 'jenkins'
-                password = artifactoryJenkinsPassword
+                repoKey = System.getenv('JF_REPO_KEY')
+                username = System.getenv('JF_RW_USER')
+                password = System.getenv('JF_RW_PASSWORD')
                 ivy {
                     mavenCompatible = true
                 }
@@ -173,7 +152,7 @@ else {
     }
 
     jar {
-        baseName 'ozghub-prozessdeployment-gradle-plugin'
+        archiveBaseName = 'ozghub-prozessdeployment-gradle-plugin'
     }
 
     artifactoryPublish {
@@ -189,30 +168,41 @@ else {
 // See https://plugins.gradle.org/docs/publish-plugin
 // See https://docs.gradle.org/current/userguide/java_gradle_plugin.html
 gradlePlugin {
+    website = 'https://www.seitenbau.com/'
+    vcsUrl = 'https://github.com/OZG-Hub/ozghub-prozess-gradle-plugin'
     plugins {
         OzghubProzessGradlePlugin {
+            // You can ignore: Warning: Cannot assign 'String' to 'T'
+            // See https://stackoverflow.com/questions/61983733/cannot-assign-string-to-t
+            description = 'Tools zum automatischen Deployment von Prozessen im OZG-Hub'
             id = 'de.seitenbau.ozghub.prozessdeployment'
             implementationClass = 'de.seitenbau.ozghub.prozessdeployment.ProzessDeploymentGradlePlugin'
             displayName = 'Gradle Plugin zum Deployen von Prozessen und Formularen im OZG-Hub'
+            tags.set(['serviceportal', 'deployment', 'prozesse', 'ozg'])
         }
     }
 }
 
-// Specify plugin properties that apply to the whole publishing bundle
-// (ie. all plugins in the current publication).
-// See https://plugins.gradle.org/docs/publish-plugin
-pluginBundle {
-    // These are the properties used in the publication on the Gradle plugins site
-    // https://plugins.gradle.org/plugin/de.seitenbau.ozghub.prozessdeployment
-    website = 'https://github.com/OZG-Hub/ozghub-prozess-gradle-plugin'
-    vcsUrl = 'https://github.com/OZG-Hub/ozghub-prozess-gradle-plugin'
-    description = 'Tools zum Deployen von Prozessen und Formularen im OZG-Hub'
-    tags = ['deployment', 'prozess', 'formular', 'ozg', 'ozg-hub']
+dependencyCheck {
+    suppressionFile = file('config/dependency-suppression.xml')
+    formats = ['HTML', 'JSON']
+    // Disable use of the https://ossindex.sonatype.org/ as they use rate limiting which causes errors
+    analyzers.ossIndexEnabled = false
+    nvd.datafeedUrl = 'https://dependency-track.sbw.imbw.dev.seitenbau.net/mirror/nvd/nvdcve-2.0-modified.json.gz'
 }
 
-dependencyCheck {
-    nvd {
-        // You must put the API-key in your ~/.gradle/gradle.properties file
-        apiKey=project.properties['dependencyCheckNvdApiKey']
+// https://github.com/ben-manes/gradle-versions-plugin?tab=readme-ov-file#rejectversionsif-and-componentselection
+def isNonStable = { String version ->
+    def regex = /^[0-9.]+(-jre)?$/
+    return !(version ==~ regex)
+}
+
+// https://github.com/ben-manes/gradle-versions-plugin?tab=readme-ov-file#rejectversionsif-and-componentselection
+tasks.named('dependencyUpdates').configure {
+    // https://github.com/ben-manes/gradle-versions-plugin?tab=readme-ov-file#gradle-release-channel
+    dependencyUpdates.gradleReleaseChannel = 'current' // Don't suggest Gradle-RC Versions
+
+    rejectVersionIf {
+        isNonStable(it.candidate.version)
     }
 }

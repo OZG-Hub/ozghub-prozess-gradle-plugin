@@ -61,7 +61,8 @@ public class ListScheduledUndeploymentsOzgHandler
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
     String formattedUndeploymentDate = dateTimeFormatter.format(scheduledUndeployment.undeploymentDate());
     return """
-        \nDeploymentId: %s
+        
+        DeploymentId: %s
         Undeployment Datum: %s
         Ankündigungsnachricht:
         %s
