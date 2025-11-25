@@ -6,20 +6,20 @@ plugins {
     id 'checkstyle'
 
     // https://plugins.gradle.org/plugin/com.github.spotbugs
-    id 'com.github.spotbugs' version '6.4.2'
+    id 'com.github.spotbugs' version '6.4.5'
 
     // https://plugins.gradle.org/plugin/com.jfrog.artifactory
-    id 'com.jfrog.artifactory' version '6.0.1'
+    id 'com.jfrog.artifactory' version '6.0.4'
 
     // https://plugins.gradle.org/plugin/com.gradle.plugin-publish
     // com.gradle.plugin-publish auto-applies `java-gradle-plugin` and `maven-publish` plugins
     id 'com.gradle.plugin-publish' version '2.0.0'
 
     // https://plugins.gradle.org/plugin/org.owasp.dependencycheck
-    id 'org.owasp.dependencycheck' version '12.1.5'
+    id 'org.owasp.dependencycheck' version '12.1.9'
 
     // https://plugins.gradle.org/plugin/com.github.ben-manes.versions
-    id 'com.github.ben-manes.versions' version '0.52.0'
+    id 'com.github.ben-manes.versions' version '0.53.0'
 }
 
 group = 'de.seitenbau.ozghub.prozessdeployment'
@@ -37,23 +37,23 @@ repositories {
 
 dependencies {
     implementation gradleApi()
-    implementation 'commons-io:commons-io:2.20.0'
-    implementation 'org.apache.commons:commons-lang3:3.18.0'
+    implementation 'commons-io:commons-io:2.21.0'
+    implementation 'org.apache.commons:commons-lang3:3.20.0'
     implementation 'org.apache.logging.log4j:log4j-api:2.25.2'
     implementation 'org.apache.logging.log4j:log4j-core:2.25.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.1'
 
     // Zum serialisieren/deserialisieren von LocalDate nötig
     // kann entfernt werden wenn jackson das nativ unterstützt
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.20.1'
 
-    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.9.6'
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.9.8'
 
-    testImplementation 'org.assertj:assertj-core:3.27.5'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.13.4'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.13.4'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.13.4'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
+    testImplementation 'org.assertj:assertj-core:3.27.6'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:6.0.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:6.0.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:6.0.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.0.1'
 
     // https://github.com/spotbugs/spotbugs-gradle-plugin#spotbugs-version-mapping
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0'
@@ -184,7 +184,7 @@ gradlePlugin {
 }
 
 dependencyCheck {
-    suppressionFile = file('config/dependency-suppression.xml')
+    suppressionFile = 'config/dependency-suppression.xml'
     formats = ['HTML', 'JSON']
     // Disable use of the https://ossindex.sonatype.org/ as they use rate limiting which causes errors
     analyzers.ossIndexEnabled = false
