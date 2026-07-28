@@ -72,6 +72,26 @@ public final class FileHelper
     return Paths.get(projectDir.getPath(), defaultFolder);
   }
 
+  public static Path getCustomFolderOrDefault(
+      File projectDir,
+      String customFolder,
+      String buildFolder,
+      String defaultFolder)
+  {
+    if (customFolder != null)
+    {
+      String userHome = System.getProperty("user.home");
+      String actualFolder = HOME_FOLDER_PATTERN
+          .matcher(customFolder)
+          .replaceFirst(Matcher.quoteReplacement(userHome));
+      Path path = Path.of(actualFolder);
+      return path.isAbsolute() ? path : Paths.get(projectDir.getPath(), actualFolder);
+    }
+
+    File dir = projectDir.toPath().resolve(buildFolder).resolve(defaultFolder).toFile();
+    return dir.exists() ? dir.toPath() : projectDir.toPath().resolve(defaultFolder);
+  }
+
   @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   private static byte[] createArchive(List<Path> files)
   {

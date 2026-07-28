@@ -27,7 +27,9 @@ public class DeployFormsHandler extends DefaultHandler
 {
   public static final String API_PATH = "/formulare/ozghub/deploy";
 
-  private static final String DEFAULT_FORMS_DIR = "/forms";
+  private static final String BUILD_DIR = "build";
+
+  private static final String FORMS_DIR = "forms";
 
   private static final ServerConnectionHelper<FormDeploymentResponse> CONNECTION_HELPER =
       new ServerConnectionHelper<>(new TypeReference<>()
@@ -53,7 +55,7 @@ public class DeployFormsHandler extends DefaultHandler
 
     try
     {
-      Path path = FileHelper.getCustomFolderOrDefault(projectDir, formFiles, DEFAULT_FORMS_DIR);
+      Path path = FileHelper.getCustomFolderOrDefault(projectDir, formFiles, BUILD_DIR, FORMS_DIR);
       List<Path> files = FileHelper.readFilesInFolder(path);
 
       Map<String, String> headers = getHeaderParameters();

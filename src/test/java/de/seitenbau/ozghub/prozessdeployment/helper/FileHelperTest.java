@@ -19,6 +19,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.io.TempDir;
 
 import lombok.SneakyThrows;
 
@@ -77,76 +78,102 @@ public class FileHelperTest
   }
 
   @Test
-  public void getCustomFolderOrDefault_null()
+  public void getCustomFolderOrDefault_null(@TempDir File directory)
   {
     // arrange
-    File projectDir = getPathToFolder().toFile();
-    Path expected = Path.of(projectDir.getPath(), "default");
+    File defaultDir = new File(directory, "default");
+    File buildDir = new File(directory, "build");
+    File buildDefaultDir = new File(buildDir, "default");
+    assertThat(buildDefaultDir.mkdirs()).isTrue();
 
     // act
-    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, null, "default");
+    Path actual1 = FileHelper.getCustomFolderOrDefault(directory, null, "default");
+    Path actual2 = FileHelper.getCustomFolderOrDefault(directory, null, "build", "default");
+    Path actual3 = FileHelper.getCustomFolderOrDefault(directory, null, "other", "default");
 
     // assert
-    assertThat(actual).isEqualTo(expected);
+    assertThat(actual1.toFile()).isEqualTo(defaultDir);
+    assertThat(actual2.toFile()).isEqualTo(buildDefaultDir);
+    assertThat(actual3.toFile()).isEqualTo(defaultDir);
   }
 
   @Test
-  public void getCustomFolderOrDefault_relative()
+  public void getCustomFolderOrDefault_relative(@TempDir File directory)
   {
     // arrange
-    File projectDir = getPathToFolder().toFile();
-    Path expected = Path.of(projectDir.getPath(), "custom");
+    File expected = new File(directory, "custom");
 
     // act
-    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, "custom", "default");
+    Path actual1 = FileHelper.getCustomFolderOrDefault(directory, "custom", null);
+    Path actual2 = FileHelper.getCustomFolderOrDefault(directory, "custom", null, null);
 
     // assert
-    assertThat(actual).isEqualTo(expected);
+    assertThat(actual1.toFile()).isEqualTo(expected);
+    assertThat(actual2.toFile()).isEqualTo(expected);
+  }
+
+  @Test
+  public void getCustomFolderOrDefault_absolute_userHome(@TempDir File directory)
+  {
+    // arrange
+    String userHome = System.getProperty("user.home");
+    File expected = new File(userHome, "custom");
+
+    // act
+    Path actual1 = FileHelper.getCustomFolderOrDefault(directory, "~/custom", null);
+    Path actual2 = FileHelper.getCustomFolderOrDefault(directory, "~/custom", null, null);
+
+    // assert
+    assertThat(actual1.toFile()).isEqualTo(expected);
+    assertThat(actual2.toFile()).isEqualTo(expected);
   }
 
   @Test
   @EnabledOnOs(OS.WINDOWS)
-  public void getCustomFolderOrDefault_absolute_windows()
+  public void getCustomFolderOrDefault_absolute_windows(@TempDir File directory)
   {
     // arrange
-    File projectDir = getPathToFolder().toFile();
-    Path expected = Path.of("C:\\custom");
+    File expected = new File("C:\\custom");
 
     // act
-    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, "C:\\custom", null);
+    Path actual1 = FileHelper.getCustomFolderOrDefault(directory, "C:\\custom", null);
+    Path actual2 = FileHelper.getCustomFolderOrDefault(directory, "C:\\custom", null, null);
 
     // assert
-    assertThat(actual).isEqualTo(expected);
+    assertThat(actual1.toFile()).isEqualTo(expected);
+    assertThat(actual2.toFile()).isEqualTo(expected);
   }
 
   @Test
   @EnabledOnOs(OS.LINUX)
-  public void getCustomFolderOrDefault_absolute_linux()
+  public void getCustomFolderOrDefault_absolute_linux(@TempDir File directory)
   {
     // arrange
-    File projectDir = getPathToFolder().toFile();
-    Path expected = Path.of("/custom");
+    File expected = new File("/custom");
 
     // act
-    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, "/custom", null);
+    Path actual1 = FileHelper.getCustomFolderOrDefault(directory, "/custom", null);
+    Path actual2 = FileHelper.getCustomFolderOrDefault(directory, "/custom", null, null);
 
     // assert
-    assertThat(actual).isEqualTo(expected);
+    assertThat(actual1.toFile()).isEqualTo(expected);
+    assertThat(actual2.toFile()).isEqualTo(expected);
   }
 
   @Test
-  public void getCustomFolderOrDefault_tilde()
+  @EnabledOnOs(OS.MAC)
+  public void getCustomFolderOrDefault_absolute_macOS(@TempDir File directory)
   {
     // arrange
-    File projectDir = getPathToFolder().toFile();
-    String userHome = System.getProperty("user.home");
-    Path expected = Path.of(userHome, "custom");
+    File expected = new File("/custom");
 
     // act
-    Path actual = FileHelper.getCustomFolderOrDefault(projectDir, "~/custom", null);
+    Path actual1 = FileHelper.getCustomFolderOrDefault(directory, "/custom", null);
+    Path actual2 = FileHelper.getCustomFolderOrDefault(directory, "/custom", null, null);
 
     // assert
-    assertThat(actual).isEqualTo(expected);
+    assertThat(actual1.toFile()).isEqualTo(expected);
+    assertThat(actual2.toFile()).isEqualTo(expected);
   }
 
   @Test
